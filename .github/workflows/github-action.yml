@@ -64,5 +64,5 @@ jobs:
           script: |
             sudo docker rm -f $(docker ps -qa)
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
-            docker run linkbook-web -p 8080:8080
+            sudo docker run linkbook-web -p 8080:8080
 
