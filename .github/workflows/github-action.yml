@@ -62,8 +62,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
-            sudo docker run ${{ secrets.DOCKER_USERNAME }}/linkbook-web -p 8080:8080 -d
-            docker image prune -f
+            docker rm -f $(docker ps -qa)
+            docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
+            docker stop server
+            docker run -d --rm --name server -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/linkbook-web
 
