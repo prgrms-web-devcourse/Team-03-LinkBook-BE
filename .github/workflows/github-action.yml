@@ -66,4 +66,14 @@ jobs:
             docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
             docker stop server
             docker run -d --rm --name server -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/linkbook-web
+            
+      - name: action-slack
+        uses: 8398a7/action-slack@v3.12.0
+        with:
+          status: ${{ job.status }}
+          author_name: Github Action # default: 8398a7@action-slack
+          fields: message,commit,author,eventName,workflow,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
 
