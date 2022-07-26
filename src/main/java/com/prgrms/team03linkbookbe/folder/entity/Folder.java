@@ -1,20 +1,16 @@
 package com.prgrms.team03linkbookbe.folder.entity;
 
+import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.user.entity.User;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,7 +31,7 @@ public class Folder extends BaseDateEntity {
     @Column(name = "content", nullable = false, columnDefinition = "varchar(10000)")
     private String content;
 
-    @Column(name = "origin_id", nullable = false)
+    @Column(name = "origin_id", nullable = true)
     private Long originId;
 
     @Column(name = "is_main", nullable = false)
@@ -48,9 +44,12 @@ public class Folder extends BaseDateEntity {
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
+    @OneToMany(mappedBy = "folder")
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     public Folder(Long id, String name, String image, String content, Long originId,
-        Boolean isMain, Boolean isPrivate, User user) {
+                  Boolean isMain, Boolean isPrivate, User user) {
         this.id = id;
         this.name = name;
         this.image = image;

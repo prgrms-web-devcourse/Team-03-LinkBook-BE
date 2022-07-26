@@ -38,7 +38,7 @@ public class Comment extends BaseDateEntity {
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
-    @Builder
+    @Builder(toBuilder = true)
     public Comment(Long id, String content, Folder folder,
         User user) {
         this.id = id;
