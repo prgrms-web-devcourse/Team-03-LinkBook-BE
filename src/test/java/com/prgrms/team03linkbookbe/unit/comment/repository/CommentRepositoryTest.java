@@ -1,11 +1,9 @@
-package com.prgrms.team03linkbookbe.unit.repository;
+package com.prgrms.team03linkbookbe.unit.comment.repository;
 
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
-import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -22,12 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommentRepositoryTest {
     @Autowired
     private CommentRepository commentRepository;
-
-    @Autowired
-    private FolderRepository folderRepository;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     TestEntityManager em;
@@ -78,13 +72,12 @@ class CommentRepositoryTest {
     }
 
     @Test
-    @DisplayName("해당 폴더에 코멘트를 등록 할 수 있다.")
+    @DisplayName("특정 폴더에 코멘트를 등록 할 수 있다.")
     void INSERT_COMMENT_BY_ID_TEST() {
         // given
-        Folder folderEntity = folderRepository.getReferenceById(folder.getId());
         Comment commentEntity = Comment.builder()
                 .content("hello")
-                .folder(folderEntity)
+                .folder(folder)
                 .user(user2)
                 .build();
 
@@ -96,45 +89,36 @@ class CommentRepositoryTest {
     }
 
     @Test
-    @DisplayName("해당 아이디의 코멘트를 조회 할 수 있다.")
-    void FIND_COMMENT_BY_ID_TEST() {
+    @DisplayName("특정 코멘트에 답글을 등록 할 수 있다.")
+    void INSERT_REPLY_COMMENT_BY_ID_TEST() {
         // given
-        Long id = comment.getId();
+        Comment commentEntity = Comment.builder()
+                .content("sup")
+                .parentId(comment.getId())
+                .folder(folder)
+                .user(user1)
+                .build();
 
         // when
-        Comment byId = commentRepository.getReferenceById(id);
+        Comment save = commentRepository.save(commentEntity);
 
         // then
-        assertThat(byId.getContent()).isEqualTo(comment.getContent());
-        assertThat(byId.getId()).isEqualTo(comment.getId());
+        assertThat(save.getParentId()).isEqualTo(comment.getId());
+        assertThat(save.getContent()).isEqualTo("sup");
     }
 
     @Test
-    @DisplayName("해당 폴더의 코멘트들을 조회 할 수 있다.")
+    @DisplayName("폴더 아이디로 코멘트들을 조회 할 수 있다.")
     void FIND_COMMENT_BY_FOLDER_TEST() {
         // given
         Long id = folder.getId();
 
         // when
-        Folder byId = folderRepository.getReferenceById(id);
+        List<Comment> comments = commentRepository.findCommentFetchJoinByFolderId(id);
 
         // then
-        assertThat(byId.getComments().size()).isEqualTo(folder.getComments().size());
-        assertThat(byId.getComments().get(0).getId()).isEqualTo(folder.getComments().get(0).getId());
-    }
-
-    @Test
-    @DisplayName("해당 유저의 코멘트들을 조회 할 수 있다.")
-    void FIND_COMMENT_BY_USER_TEST() {
-        // given
-        Long id = user2.getId();
-
-        // when
-        User byId = userRepository.getReferenceById(id);
-
-        // then
-        assertThat(byId.getComments().size()).isEqualTo(folder.getComments().size());
-        assertThat(byId.getComments().get(0).getId()).isEqualTo(folder.getComments().get(0).getId());
+        assertThat(comments).hasSize(1);
+        assertThat(comments.get(0).getId()).isEqualTo(comment.getId());
     }
 
     @Test
@@ -159,26 +143,7 @@ class CommentRepositoryTest {
         Long id = comment.getId();
         Comment byId = commentRepository.getReferenceById(id);
 
-        // when
+        // then
         commentRepository.delete(byId);
-
-        // then
-        comment = commentRepository.save(byId);
-    }
-
-    @Test
-    @DisplayName("해당 폴더의 코멘트들을 삭제 할 수 있다.")
-    void DELETE_COMMENTS_BY_FOLDER_TEST() {
-        // given
-        Long id = folder.getId();
-        Folder referenceById = folderRepository.getReferenceById(id);
-
-        // when
-        for (Comment o : referenceById.getComments()) {
-            commentRepository.delete(o);
-        }
-
-        // then
-        assertThat(referenceById.getComments()).isEmpty();
     }
 }
