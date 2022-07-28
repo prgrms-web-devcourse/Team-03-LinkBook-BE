@@ -1,15 +1,14 @@
 package com.prgrms.team03linkbookbe.user.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,9 +35,12 @@ public class User {
     @Column(name = "role", nullable = false, columnDefinition = "varchar(20)")
     private String role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
     @Builder
     public User(Long id, String email, String password, String name, String image,
-        String role) {
+                String role) {
         this.id = id;
         this.email = email;
         this.password = password;

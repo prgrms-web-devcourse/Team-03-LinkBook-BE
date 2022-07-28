@@ -3,19 +3,13 @@ package com.prgrms.team03linkbookbe.comment.entity;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.user.entity.User;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Getter
@@ -27,6 +21,10 @@ public class Comment extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "parent_id", nullable = true)
+    private Long parentId;
+
+    @Size(min = 1, max = 1000, message = "댓글은 1~1000자 까지 가능합니다.")
     @Column(name = "content", nullable = false, columnDefinition = "varchar(1000)")
     private String content;
 
@@ -38,10 +36,11 @@ public class Comment extends BaseDateEntity {
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
-    @Builder
-    public Comment(Long id, String content, Folder folder,
-        User user) {
+    @Builder(toBuilder = true)
+    public Comment(Long id, Long parentId, String content,
+                   Folder folder, User user) {
         this.id = id;
+        this.parentId = parentId;
         this.content = content;
         this.folder = folder;
         this.user = user;
