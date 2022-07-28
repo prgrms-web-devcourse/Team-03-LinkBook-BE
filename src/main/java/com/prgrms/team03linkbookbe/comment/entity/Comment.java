@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -46,4 +47,16 @@ public class Comment extends BaseDateEntity {
         this.user = user;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id) && Objects.equals(parentId, comment.parentId) && Objects.equals(content, comment.content) && Objects.equals(folder, comment.folder) && Objects.equals(user, comment.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, parentId, content, folder, user);
+    }
 }

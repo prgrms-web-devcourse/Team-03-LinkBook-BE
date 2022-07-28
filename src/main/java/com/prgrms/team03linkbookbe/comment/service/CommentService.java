@@ -1,6 +1,9 @@
 package com.prgrms.team03linkbookbe.comment.service;
 
-import com.prgrms.team03linkbookbe.comment.dto.*;
+import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
+import com.prgrms.team03linkbookbe.comment.dto.CreateCommentResponseDto;
+import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequestDto;
+import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponseDto;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
@@ -12,9 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,17 +35,9 @@ public class CommentService {
 
         Comment comment = CreateCommentRequestDto.toEntity(folder, user, requestDto);
 
-        Comment save = commentRepository.save(comment);
-
-        return CreateCommentResponseDto.builder().id(save.getId()).build();
-    }
-
-    @Transactional
-    public List<CommentResponseDto> findCommentsByFolder(Long folderId) {
-        return commentRepository.findCommentFetchJoinByFolderId(folderId)
-                .stream()
-                .map(CommentResponseDto::fromEntity)
-                .collect(Collectors.toList());
+        return CreateCommentResponseDto.builder()
+                .id(commentRepository.save(comment).getId())
+                .build();
     }
 
     @Transactional
@@ -63,7 +55,7 @@ public class CommentService {
 
         Comment save = commentRepository.save(updated);
 
-        return UpdateCommentResponseDto.builder().id(save.getFolder().getId()).build();
+        return UpdateCommentResponseDto.builder().id(save.getId()).build();
     }
 
     @Transactional
