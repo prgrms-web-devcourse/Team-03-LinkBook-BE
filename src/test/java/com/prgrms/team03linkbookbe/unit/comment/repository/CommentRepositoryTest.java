@@ -29,6 +29,7 @@ class CommentRepositoryTest {
     User user1;
 
     User user2;
+
     Folder folder;
 
     Comment comment;
@@ -105,20 +106,6 @@ class CommentRepositoryTest {
         // then
         assertThat(save.getParentId()).isEqualTo(comment.getId());
         assertThat(save.getContent()).isEqualTo("sup");
-    }
-
-    @Test
-    @DisplayName("폴더 아이디로 코멘트들을 조회 할 수 있다.")
-    void FIND_COMMENT_BY_FOLDER_TEST() {
-        // given
-        Long id = folder.getId();
-
-        // when
-        List<Comment> comments = commentRepository.findCommentFetchJoinByFolderId(id);
-
-        // then
-        assertThat(comments).hasSize(1);
-        assertThat(comments.get(0).getId()).isEqualTo(comment.getId());
     }
 
     @Test
