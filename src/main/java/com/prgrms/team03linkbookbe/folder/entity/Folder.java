@@ -3,6 +3,7 @@ package com.prgrms.team03linkbookbe.folder.entity;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
+import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +68,8 @@ public class Folder extends BaseDateEntity {
     @OneToMany(mappedBy = "folder")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "folder")
+    private List<Tag> tags = new ArrayList<>();
 
 
     @Builder
