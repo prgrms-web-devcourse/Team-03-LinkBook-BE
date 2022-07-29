@@ -2,9 +2,8 @@ package com.prgrms.team03linkbookbe.folder.dto;
 
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
-import java.util.List;
+import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
@@ -12,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -27,17 +27,21 @@ public class CreateFolderRequest {
     @NotBlank(message = "폴더의 내용을 입력해주세요")
     private String content;
 
-    @Column(name = "origin_id", nullable = true)
     private Long originId;
 
-    @Column(name = "is_pinned", nullable = false)
+    @NotBlank(message = "폴더 고정여부를 설정해주세요")
     private Boolean isPinned;
 
-    @Column(name = "is_private", nullable = false)
+    @NotBlank(message = "폴더 공개여부를 설정해주세요")
     private Boolean isPrivate;
 
-
     private Set<TagCategory> tags;
+
+    private User user;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Folder toEntity(){
         return Folder.builder()
@@ -47,6 +51,7 @@ public class CreateFolderRequest {
             .originId(this.getOriginId())
             .isPinned(this.getIsPinned())
             .isPrivate(this.getIsPrivate())
+            .user(this.user)
             .build();
     }
 

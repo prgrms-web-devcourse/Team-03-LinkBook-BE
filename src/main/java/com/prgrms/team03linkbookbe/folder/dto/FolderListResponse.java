@@ -17,21 +17,21 @@ public class FolderListResponse {
 
     private UserResponse userResponse;
 
-    private List<FolderResponse> folderResponses;
+    private List<FolderResponse> folders;
 
 
     @Builder
     public FolderListResponse(UserResponse userResponse,
-        List<FolderResponse> folderResponses) {
+        List<FolderResponse> folders) {
         this.userResponse = userResponse;
-        this.folderResponses = folderResponses;
+        this.folders = folders;
     }
 
 
     public static FolderListResponse fromEntity(User user, List<Folder> folders){
         return FolderListResponse.builder()
             .userResponse(UserResponse.fromEntity(user))
-            .folderResponses(folders.stream().map(FolderResponse::fromEntity).collect(Collectors.toList()))
+            .folders(folders.stream().map(FolderResponse::fromEntity).collect(Collectors.toList()))
             .build();
     }
 }
