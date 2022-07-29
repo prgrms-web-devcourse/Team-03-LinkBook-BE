@@ -4,7 +4,7 @@ import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
@@ -40,7 +40,8 @@ public class FolderService {
 
     // 폴더생성
     @Transactional(readOnly = false)
-    public FolderIdResponse create(CreateFolderRequest createFolderRequest) {
+    public FolderIdResponse create(User user, CreateFolderRequest createFolderRequest) {
+        createFolderRequest.setUser(user);
         Folder folder = createFolderRequest.toEntity();
         Folder save = folderRepository.save(folder);
 
@@ -53,14 +54,14 @@ public class FolderService {
 
 
     // 특정 폴더조회
-    public FolderResponse detail(Long folderId) {
+    public FolderDetailResponse detail(Long folderId) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
-        FolderResponse folderResponse = FolderResponse
+        FolderDetailResponse folderDetailResponse = FolderDetailResponse
             .fromEntity(folder);
 
         // 좋아요 개수 넣기
-        folderResponse.setLikes(likeRepository.countByFolderEquals(folder));
-        return folderResponse;
+        folderDetailResponse.setLikes(likeRepository.countByFolderEquals(folder));
+        return folderDetailResponse;
     }
 
 
