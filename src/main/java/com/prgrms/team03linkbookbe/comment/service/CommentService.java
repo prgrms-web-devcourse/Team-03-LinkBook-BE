@@ -26,8 +26,8 @@ public class CommentService {
     private final FolderRepository folderRepository;
 
     @Transactional
-    public CreateCommentResponseDto saveComment(CreateCommentRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId())
+    public CreateCommentResponseDto create(CreateCommentRequestDto requestDto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
@@ -41,14 +41,14 @@ public class CommentService {
     }
 
     @Transactional
-    public UpdateCommentResponseDto updateComment(UpdateCommentRequestDto requestDto) {
-        User user = userRepository.findById(requestDto.getUserId())
+    public UpdateCommentResponseDto update(UpdateCommentRequestDto requestDto, Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
                 .orElseThrow(NoDataException::new);
 
-        Comment comment = commentRepository.findById(requestDto.getId())
+        Comment comment = commentRepository.findByIdAndUser(requestDto.getId(), user)
                 .orElseThrow(NoDataException::new);
 
         Comment updated = UpdateCommentRequestDto.toEntity(folder, user, comment);
@@ -59,8 +59,11 @@ public class CommentService {
     }
 
     @Transactional
-    public Long deleteComment(Long id) {
-        Comment comment = commentRepository.findById(id)
+    public Long delete(Long id, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(NoDataException::new);
+
+        Comment comment = commentRepository.findByIdAndUser(id, user)
                 .orElseThrow(NoDataException::new);
 
         commentRepository.delete(comment);

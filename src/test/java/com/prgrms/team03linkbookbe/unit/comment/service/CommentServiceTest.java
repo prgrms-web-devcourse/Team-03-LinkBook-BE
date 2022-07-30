@@ -70,7 +70,7 @@ class CommentServiceTest {
         when(commentRepository.save(comment)).thenReturn(comment.toBuilder().id(1L).build());
 
         // when, then
-        assertThat(commentService.saveComment(requestDto1).getId()).isEqualTo(1L);
+        assertThat(commentService.create(requestDto1, 1L).getId()).isEqualTo(1L);
     }
 
     @Test
@@ -84,7 +84,7 @@ class CommentServiceTest {
         comment.toBuilder().id(1L).build();
         when(commentRepository.save(comment)).thenReturn(comment.toBuilder().id(1L).build());
 
-        Long id = commentService.saveComment(requestDto1).getId();
+        Long id = commentService.create(requestDto1, 1L).getId();
         UpdateCommentRequestDto updateCommentRequestDto = UpdateCommentRequestDto.builder()
                 .id(id)
                 .content("updated")
@@ -93,8 +93,9 @@ class CommentServiceTest {
                 .build();
 
         // when
-        when(commentRepository.findById(id)).thenReturn(Optional.of(comment));
-        UpdateCommentResponseDto updateCommentResponseDto = commentService.updateComment(updateCommentRequestDto);
+        when(commentRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(comment));
+        UpdateCommentResponseDto updateCommentResponseDto =
+                commentService.update(updateCommentRequestDto, 1L);
 
         // then
         assertThat(updateCommentResponseDto.getId()).isEqualTo(id);
@@ -104,11 +105,12 @@ class CommentServiceTest {
     @DisplayName("댓글 삭제 테스트")
     void DELETE_COMMENT_TEST() {
         // given
-        when(commentRepository.findById(1L))
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(commentRepository.findByIdAndUser(1L, user))
                 .thenReturn(Optional.of(Comment.builder().id(1L).build()));
 
         // when
-        Long deleteComment = commentService.deleteComment(1L);
+        Long deleteComment = commentService.delete(1L, 1L);
 
         // then
         assertThat(deleteComment).isEqualTo(1L);

@@ -13,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -93,19 +91,19 @@ class CommentRepositoryTest {
     @DisplayName("특정 코멘트에 답글을 등록 할 수 있다.")
     void INSERT_REPLY_COMMENT_BY_ID_TEST() {
         // given
-        Comment commentEntity = Comment.builder()
-                .content("sup")
+        Comment temp = Comment.builder()
                 .parentId(comment.getId())
+                .content("sup")
                 .folder(folder)
                 .user(user1)
                 .build();
 
         // when
-        Comment save = commentRepository.save(commentEntity);
+        commentRepository.save(temp);
 
         // then
-        assertThat(save.getParentId()).isEqualTo(comment.getId());
-        assertThat(save.getContent()).isEqualTo("sup");
+        assertThat(temp.getParentId()).isEqualTo(comment.getId());
+        assertThat(temp.getContent()).isEqualTo("sup");
     }
 
     @Test

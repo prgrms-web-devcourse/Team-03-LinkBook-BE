@@ -18,8 +18,6 @@ public class UpdateCommentRequestDto {
     @NotNull(message = "코멘트 아이디를 입력해주세요.")
     private Long id;
 
-    private Long parentId;
-
     @NotNull(message = "내용을 입력해주세요.")
     @Size(min = 1, max = 1000, message = "댓글은 1~1000자 까지 가능합니다.")
     private String content;
@@ -33,8 +31,6 @@ public class UpdateCommentRequestDto {
     public static Comment toEntity(Folder folder, User user,
                                    Comment comment) {
         return Comment.builder()
-                .parentId(comment.getParentId() != null ?
-                        comment.getParentId() : null)
                 .content(comment.getContent())
                 .folder(folder)
                 .user(user)

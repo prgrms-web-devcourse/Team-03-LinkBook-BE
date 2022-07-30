@@ -3,17 +3,17 @@ package com.prgrms.team03linkbookbe.comment.entity;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.user.entity.User;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Getter
+@ToString
 @Table(name = "comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseDateEntity {
@@ -38,7 +38,7 @@ public class Comment extends BaseDateEntity {
     private User user;
 
     @Builder(toBuilder = true)
-    public Comment(Long id, Long parentId, String content,
+    public Comment(Long id, String content, Long parentId,
                    Folder folder, User user) {
         this.id = id;
         this.parentId = parentId;
