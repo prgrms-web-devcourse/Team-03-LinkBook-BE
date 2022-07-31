@@ -72,10 +72,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            docker stop server
+            docker rm -f $(docker ps -qa)
             docker rmi ${{ secrets.DOCKER_USERNAME }}/linkbook-web
+            docker rmi ${{ secrets.DOCKER_USERNAME_NGINX }}/nginx
             docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
-            docker run -d --rm --name server -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/linkbook-web
+            docker pull ${{ secrets.DOCKER_USERNAME_NGINX }}/nginx
+            docker-compose up -d
+            docker image prune -f
 
 
       - name: Github Action Slack Noti
