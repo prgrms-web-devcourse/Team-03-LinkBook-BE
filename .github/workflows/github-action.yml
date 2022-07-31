@@ -62,9 +62,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.KEY }}
           script: |
-            docker rm -f $(docker ps -qa)
-            docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
             docker stop server
+            docker rmi ${{ secrets.DOCKER_USERNAME }}/linkbook-web
+            docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
             docker run -d --rm --name server -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/linkbook-web
             
       - name: action-slack
