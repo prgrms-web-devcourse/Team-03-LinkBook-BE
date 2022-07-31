@@ -39,7 +39,7 @@ public class FolderDetailResponse {
 
     private List<TagCategory> tags;
 
-    private Long likes;
+    private int likes;
 
     private List<CommentResponseDto> comments;
 
@@ -47,11 +47,8 @@ public class FolderDetailResponse {
 
     private LocalDateTime updatedAt;
 
-    public void setLikes(Long likes) {
-        this.likes = likes;
-    }
 
-    public static FolderDetailResponse fromEntity(Folder folder) {
+    public static FolderDetailResponse fromEntity(Folder folder, int likes) {
         return FolderDetailResponse.builder()
             .id(folder.getId())
             .name(folder.getName())
@@ -60,6 +57,7 @@ public class FolderDetailResponse {
             .originId(folder.getOriginId())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
+            .likes(likes)
             .tags(folder.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
             .user(UserResponse.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
