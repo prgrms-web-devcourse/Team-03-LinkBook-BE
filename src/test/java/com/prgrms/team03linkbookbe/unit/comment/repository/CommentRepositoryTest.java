@@ -47,7 +47,7 @@ class CommentRepositoryTest {
                 .name("my-folder")
                 .image("url")
                 .content("halo")
-                .isMain(false)
+                .isPinned(false)
                 .isPrivate(false)
                 .user(user1)
                 .build();
