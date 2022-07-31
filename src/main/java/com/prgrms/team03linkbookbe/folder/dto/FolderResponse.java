@@ -9,8 +9,14 @@ import com.prgrms.team03linkbookbe.user.dto.UserResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FolderResponse {
 
     private Long id;
@@ -32,25 +38,6 @@ public class FolderResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
-
-    @Builder
-
-    public FolderResponse(Long id, String name, String image, Boolean isPinned,
-        Boolean isPrivate, UserResponse user,
-        List<TagCategory> tags, Long likes, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.isPinned = isPinned;
-        this.isPrivate = isPrivate;
-        this.user = user;
-        this.tags = tags;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-
-
 
 
     public static FolderResponse fromEntity(Folder folder){

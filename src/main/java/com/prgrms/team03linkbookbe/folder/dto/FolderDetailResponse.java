@@ -10,11 +10,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FolderDetailResponse {
     private Long id;
@@ -45,31 +47,9 @@ public class FolderDetailResponse {
 
     private LocalDateTime updatedAt;
 
-
-    @Builder
-    public FolderDetailResponse(Long id, String name, String image, String content,
-        Long originId, Boolean isPinned, Boolean isPrivate,
-        UserResponse user,
-        List<BookmarkResponse> bookmarks,
-        List<TagCategory> tags, Long likes,
-        List<CommentResponseDto> comments, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.image = image;
-        this.content = content;
-        this.originId = originId;
-        this.isPinned = isPinned;
-        this.isPrivate = isPrivate;
-        this.user = user;
-        this.bookmarks = bookmarks;
-        this.tags = tags;
+    public void setLikes(Long likes) {
         this.likes = likes;
-        this.comments = comments;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
-
-
 
     public static FolderDetailResponse fromEntity(Folder folder){
         return FolderDetailResponse.builder()

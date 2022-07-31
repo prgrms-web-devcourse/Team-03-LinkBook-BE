@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateFolderRequest {

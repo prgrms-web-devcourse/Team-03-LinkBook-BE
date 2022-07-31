@@ -5,10 +5,13 @@ import java.awt.print.Book;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookmarkResponse {
 
@@ -18,13 +21,6 @@ public class BookmarkResponse {
 
     private String title;
 
-
-    @Builder
-    public BookmarkResponse(Long id, String url, String title) {
-        this.id = id;
-        this.url = url;
-        this.title = title;
-    }
 
     public static BookmarkResponse fromEntity(Bookmark bookmark){
         return BookmarkResponse.builder()

@@ -6,26 +6,20 @@ import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FolderListResponse {
 
     private UserResponse userResponse;
 
     private List<FolderResponse> folders;
-
-
-    @Builder
-    public FolderListResponse(UserResponse userResponse,
-        List<FolderResponse> folders) {
-        this.userResponse = userResponse;
-        this.folders = folders;
-    }
 
 
     public static FolderListResponse fromEntity(User user, List<Folder> folders){
