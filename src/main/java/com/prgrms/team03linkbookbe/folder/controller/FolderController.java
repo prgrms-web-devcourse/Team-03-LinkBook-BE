@@ -47,14 +47,14 @@ public class FolderController {
     // TODO : 본인인증
     @PutMapping("/api/folder/{id}")
     public ResponseEntity<FolderIdResponse> update(@PathVariable Long id, @Valid @RequestBody CreateFolderRequest createFolderRequest, @AuthenticationPrincipal User user){
-        FolderIdResponse update = folderService.update(id, createFolderRequest);
+        FolderIdResponse update = folderService.update(user.getId(), id, createFolderRequest);
         return ResponseEntity.ok(update);
     }
 
     // TODO : 본인인증
     @DeleteMapping("/api/folder/{id}")
     public void delete(@PathVariable Long id, @AuthenticationPrincipal User user){
-        folderService.delete(id);
+        folderService.delete(user.getId(), id);
     }
 
 

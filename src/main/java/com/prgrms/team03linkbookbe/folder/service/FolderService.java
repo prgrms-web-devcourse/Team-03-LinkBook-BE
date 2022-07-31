@@ -15,6 +15,7 @@ import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.List;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class FolderService {
 
-    private FolderRepository folderRepository;
-    private FolderTagRepository folderTagRepository;
-    private LikeRepository likeRepository;
-    private TagRepository tagRepository;
+    private final FolderRepository folderRepository;
+    private final FolderTagRepository folderTagRepository;
+    private final LikeRepository likeRepository;
+    private final TagRepository tagRepository;
 
     public FolderService(
         FolderRepository folderRepository,
@@ -74,23 +75,33 @@ public class FolderService {
 
     // 특정 폴더 수정
     @Transactional(readOnly = false)
-    public FolderIdResponse update(Long folderId, CreateFolderRequest createFolderRequest) {
-        Folder folder = createFolderRequest.toEntity();
-        Folder save = folderRepository.save(folder); // merge
+    public FolderIdResponse update(Long userId, Long folderId, CreateFolderRequest createFolderRequest) {
+        Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
+        if(!folder.getUser().getId().equals(userId)){
+            throw new AccessDeniedException("자신의 폴더만 수정가능합니다");
+        }
+
+        // dirty check로 update
+        folder.modifyFolder(createFolderRequest);
 
         // 태그관계끊어주기
-        folderTagRepository.deleteAllByFolder(save);
+        folderTagRepository.deleteAllByFolder(folder);
 
         // 태그관계이어주기
-        addFolderTag(createFolderRequest, save);
+        addFolderTag(createFolderRequest, folder);
 
-        return FolderIdResponse.fromEntity(save.getId());
+
+        return FolderIdResponse.fromEntity(folder.getId());
     }
 
     // 특정 폴더 삭제
     @Transactional(readOnly = false)
-    public void delete(Long folderId) {
+    public void delete(Long userId, Long folderId) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
+        if(!folder.getUser().getId().equals(userId)){
+            throw new AccessDeniedException("자신의 폴더만 삭제가능합니다");
+        }
+
         folderRepository.delete(folder);
     }
 
@@ -108,6 +119,8 @@ public class FolderService {
             folderTagRepository.save(folderTag);
         }
     }
+
+
 
 
 }
