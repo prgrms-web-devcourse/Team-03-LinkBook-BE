@@ -1,7 +1,8 @@
-package com.prgrms.team03linkbookbe.hashtag.entity;
+package com.prgrms.team03linkbookbe.folderTag.entity;
+
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import javax.persistence.Column;
+import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,28 +16,30 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @Getter
-@Table(name = "hashtag")
+@Table(name = "folder_tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Hashtag {
+public class FolderTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
-    private Field name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_id")
+    private Tag tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "folder_id", referencedColumnName = "id")
+    @JoinColumn(name = "folder_id")
     private Folder folder;
 
+
     @Builder
-    public Hashtag(Long id, Field name, Folder folder) {
+    public FolderTag(Long id, Tag tag, Folder folder) {
         this.id = id;
-        this.name = name;
+        this.tag = tag;
         this.folder = folder;
     }
-
 }

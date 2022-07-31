@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,15 +27,19 @@ public class Bookmark extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "url을 입력하세요")
     @Column(name = "url", nullable = false)
     private String url;
 
+    @NotBlank(message = "북마크이름을 입력하세요")
     @Column(name = "title", nullable = false)
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private Folder folder;
+
+
 
     @Builder
     public Bookmark(Long id, String url, String title, Folder folder) {
