@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // object mapping을 위해
 public class CreateFolderRequest {
 
     @NotBlank(message = "폴더의 이름을 입력해주세요")
