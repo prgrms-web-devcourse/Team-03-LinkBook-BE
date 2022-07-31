@@ -42,7 +42,7 @@ public class FolderResponse {
             .image(folder.getImage())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
-            .tags(folder.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
+            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName()).collect(Collectors.toList()))
             .user(UserResponse.fromEntity(folder.getUser()))
             .createdAt(folder.getCreatedAt())
             .updatedAt(folder.getUpdatedAt())
