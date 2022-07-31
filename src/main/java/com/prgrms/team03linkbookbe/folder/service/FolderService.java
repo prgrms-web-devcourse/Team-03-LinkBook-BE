@@ -2,9 +2,9 @@ package com.prgrms.team03linkbookbe.folder.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
+import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
@@ -53,7 +53,6 @@ public class FolderService {
     }
 
 
-
     // 특정 폴더조회
     public FolderDetailResponse detail(Long folderId) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
@@ -75,9 +74,10 @@ public class FolderService {
 
     // 특정 폴더 수정
     @Transactional(readOnly = false)
-    public FolderIdResponse update(Long userId, Long folderId, CreateFolderRequest createFolderRequest) {
+    public FolderIdResponse update(Long userId, Long folderId,
+        CreateFolderRequest createFolderRequest) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
-        if(!folder.getUser().getId().equals(userId)){
+        if (!folder.getUser().getId().equals(userId)) {
             throw new AccessDeniedException("자신의 폴더만 수정가능합니다");
         }
 
@@ -90,7 +90,6 @@ public class FolderService {
         // 태그관계이어주기
         addFolderTag(createFolderRequest, folder);
 
-
         return FolderIdResponse.fromEntity(folder.getId());
     }
 
@@ -98,7 +97,7 @@ public class FolderService {
     @Transactional(readOnly = false)
     public void delete(Long userId, Long folderId) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
-        if(!folder.getUser().getId().equals(userId)){
+        if (!folder.getUser().getId().equals(userId)) {
             throw new AccessDeniedException("자신의 폴더만 삭제가능합니다");
         }
 
@@ -119,8 +118,6 @@ public class FolderService {
             folderTagRepository.save(folderTag);
         }
     }
-
-
 
 
 }

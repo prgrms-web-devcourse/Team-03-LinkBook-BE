@@ -1,7 +1,5 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
-import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
-import com.prgrms.team03linkbookbe.comment.dto.CommentResponseDto;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
@@ -9,11 +7,8 @@ import com.prgrms.team03linkbookbe.user.dto.UserResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
@@ -40,7 +35,7 @@ public class FolderResponse {
     private LocalDateTime updatedAt;
 
 
-    public static FolderResponse fromEntity(Folder folder){
+    public static FolderResponse fromEntity(Folder folder) {
         return FolderResponse.builder()
             .id(folder.getId())
             .name(folder.getName())

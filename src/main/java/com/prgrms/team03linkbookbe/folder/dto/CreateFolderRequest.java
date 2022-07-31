@@ -5,13 +5,10 @@ import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.Set;
-import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // object mapping을 위해
@@ -42,7 +39,7 @@ public class CreateFolderRequest {
         this.user = user;
     }
 
-    public Folder toEntity(){
+    public Folder toEntity() {
         return Folder.builder()
             .name(this.getName())
             .image(this.getImage())

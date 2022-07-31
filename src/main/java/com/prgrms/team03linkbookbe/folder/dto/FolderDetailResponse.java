@@ -13,12 +13,12 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FolderDetailResponse {
+
     private Long id;
 
     private String name;
@@ -51,7 +51,7 @@ public class FolderDetailResponse {
         this.likes = likes;
     }
 
-    public static FolderDetailResponse fromEntity(Folder folder){
+    public static FolderDetailResponse fromEntity(Folder folder) {
         return FolderDetailResponse.builder()
             .id(folder.getId())
             .name(folder.getName())

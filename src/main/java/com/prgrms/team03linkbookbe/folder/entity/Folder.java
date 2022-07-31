@@ -67,7 +67,7 @@ public class Folder extends BaseDateEntity {
     private User user;
 
     @OneToMany(mappedBy = "folder")
-    private List<Bookmark> bookmarks= new ArrayList<>();
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @OneToMany(mappedBy = "folder")
     private List<Comment> comments = new ArrayList<>();
@@ -75,7 +75,7 @@ public class Folder extends BaseDateEntity {
     @OneToMany(mappedBy = "folder")
     private List<Tag> tags = new ArrayList<>();
 
-    public void modifyFolder(CreateFolderRequest dto){
+    public void modifyFolder(CreateFolderRequest dto) {
         this.name = dto.getName();
         this.image = dto.getImage();
         this.isPinned = dto.getIsPinned();
