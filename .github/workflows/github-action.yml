@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v3
 
 
@@ -33,9 +33,9 @@ jobs:
           distribution: 'temurin'
 
 
-      - name: make env file
+      - name: Make env file
         run: |
-          ## create env file
+          # create env file
           cd ./src/main/resources
 
           # application-database.yaml 파일 생성
