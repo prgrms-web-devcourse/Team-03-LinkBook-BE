@@ -1,6 +1,7 @@
 package com.prgrms.team03linkbookbe.tag.entity;
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -32,7 +33,7 @@ public class Tag {
     private TagCategory name;
 
     @OneToMany(mappedBy = "tag")
-    private List<Folder> folders = new ArrayList<>();
+    private List<FolderTag> folderTags = new ArrayList<>();
 
 
     @Builder
