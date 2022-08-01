@@ -1,5 +1,6 @@
 package com.prgrms.team03linkbookbe.bookmark.entity;
 
+import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import javax.persistence.Column;
@@ -13,13 +14,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
 @Getter
 @Table(name = "bookmark")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bookmark extends BaseDateEntity {
 
@@ -40,12 +44,9 @@ public class Bookmark extends BaseDateEntity {
     private Folder folder;
 
 
-
-    @Builder
-    public Bookmark(Long id, String url, String title, Folder folder) {
-        this.id = id;
-        this.url = url;
-        this.title = title;
+    public void modifyBookmark(BookmarkRequest dto, Folder folder){
+        this.url = dto.getUrl();
+        this.title = dto.getTitle();
         this.folder = folder;
     }
 
