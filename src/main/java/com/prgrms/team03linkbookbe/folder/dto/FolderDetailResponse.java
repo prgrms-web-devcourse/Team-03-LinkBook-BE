@@ -21,7 +21,7 @@ public class FolderDetailResponse {
 
     private Long id;
 
-    private String name;
+    private String title;
 
     private String image;
 
@@ -51,7 +51,7 @@ public class FolderDetailResponse {
     public static FolderDetailResponse fromEntity(Folder folder, int likes) {
         return FolderDetailResponse.builder()
             .id(folder.getId())
-            .name(folder.getName())
+            .title(folder.getTitle())
             .image(folder.getImage())
             .content(folder.getContent())
             .originId(folder.getOriginId())

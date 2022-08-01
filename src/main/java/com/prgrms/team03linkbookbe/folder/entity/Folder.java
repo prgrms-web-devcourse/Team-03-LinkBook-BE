@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -41,8 +42,8 @@ public class Folder extends BaseDateEntity {
 
     @Size(max = 50, message = "폴더의 이름은 50자 이하로 입력해주세요")
     @NotBlank(message = "폴더의 이름을 입력해주세요")
-    @Column(name = "name", nullable = false, columnDefinition = "varchar(50)")
-    private String name;
+    @Column(name = "title", nullable = false, columnDefinition = "varchar(50)")
+    private String title;
 
     @NotBlank(message = "폴더의 이미지를 설정해주세요")
     @Column(name = "image", nullable = false, columnDefinition = "varchar(1000)")
@@ -55,11 +56,11 @@ public class Folder extends BaseDateEntity {
     @Column(name = "origin_id", nullable = true)
     private Long originId;
 
-    @NotBlank(message = "폴더의 핀여부를 선택해주세요")
+    @NotNull(message = "폴더의 핀여부를 선택해주세요")
     @Column(name = "is_pinned", nullable = false)
     private Boolean isPinned;
 
-    @NotBlank(message = "폴더의 공개여부를 선택해주세요")
+    @NotNull(message = "폴더의 공개여부를 선택해주세요")
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
@@ -77,7 +78,7 @@ public class Folder extends BaseDateEntity {
     private List<FolderTag> folderTags = new ArrayList<>();
 
     public void modifyFolder(CreateFolderRequest dto) {
-        this.name = dto.getName();
+        this.title = dto.getTitle();
         this.image = dto.getImage();
         this.isPinned = dto.getIsPinned();
         this.isPrivate = dto.getIsPrivate();

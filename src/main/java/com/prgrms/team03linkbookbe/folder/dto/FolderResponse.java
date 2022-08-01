@@ -16,9 +16,11 @@ public class FolderResponse {
 
     private Long id;
 
-    private String name;
+    private String title;
 
     private String image;
+
+    private String content;
 
     private Boolean isPinned;
 
@@ -38,7 +40,8 @@ public class FolderResponse {
     public static FolderResponse fromEntity(Folder folder) {
         return FolderResponse.builder()
             .id(folder.getId())
-            .name(folder.getName())
+            .title(folder.getTitle())
+            .content(folder.getContent())
             .image(folder.getImage())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
