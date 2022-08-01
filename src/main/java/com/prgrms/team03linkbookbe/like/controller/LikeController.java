@@ -1,5 +1,6 @@
 package com.prgrms.team03linkbookbe.like.controller;
 
+import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponseDto;
 import com.prgrms.team03linkbookbe.like.dto.UpdateLikeRequestDto;
@@ -12,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +31,16 @@ public class LikeController {
                 likeservice.create(requestDto, user.getId());
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<Folder>> getLikedFoldersByUserIds(
+            @PathVariable Long id
+    ) {
+
+        List<Folder> folders = likeservice.getLikedFoldersByUserId(id);
+
+        return ResponseEntity.ok(folders);
     }
 
     @DeleteMapping("/{id}")
