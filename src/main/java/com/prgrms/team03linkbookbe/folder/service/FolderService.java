@@ -56,12 +56,11 @@ public class FolderService {
     // 특정 폴더조회
     public FolderDetailResponse detail(Long folderId) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
-        FolderDetailResponse folderDetailResponse = FolderDetailResponse
-            .fromEntity(folder);
+        // 좋아요 개수 세기
+        int likes = likeRepository.countByFolderEquals(folder);
 
-        // 좋아요 개수 넣기
-        folderDetailResponse.setLikes(likeRepository.countByFolderEquals(folder));
-        return folderDetailResponse;
+        return FolderDetailResponse
+            .fromEntity(folder, likes);
     }
 
 
