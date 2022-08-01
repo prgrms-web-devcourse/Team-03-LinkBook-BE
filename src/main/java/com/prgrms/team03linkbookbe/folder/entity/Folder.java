@@ -20,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -55,11 +57,11 @@ public class Folder extends BaseDateEntity {
     @Column(name = "origin_id", nullable = true)
     private Long originId;
 
-    @NotBlank(message = "폴더의 핀여부를 선택해주세요")
+    @NotNull(message = "폴더의 핀여부를 선택해주세요")
     @Column(name = "is_pinned", nullable = false)
     private Boolean isPinned;
 
-    @NotBlank(message = "폴더의 공개여부를 선택해주세요")
+    @NotNull(message = "폴더의 공개여부를 선택해주세요")
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
