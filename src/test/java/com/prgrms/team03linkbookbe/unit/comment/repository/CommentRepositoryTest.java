@@ -46,10 +46,10 @@ class CommentRepositoryTest {
         em.persist(user1);
 
         folder = Folder.builder()
-                .name("my-folder")
+                .title("my-folder")
                 .image("url")
                 .content("halo")
-                .isMain(false)
+                .isPinned(false)
                 .isPrivate(false)
                 .user(user1)
                 .build();
