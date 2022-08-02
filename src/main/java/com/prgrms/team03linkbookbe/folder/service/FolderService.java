@@ -14,7 +14,9 @@ import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
+import java.awt.print.Pageable;
 import java.util.List;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,8 +67,8 @@ public class FolderService {
 
 
     // 특정 사용자의 폴더전체조회
-    public FolderListResponse getAllByUser(User user) {
-        List<Folder> folders = folderRepository.findAllByUser(user);
+    public FolderListResponse getAllByUser(User user, Boolean isPrivate, Pageable pageable) {
+        Page<Folder> folders = folderRepository.findAllByUserAndIsPrivate(user, isPrivate, pageable);
         return FolderListResponse.fromEntity(user, folders);
     }
 

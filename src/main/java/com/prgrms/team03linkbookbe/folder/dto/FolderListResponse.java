@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 
 @Builder
@@ -15,13 +16,13 @@ public class FolderListResponse {
 
     private UserResponse userResponse;
 
-    private List<FolderResponse> folders;
+    private Page<FolderResponse> folders;
 
 
-    public static FolderListResponse fromEntity(User user, List<Folder> folders) {
+    public static FolderListResponse fromEntity(User user, Page<Folder> folders) {
         return FolderListResponse.builder()
             .userResponse(UserResponse.fromEntity(user))
-            .folders(folders.stream().map(FolderResponse::fromEntity).collect(Collectors.toList()))
+            .folders(folders.map(FolderResponse::fromEntity))
             .build();
     }
 }
