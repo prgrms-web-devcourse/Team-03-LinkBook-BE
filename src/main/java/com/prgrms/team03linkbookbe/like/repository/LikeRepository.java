@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
-    Long countByFolderEquals(Folder folder);
+    int countByFolderEquals(Folder folder);
 
     Optional<Like> findByIdAndUser(Long id, User user);
 

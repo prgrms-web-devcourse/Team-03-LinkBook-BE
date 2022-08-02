@@ -92,7 +92,7 @@ class CommentRepositoryTest {
     void INSERT_REPLY_COMMENT_BY_ID_TEST() {
         // given
         Comment temp = Comment.builder()
-                .parentId(comment.getId())
+                .parent(comment)
                 .content("sup")
                 .folder(folder)
                 .user(user1)
@@ -100,10 +100,14 @@ class CommentRepositoryTest {
 
         // when
         commentRepository.save(temp);
+        comment = comment.toBuilder()
+                .children(
+                        commentRepository.findAllByParentId(comment.getId())
+                )
+                .build();
 
         // then
-        assertThat(temp.getParentId()).isEqualTo(comment.getId());
-        assertThat(temp.getContent()).isEqualTo("sup");
+        assertThat(temp.getId()).isEqualTo(comment.getChildren().get(0).getId());
     }
 
     @Test

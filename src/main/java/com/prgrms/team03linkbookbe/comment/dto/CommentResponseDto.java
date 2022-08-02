@@ -1,7 +1,6 @@
 package com.prgrms.team03linkbookbe.comment.dto;
 
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
-import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import lombok.*;
 
@@ -19,8 +18,6 @@ public class CommentResponseDto {
 
     private String content;
 
-    private Folder folder;
-
     private User user;
 
     private LocalDateTime createdAt;
@@ -30,8 +27,8 @@ public class CommentResponseDto {
     public static CommentResponseDto fromEntity(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
+                .children(comment.getChildren())
                 .content(comment.getContent())
-                .folder(comment.getFolder())
                 .user(comment.getUser())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
