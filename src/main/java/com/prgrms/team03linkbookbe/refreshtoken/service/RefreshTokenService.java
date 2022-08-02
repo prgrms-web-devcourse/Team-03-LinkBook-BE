@@ -1,6 +1,5 @@
 package com.prgrms.team03linkbookbe.refreshtoken.service;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -44,10 +43,10 @@ public class RefreshTokenService {
 
             // refreshToken DB 검사
             User user = userRepository.findByEmail(claims.getEmail())
-                .orElseThrow(() -> new IllegalTokenException());
+                .orElseThrow(IllegalTokenException::new);
 
             RefreshToken findRefreshToken = refreshTokenRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new IllegalTokenException());
+                .orElseThrow(IllegalTokenException::new);
 
             if (!findRefreshToken.getValue().equals(refreshToken)) {
                 throw new IllegalTokenException();
@@ -68,7 +67,7 @@ public class RefreshTokenService {
     public String issueRefreshToken(Claims claims) {
         String newRefreshToken = jwt.createRefreshToken(claims);
         User user = userRepository.findByEmail(claims.getEmail())
-            .orElseThrow(() -> new NoDataException());
+            .orElseThrow(NoDataException::new);
 
         refreshTokenRepository.findByUserId(user.getId())
             .ifPresentOrElse(
@@ -78,8 +77,8 @@ public class RefreshTokenService {
                 },
                 () -> {
                     refreshTokenRepository.save(RefreshToken.builder()
-                            .value(newRefreshToken)
-                            .user(user)
+                        .value(newRefreshToken)
+                        .user(user)
                         .build());
                     log.info("refreshToken create, email : {}", user.getEmail());
                 });
