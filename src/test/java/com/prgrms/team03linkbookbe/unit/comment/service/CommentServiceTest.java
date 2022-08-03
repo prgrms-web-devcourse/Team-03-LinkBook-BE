@@ -1,8 +1,8 @@
 package com.prgrms.team03linkbookbe.unit.comment.service;
 
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponseDto;
+import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequest;
+import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequest;
+import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponse;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
 import com.prgrms.team03linkbookbe.comment.service.CommentService;
@@ -39,7 +39,7 @@ class CommentServiceTest {
     @Mock
     FolderRepository folderRepository;
 
-    CreateCommentRequestDto requestDto1;
+    CreateCommentRequest requestDto1;
 
     Folder folder;
 
@@ -47,7 +47,7 @@ class CommentServiceTest {
 
     @BeforeEach
     void setup() {
-        requestDto1 = CreateCommentRequestDto.builder()
+        requestDto1 = CreateCommentRequest.builder()
                 .content("LGTM")
                 .folderId(1L)
                 .userId(1L)
@@ -72,12 +72,19 @@ class CommentServiceTest {
         when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        Comment comment = CreateCommentRequestDto.toEntity(folder, user, requestDto1);
+        Comment comment = CreateCommentRequest.toEntity(folder, user, requestDto1);
         comment.toBuilder().id(1L).build();
         when(commentRepository.save(comment)).thenReturn(comment.toBuilder().id(1L).build());
 
         // when, then
         assertThat(commentService.create(requestDto1, user.getEmail()).getId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("특정 폴더 댓글 읽기 테스트")
+    void GET_COMMENTS_BY_FOLDER_TEST() {
+        // given
+
     }
 
     @Test
@@ -87,12 +94,12 @@ class CommentServiceTest {
         when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        Comment comment = CreateCommentRequestDto.toEntity(folder, user, requestDto1);
+        Comment comment = CreateCommentRequest.toEntity(folder, user, requestDto1);
         comment.toBuilder().id(1L).build();
         when(commentRepository.save(comment)).thenReturn(comment.toBuilder().id(1L).build());
 
         Long id = commentService.create(requestDto1, user.getEmail()).getId();
-        UpdateCommentRequestDto updateCommentRequestDto = UpdateCommentRequestDto.builder()
+        UpdateCommentRequest updateCommentRequest = UpdateCommentRequest.builder()
                 .id(id)
                 .content("updated")
                 .folderId(requestDto1.getFolderId())
@@ -101,11 +108,11 @@ class CommentServiceTest {
 
         // when
         when(commentRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(comment));
-        UpdateCommentResponseDto updateCommentResponseDto =
-                commentService.update(updateCommentRequestDto, user.getEmail());
+        UpdateCommentResponse updateCommentResponse =
+                commentService.update(updateCommentRequest, user.getEmail());
 
         // then
-        assertThat(updateCommentResponseDto.getId()).isEqualTo(id);
+        assertThat(updateCommentResponse.getId()).isEqualTo(id);
     }
 
     @Test

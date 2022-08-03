@@ -2,8 +2,8 @@ package com.prgrms.team03linkbookbe.integration.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequestDto;
+import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequest;
+import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequest;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
@@ -71,6 +71,7 @@ class CommentIntegrationTest {
                 .name("my-folder")
                 .image("url")
                 .content("halo")
+                .likes(0)
                 .isPinned(false)
                 .isPrivate(false)
                 .user(user)
@@ -98,8 +99,8 @@ class CommentIntegrationTest {
     @DisplayName("댓글 등록 테스트")
     @WithJwtAuth(email = "test@test.com")
     void INSERT_COMMENT_TEST() throws Exception {
-        CreateCommentRequestDto commentRequestDto =
-                CreateCommentRequestDto.builder()
+        CreateCommentRequest commentRequestDto =
+                CreateCommentRequest.builder()
                         .userId(user.getId())
                         .folderId(folder.getId())
                         .content("thx")
@@ -130,8 +131,8 @@ class CommentIntegrationTest {
     @DisplayName("댓글 수정 테스트")
     @WithJwtAuth(email = "test@test.com")
     void UPDATE_COMMENT_BY_ID_TEST() throws Exception {
-        UpdateCommentRequestDto commentRequestDto =
-                UpdateCommentRequestDto.builder()
+        UpdateCommentRequest commentRequestDto =
+                UpdateCommentRequest.builder()
                         .id(comment.getId())
                         .userId(user.getId())
                         .folderId(folder.getId())

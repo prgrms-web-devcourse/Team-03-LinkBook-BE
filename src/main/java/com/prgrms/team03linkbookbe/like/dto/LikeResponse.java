@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LikeResponseDto {
+public class LikeResponse {
     private Long id;
 
     private FolderResponse folder;
@@ -22,8 +22,8 @@ public class LikeResponseDto {
 
     private LocalDateTime updatedAt;
 
-    public static LikeResponseDto fromEntity(Comment comment) {
-        return LikeResponseDto.builder()
+    public static LikeResponse fromEntity(Comment comment) {
+        return LikeResponse.builder()
                 .id(comment.getId())
                 .folder(FolderResponse.fromEntity(comment.getFolder()))
                 .user(UserResponse.fromEntity(comment.getUser()))

@@ -1,10 +1,10 @@
 package com.prgrms.team03linkbookbe.unit.comment.controller;
 
 import com.prgrms.team03linkbookbe.comment.controller.CommentController;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentResponseDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponseDto;
+import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequest;
+import com.prgrms.team03linkbookbe.comment.dto.CreateCommentResponse;
+import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequest;
+import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponse;
 import com.prgrms.team03linkbookbe.comment.service.CommentService;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
@@ -57,14 +57,14 @@ class CommentControllerTest {
     @DisplayName("댓글 작성 테스트")
     void INSERT_COMMENT_TEST() {
         // given
-        CreateCommentRequestDto requestDto = CreateCommentRequestDto.builder()
+        CreateCommentRequest requestDto = CreateCommentRequest.builder()
                 .content("LGTM")
                 .folderId(1L)
                 .userId(1L)
                 .build();
 
         when(commentService.create(requestDto, user.getEmail()))
-                .thenReturn(CreateCommentResponseDto.builder().id(1L).build());
+                .thenReturn(CreateCommentResponse.builder().id(1L).build());
 
         // when, then
         assertThat(commentController.create(requestDto, jwtAuthentication).getBody().getId())
@@ -75,7 +75,7 @@ class CommentControllerTest {
     @DisplayName("특정 댓글 수정 테스트")
     void UPDATE_COMMENT_TEST() {
         // given
-        UpdateCommentRequestDto requestDto = UpdateCommentRequestDto.builder()
+        UpdateCommentRequest requestDto = UpdateCommentRequest.builder()
                 .id(1L)
                 .content("LGTM")
                 .folderId(1L)
@@ -83,7 +83,7 @@ class CommentControllerTest {
                 .build();
 
         when(commentService.update(requestDto, user.getEmail()))
-                .thenReturn(UpdateCommentResponseDto.builder().id(1L).build());
+                .thenReturn(UpdateCommentResponse.builder().id(1L).build());
 
         // when, then
         assertThat(commentController.update(requestDto, jwtAuthentication).getBody().getId())

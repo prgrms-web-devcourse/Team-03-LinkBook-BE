@@ -1,12 +1,8 @@
 package com.prgrms.team03linkbookbe.comment.controller;
 
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentResponseDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponseDto;
+import com.prgrms.team03linkbookbe.comment.dto.*;
 import com.prgrms.team03linkbookbe.comment.service.CommentService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
-import com.prgrms.team03linkbookbe.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,24 +17,31 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/")
-    public ResponseEntity<CreateCommentResponseDto> create(
-            @Valid @RequestBody CreateCommentRequestDto requestDto,
+    public ResponseEntity<CreateCommentResponse> create(
+            @Valid @RequestBody CreateCommentRequest requestDto,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication
     ) {
 
-        CreateCommentResponseDto responseDto =
+        CreateCommentResponse responseDto =
                 commentService.create(requestDto, jwtAuthentication.email);
 
         return ResponseEntity.ok(responseDto);
     }
 
+    @GetMapping("/folders/{id}")
+    public ResponseEntity<CommentListResponse> getAllByFolderId(
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(commentService.getAllByFolder(id));
+    }
+
     @PutMapping("/")
-    public ResponseEntity<UpdateCommentResponseDto> update(
-            @Valid @RequestBody UpdateCommentRequestDto requestDto,
+    public ResponseEntity<UpdateCommentResponse> update(
+            @Valid @RequestBody UpdateCommentRequest requestDto,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication
     ) {
 
-        UpdateCommentResponseDto responseDto =
+        UpdateCommentResponse responseDto =
                 commentService.update(requestDto, jwtAuthentication.email);
 
         return ResponseEntity.ok(responseDto);

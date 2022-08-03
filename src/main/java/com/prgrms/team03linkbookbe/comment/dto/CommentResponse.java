@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentResponseDto {
+public class CommentResponse {
     private Long id;
 
-    private List<CommentResponseDto> children;
+    private List<CommentResponse> children;
 
     private String content;
 
@@ -25,11 +25,11 @@ public class CommentResponseDto {
 
     private LocalDateTime updatedAt;
 
-    public static CommentResponseDto fromEntity(Comment comment) {
-        return CommentResponseDto.builder()
+    public static CommentResponse fromEntity(Comment comment) {
+        return CommentResponse.builder()
                 .id(comment.getId())
                 .children(comment.getChildren().stream()
-                        .map(CommentResponseDto::fromEntity)
+                        .map(CommentResponse::fromEntity)
                         .collect(Collectors.toList()))
                 .content(comment.getContent())
                 .user(UserResponse.fromEntity(comment.getUser()))

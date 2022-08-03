@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CreateLikeResponseDto {
+public class CreateLikeResponse {
     Long id;
 }

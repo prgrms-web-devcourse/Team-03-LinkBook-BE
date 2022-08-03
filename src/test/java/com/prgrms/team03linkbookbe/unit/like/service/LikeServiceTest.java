@@ -2,7 +2,7 @@ package com.prgrms.team03linkbookbe.unit.like.service;
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
 import com.prgrms.team03linkbookbe.like.entity.Like;
 import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.like.service.LikeService;
@@ -36,7 +36,7 @@ class LikeServiceTest {
 
     @Mock
     FolderRepository folderRepository;
-    CreateLikeRequestDto requestDto1;
+    CreateLikeRequest requestDto1;
 
     Folder folder;
 
@@ -44,7 +44,7 @@ class LikeServiceTest {
 
     @BeforeEach
     void setup() {
-        requestDto1 = CreateLikeRequestDto.builder()
+        requestDto1 = CreateLikeRequest.builder()
                 .folderId(1L)
                 .userId(1L)
                 .build();
@@ -68,7 +68,7 @@ class LikeServiceTest {
         when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        Like like = CreateLikeRequestDto.toEntity(folder, user);
+        Like like = CreateLikeRequest.toEntity(folder, user);
         like.toBuilder().id(1L).build();
         when(likeRepository.save(like)).thenReturn(like.toBuilder().id(1L).build());
 

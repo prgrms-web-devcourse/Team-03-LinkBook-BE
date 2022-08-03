@@ -1,10 +1,10 @@
 package com.prgrms.team03linkbookbe.like.controller;
 
 import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
-import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.folder.dto.FolderResponse;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponseDto;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponse;
 import com.prgrms.team03linkbookbe.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,23 +21,23 @@ public class LikeController {
     private final LikeService likeservice;
 
     @PostMapping("/")
-    public ResponseEntity<CreateLikeResponseDto> create(
-            @Valid @RequestBody CreateLikeRequestDto requestDto,
+    public ResponseEntity<CreateLikeResponse> create(
+            @Valid @RequestBody CreateLikeRequest requestDto,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication
     ) {
 
-        CreateLikeResponseDto responseDto =
+        CreateLikeResponse responseDto =
                 likeservice.create(requestDto, jwtAuthentication.email);
 
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<FolderIdResponse>> getLikedFoldersByUserIds(
+    public ResponseEntity<List<FolderResponse>> getLikedFoldersByUserIds(
             @PathVariable Long id
     ) {
 
-        List<FolderIdResponse> folders = likeservice.getLikedFoldersByUserId(id);
+        List<FolderResponse> folders = likeservice.getLikedFoldersByUserId(id);
 
         return ResponseEntity.ok(folders);
     }

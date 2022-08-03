@@ -3,8 +3,8 @@ package com.prgrms.team03linkbookbe.unit.like.controller;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.like.controller.LikeController;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponseDto;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponse;
 import com.prgrms.team03linkbookbe.like.service.LikeService;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -55,13 +55,13 @@ class LikeControllerTest {
     @DisplayName("댓글 작성 테스트")
     void INSERT_COMMENT_TEST() {
         // given
-        CreateLikeRequestDto requestDto = CreateLikeRequestDto.builder()
+        CreateLikeRequest requestDto = CreateLikeRequest.builder()
                 .folderId(1L)
                 .userId(1L)
                 .build();
 
         when(likeService.create(requestDto, user.getEmail()))
-                .thenReturn(CreateLikeResponseDto.builder().id(1L).build());
+                .thenReturn(CreateLikeResponse.builder().id(1L).build());
 
         // when, then
         assertThat(likeController.create(requestDto, jwtAuthentication).getBody().getId())

@@ -11,7 +11,7 @@ import javax.validation.constraints.Positive;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CreateLikeRequestDto {
+public class CreateLikeRequest {
     @Positive(message = "id는 양수로 입력해주세요.")
     private Long folderId;
 

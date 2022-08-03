@@ -13,6 +13,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -49,6 +51,7 @@ class CommentRepositoryTest {
                 .content("halo")
                 .isPinned(false)
                 .isPrivate(false)
+                .likes(0)
                 .user(user1)
                 .build();
         em.persist(folder);
@@ -108,6 +111,16 @@ class CommentRepositoryTest {
 
         // then
         assertThat(temp.getId()).isEqualTo(comment.getChildren().get(0).getId());
+    }
+
+    @Test
+    @DisplayName("특정 폴더의 댓글을 불러 올 수 있다.")
+    void GET_COMMENTS_BY_FOLDER_TEST() {
+        // given, when
+        List<Comment> list = commentRepository.findAllByFolder(folder);
+
+        // then
+        assertThat(list).hasSize(1);
     }
 
     @Test

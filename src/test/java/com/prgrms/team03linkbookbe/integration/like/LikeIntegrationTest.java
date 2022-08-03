@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
 import com.prgrms.team03linkbookbe.like.entity.Like;
 import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
@@ -94,8 +94,8 @@ class LikeIntegrationTest {
     @DisplayName("좋아요 등록 테스트")
     @WithJwtAuth(email = "test@test.com")
     void INSERT_LIKE_TEST() throws Exception {
-        CreateLikeRequestDto likeRequestDto =
-                CreateLikeRequestDto.builder()
+        CreateLikeRequest likeRequestDto =
+                CreateLikeRequest.builder()
                         .userId(user.getId())
                         .folderId(folder.getId())
                         .build();

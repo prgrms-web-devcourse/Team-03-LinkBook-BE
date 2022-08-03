@@ -1,11 +1,11 @@
 package com.prgrms.team03linkbookbe.like.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
-import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponseDto;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponse;
 import com.prgrms.team03linkbookbe.like.entity.Like;
 import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
@@ -28,35 +28,35 @@ public class LikeService {
     private final FolderRepository folderRepository;
 
     @Transactional
-    public CreateLikeResponseDto create(CreateLikeRequestDto requestDto, String email) {
+    public CreateLikeResponse create(CreateLikeRequest requestDto, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
                 .orElseThrow(NoDataException::new);
 
-        Like like = CreateLikeRequestDto.toEntity(folder, user);
+        Like like = CreateLikeRequest.toEntity(folder, user);
 
         Long id = likeRepository.save(like).getId();
 
         folderRepository.save(folder.toBuilder()
-                .likes(folder.getLikes() + 1)
+                .likes(likeRepository.countByFolderEquals(folder))
                 .build());
 
-        return CreateLikeResponseDto.builder()
+        return CreateLikeResponse.builder()
                 .id(id)
                 .build();
     }
 
     @Transactional
-    public List<FolderIdResponse> getLikedFoldersByUserId(Long userId) {
+    public List<FolderResponse> getLikedFoldersByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(NoDataException::new);
 
         List<Like> likes = likeRepository.findAllByUser(user);
 
         return likes.stream().map(o ->
-                        FolderIdResponse.fromEntity(o.getFolder().getId()))
+                        FolderResponse.fromEntity(o.getFolder()))
                 .collect(Collectors.toList());
     }
 
@@ -71,7 +71,7 @@ public class LikeService {
         likeRepository.delete(like);
 
         folderRepository.save(like.getFolder().toBuilder()
-                .likes(like.getFolder().getLikes() - 1)
+                .likes(likeRepository.countByFolderEquals(like.getFolder()))
                 .build());
 
         return like.getId();

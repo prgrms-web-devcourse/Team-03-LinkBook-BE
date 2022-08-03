@@ -1,9 +1,8 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
-import com.prgrms.team03linkbookbe.comment.dto.CommentResponseDto;
+import com.prgrms.team03linkbookbe.comment.dto.CommentResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.dto.UserResponse;
 import java.time.LocalDateTime;
@@ -41,7 +40,7 @@ public class FolderDetailResponse {
 
     private int likes;
 
-    private List<CommentResponseDto> comments;
+    private List<CommentResponse> comments;
 
     private LocalDateTime createdAt;
 
@@ -60,7 +59,7 @@ public class FolderDetailResponse {
             .user(UserResponse.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
                 Collectors.toList()))
-            .comments(folder.getComments().stream().map(CommentResponseDto::fromEntity).collect(
+            .comments(folder.getComments().stream().map(CommentResponse::fromEntity).collect(
                 Collectors.toList()))
             .createdAt(folder.getCreatedAt())
             .updatedAt(folder.getUpdatedAt())
