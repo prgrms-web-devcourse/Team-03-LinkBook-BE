@@ -55,7 +55,14 @@ class CommentServiceTest {
 
         folder = Folder.builder().build();
 
-        user = User.builder().build();
+        String email = "test@test.com";
+        String password = "test1234!";
+
+        user = User.builder()
+                .id(1L)
+                .email(email)
+                .password(password)
+                .build();
     }
 
     @Test
@@ -70,7 +77,7 @@ class CommentServiceTest {
         when(commentRepository.save(comment)).thenReturn(comment.toBuilder().id(1L).build());
 
         // when, then
-        assertThat(commentService.create(requestDto1, 1L).getId()).isEqualTo(1L);
+        assertThat(commentService.create(requestDto1, user.getEmail()).getId()).isEqualTo(1L);
     }
 
     @Test
@@ -84,7 +91,7 @@ class CommentServiceTest {
         comment.toBuilder().id(1L).build();
         when(commentRepository.save(comment)).thenReturn(comment.toBuilder().id(1L).build());
 
-        Long id = commentService.create(requestDto1, 1L).getId();
+        Long id = commentService.create(requestDto1, user.getEmail()).getId();
         UpdateCommentRequestDto updateCommentRequestDto = UpdateCommentRequestDto.builder()
                 .id(id)
                 .content("updated")
@@ -95,7 +102,7 @@ class CommentServiceTest {
         // when
         when(commentRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(comment));
         UpdateCommentResponseDto updateCommentResponseDto =
-                commentService.update(updateCommentRequestDto, 1L);
+                commentService.update(updateCommentRequestDto, user.getEmail());
 
         // then
         assertThat(updateCommentResponseDto.getId()).isEqualTo(id);
@@ -110,7 +117,7 @@ class CommentServiceTest {
                 .thenReturn(Optional.of(Comment.builder().id(1L).build()));
 
         // when
-        Long deleteComment = commentService.delete(1L, 1L);
+        Long deleteComment = commentService.delete(1L, user.getEmail());
 
         // then
         assertThat(deleteComment).isEqualTo(1L);

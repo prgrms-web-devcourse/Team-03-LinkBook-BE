@@ -27,8 +27,8 @@ public class LikeService {
     private final FolderRepository folderRepository;
 
     @Transactional
-    public CreateLikeResponseDto create(CreateLikeRequestDto requestDto, Long userId) {
-        User user = userRepository.findById(userId)
+    public CreateLikeResponseDto create(CreateLikeRequestDto requestDto, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
@@ -53,8 +53,8 @@ public class LikeService {
     }
 
     @Transactional
-    public Long delete(Long id, Long userId) {
-        User user = userRepository.findById(userId)
+    public Long delete(Long id, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Like like = likeRepository.findByIdAndUser(id, user)

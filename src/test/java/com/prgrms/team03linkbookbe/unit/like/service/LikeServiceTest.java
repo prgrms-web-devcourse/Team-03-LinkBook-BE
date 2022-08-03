@@ -51,7 +51,14 @@ class LikeServiceTest {
 
         folder = Folder.builder().build();
 
-        user = User.builder().build();
+        String email = "test@test.com";
+        String password = "test1234!";
+
+        user = User.builder()
+                .id(1L)
+                .email(email)
+                .password(password)
+                .build();
     }
 
     @Test
@@ -66,7 +73,7 @@ class LikeServiceTest {
         when(likeRepository.save(like)).thenReturn(like.toBuilder().id(1L).build());
 
         // when, then
-        assertThat(likeService.create(requestDto1, 1L).getId()).isEqualTo(1L);
+        assertThat(likeService.create(requestDto1, user.getEmail()).getId()).isEqualTo(1L);
     }
 
     @Test
@@ -78,7 +85,7 @@ class LikeServiceTest {
                 .thenReturn(Optional.of(Like.builder().id(1L).build()));
 
         // when
-        Long deleteLike = likeService.delete(1L, 1L);
+        Long deleteLike = likeService.delete(1L, user.getEmail());
 
         // then
         assertThat(deleteLike).isEqualTo(1L);

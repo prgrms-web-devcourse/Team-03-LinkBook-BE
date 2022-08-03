@@ -1,10 +1,10 @@
 package com.prgrms.team03linkbookbe.like.controller;
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponseDto;
 import com.prgrms.team03linkbookbe.like.service.LikeService;
-import com.prgrms.team03linkbookbe.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,11 +22,11 @@ public class LikeController {
     @PostMapping("/")
     public ResponseEntity<CreateLikeResponseDto> create(
             @Valid @RequestBody CreateLikeRequestDto requestDto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal JwtAuthentication jwtAuthentication
     ) {
 
         CreateLikeResponseDto responseDto =
-                likeservice.create(requestDto, user.getId());
+                likeservice.create(requestDto, jwtAuthentication.email);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -42,8 +42,8 @@ public class LikeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        likeservice.delete(id, user.getId());
+    public ResponseEntity<Long> delete(@PathVariable Long id, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        likeservice.delete(id, jwtAuthentication.email);
         return ResponseEntity.ok(id);
     }
 }

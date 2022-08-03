@@ -26,8 +26,8 @@ public class CommentService {
     private final FolderRepository folderRepository;
 
     @Transactional
-    public CreateCommentResponseDto create(CreateCommentRequestDto requestDto, Long userId) {
-        User user = userRepository.findById(userId)
+    public CreateCommentResponseDto create(CreateCommentRequestDto requestDto, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
@@ -41,8 +41,8 @@ public class CommentService {
     }
 
     @Transactional
-    public UpdateCommentResponseDto update(UpdateCommentRequestDto requestDto, Long userId) {
-        User user = userRepository.findById(userId)
+    public UpdateCommentResponseDto update(UpdateCommentRequestDto requestDto, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
@@ -59,8 +59,8 @@ public class CommentService {
     }
 
     @Transactional
-    public Long delete(Long id, Long userId) {
-        User user = userRepository.findById(userId)
+    public Long delete(Long id, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Comment comment = commentRepository.findByIdAndUser(id, user)
