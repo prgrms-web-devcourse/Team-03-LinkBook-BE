@@ -124,7 +124,6 @@ class CommentRepositoryTest {
 
     @Test
     @DisplayName("해당 아이디의 코멘트를 삭제 할 수 있다.")
-    @Disabled // 빌드 실패 방지
     void DELETE_COMMENT_BY_ID_TEST() {
         // given
         Long id = comment.getId();
