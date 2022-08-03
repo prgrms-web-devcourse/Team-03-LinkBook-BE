@@ -11,6 +11,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +52,10 @@ public class Folder extends BaseDateEntity {
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
+    @PositiveOrZero(message = "좋아요는 0이상 값으로 넣어주세요.")
     @NotNull(message = "좋아요수를 넣어주세요.")
     @Column(name = "likes", nullable = false)
-    private Integer likes;
+    private int likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", referencedColumnName = "id")
