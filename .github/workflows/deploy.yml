@@ -53,13 +53,6 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/linkbook-web .
           docker push ${{ secrets.DOCKER_USERNAME }}/linkbook-web
 
-      # NGINX 어플리케이션 Docker Image 빌드
-      - name: Build Docker Image For NGINX
-        run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME_NGINX }} -p ${{ secrets.DOCKER_PASSWORD_NGINX }}
-          docker build -t ${{ secrets.DOCKER_USERNAME_NGINX }}/nginx .
-          docker push ${{ secrets.DOCKER_USERNAME_NGINX }}/nginx
-
       # 서버에서 어플리케이션 실행 (with Docker)
       - name: EC2 Docker Run
         uses: appleboy/ssh-action@master
@@ -70,13 +63,8 @@ jobs:
           script: |
             docker rm -f $(docker ps -qa)
             docker rmi ${{ secrets.DOCKER_USERNAME }}/linkbook-web
-            docker rmi ${{ secrets.DOCKER_USERNAME_NGINX }}/nginx
-            
             docker pull ${{ secrets.DOCKER_USERNAME }}/linkbook-web
-            docker pull ${{ secrets.DOCKER_USERNAME_NGINX }}/nginx
-            
             docker-compose up -d
-            docker image prune -f
 
       # Github Action 성공 여부 Slack 알림 전송
       - name: action-slack
