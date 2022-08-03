@@ -66,7 +66,7 @@ public class User extends BaseDateEntity {
 
     @Builder
     public User(Long id, String email, String password, String name, String image, String introduce,
-        String role) {
+        String role, LocalDateTime lastLoginAt) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -74,6 +74,7 @@ public class User extends BaseDateEntity {
         this.image = image;
         this.introduce = introduce;
         this.role = role;
+        this.lastLoginAt = lastLoginAt;
     }
 
     public void checkPassword(PasswordEncoder passwordEncoder, String credentials) {

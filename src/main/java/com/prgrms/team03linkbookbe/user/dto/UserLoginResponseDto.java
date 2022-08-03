@@ -14,5 +14,4 @@ public class UserLoginResponseDto {
     private String name;
 
     private String image;
-
 }

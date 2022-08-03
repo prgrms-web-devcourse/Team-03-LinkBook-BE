@@ -1,11 +1,9 @@
 package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.user.dto.LoginRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.LoginResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterResponseDto;
-import com.prgrms.team03linkbookbe.user.dto.UpdateRequestDto;
+import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
@@ -59,7 +57,7 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(UpdateRequestDto requestDto, String email) {
+    public void updateUser(UserUpdateRequestDto requestDto, String email) {
         User user = userRepository.findByEmailFetchJoinInterests(email)
             .orElseThrow(() -> new NoDataException());
         User updateUser = requestDto.toEntity();
