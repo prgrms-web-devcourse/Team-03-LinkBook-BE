@@ -11,4 +11,5 @@ public class NoDataException extends RuntimeException{
         this.exceptionCode = ExceptionCode.NO_DATA_IN_DB;
     }
 
+
 }

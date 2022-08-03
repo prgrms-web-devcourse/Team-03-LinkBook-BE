@@ -4,6 +4,7 @@ import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
+import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
 import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -54,11 +57,11 @@ public class Folder extends BaseDateEntity {
     @Column(name = "origin_id", nullable = true)
     private Long originId;
 
-    @NotBlank(message = "폴더의 핀여부를 선택해주세요")
+    @NotNull(message = "폴더의 핀여부를 선택해주세요")
     @Column(name = "is_pinned", nullable = false)
     private Boolean isPinned;
 
-    @NotBlank(message = "폴더의 공개여부를 선택해주세요")
+    @NotNull(message = "폴더의 공개여부를 선택해주세요")
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
@@ -66,14 +69,17 @@ public class Folder extends BaseDateEntity {
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "folder")
     private List<Bookmark> bookmarks = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "folder")
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "folder")
-    private List<Tag> tags = new ArrayList<>();
+    private List<FolderTag> folderTags = new ArrayList<>();
 
     public void modifyFolder(CreateFolderRequest dto) {
         this.name = dto.getName();

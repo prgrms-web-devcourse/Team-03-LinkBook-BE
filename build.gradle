@@ -35,6 +35,10 @@ jacocoTestReport {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'com.auth0:java-jwt:3.19.2'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.projectlombok:lombok:1.18.22'
@@ -43,6 +47,8 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {

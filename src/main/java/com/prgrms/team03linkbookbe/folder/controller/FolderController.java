@@ -7,6 +7,7 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -46,7 +48,6 @@ public class FolderController {
         return ResponseEntity.ok(create);
     }
 
-    // TODO : 본인인증
     @PutMapping("/api/folder/{id}")
     public ResponseEntity<FolderIdResponse> update(@PathVariable Long id,
         @Valid @RequestBody CreateFolderRequest createFolderRequest,
@@ -55,8 +56,8 @@ public class FolderController {
         return ResponseEntity.ok(update);
     }
 
-    // TODO : 본인인증
     @DeleteMapping("/api/folder/{id}")
+    @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
         folderService.delete(user.getId(), id);
     }

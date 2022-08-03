@@ -6,6 +6,7 @@ import com.prgrms.team03linkbookbe.user.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Builder
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 public class CommentResponseDto {
     private Long id;
 
-    private Long parentId;
+    private List<Comment> children;
 
     private String content;
 
@@ -29,7 +30,6 @@ public class CommentResponseDto {
     public static CommentResponseDto fromEntity(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .parentId(comment.getParentId())
                 .content(comment.getContent())
                 .folder(comment.getFolder())
                 .user(comment.getUser())

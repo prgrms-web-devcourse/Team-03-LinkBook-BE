@@ -29,8 +29,6 @@ public class CreateCommentRequestDto {
     public static Comment toEntity(Folder folder, User user,
                                    CreateCommentRequestDto commentRequestDto) {
         return Comment.builder()
-                .parentId(commentRequestDto.getParentId() != null ?
-                        commentRequestDto.getParentId() : null)
                 .content(commentRequestDto.getContent())
                 .folder(folder)
                 .user(user)
