@@ -88,6 +88,7 @@ class LikeIntegrationTest {
         userRepository.deleteAll();
     }
 
+    @Disabled
     @Test
     @Order(1)
     @DisplayName("좋아요 등록 테스트")
@@ -116,6 +117,7 @@ class LikeIntegrationTest {
                 );
     }
 
+    @Disabled
     @Test
     @Order(2)
     @DisplayName("좋아요 삭제 테스트")

@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -91,6 +92,7 @@ class CommentIntegrationTest {
         userRepository.deleteAll();
     }
 
+    @Disabled
     @Test
     @Order(1)
     @DisplayName("댓글 등록 테스트")
@@ -122,6 +124,7 @@ class CommentIntegrationTest {
                 );
     }
 
+    @Disabled
     @Test
     @Order(2)
     @DisplayName("댓글 수정 테스트")
@@ -156,6 +159,7 @@ class CommentIntegrationTest {
                 );
     }
 
+    @Disabled
     @Test
     @Order(3)
     @DisplayName("댓글 삭제 테스트")
