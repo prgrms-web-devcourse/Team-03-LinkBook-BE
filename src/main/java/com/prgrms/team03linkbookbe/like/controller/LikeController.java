@@ -1,5 +1,6 @@
 package com.prgrms.team03linkbookbe.like.controller;
 
+import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
@@ -32,11 +33,11 @@ public class LikeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<Folder>> getLikedFoldersByUserIds(
+    public ResponseEntity<List<FolderIdResponse>> getLikedFoldersByUserIds(
             @PathVariable Long id
     ) {
 
-        List<Folder> folders = likeservice.getLikedFoldersByUserId(id);
+        List<FolderIdResponse> folders = likeservice.getLikedFoldersByUserId(id);
 
         return ResponseEntity.ok(folders);
     }

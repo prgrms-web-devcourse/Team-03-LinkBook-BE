@@ -1,6 +1,7 @@
 package com.prgrms.team03linkbookbe.like.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
+import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
@@ -36,19 +37,26 @@ public class LikeService {
 
         Like like = CreateLikeRequestDto.toEntity(folder, user);
 
+        Long id = likeRepository.save(like).getId();
+
+        folderRepository.save(folder.toBuilder()
+                .likes(folder.getLikes() + 1)
+                .build());
+
         return CreateLikeResponseDto.builder()
-                .id(likeRepository.save(like).getId())
+                .id(id)
                 .build();
     }
 
     @Transactional
-    public List<Folder> getLikedFoldersByUserId(Long userId) {
+    public List<FolderIdResponse> getLikedFoldersByUserId(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(NoDataException::new);
 
         List<Like> likes = likeRepository.findAllByUser(user);
 
-        return likes.stream().map(Like::getFolder)
+        return likes.stream().map(o ->
+                        FolderIdResponse.fromEntity(o.getFolder().getId()))
                 .collect(Collectors.toList());
     }
 
@@ -61,6 +69,10 @@ public class LikeService {
                 .orElseThrow(NoDataException::new);
 
         likeRepository.delete(like);
+
+        folderRepository.save(like.getFolder().toBuilder()
+                .likes(like.getFolder().getLikes() - 1)
+                .build());
 
         return like.getId();
     }

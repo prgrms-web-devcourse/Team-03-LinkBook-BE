@@ -1,11 +1,12 @@
 package com.prgrms.team03linkbookbe.comment.dto;
 
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
-import com.prgrms.team03linkbookbe.user.entity.User;
+import com.prgrms.team03linkbookbe.user.dto.UserResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -14,11 +15,11 @@ import java.util.List;
 public class CommentResponseDto {
     private Long id;
 
-    private List<Comment> children;
+    private List<CommentResponseDto> children;
 
     private String content;
 
-    private User user;
+    private UserResponse user;
 
     private LocalDateTime createdAt;
 
@@ -27,9 +28,11 @@ public class CommentResponseDto {
     public static CommentResponseDto fromEntity(Comment comment) {
         return CommentResponseDto.builder()
                 .id(comment.getId())
-                .children(comment.getChildren())
+                .children(comment.getChildren().stream()
+                        .map(CommentResponseDto::fromEntity)
+                        .collect(Collectors.toList()))
                 .content(comment.getContent())
-                .user(comment.getUser())
+                .user(UserResponse.fromEntity(comment.getUser()))
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .build();

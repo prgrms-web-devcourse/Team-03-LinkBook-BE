@@ -1,12 +1,11 @@
 package com.prgrms.team03linkbookbe.like.dto;
 
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
-import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.user.entity.User;
+import com.prgrms.team03linkbookbe.folder.dto.FolderResponse;
+import com.prgrms.team03linkbookbe.user.dto.UserResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Builder
@@ -15,9 +14,9 @@ import java.util.List;
 public class LikeResponseDto {
     private Long id;
 
-    private Folder folder;
+    private FolderResponse folder;
 
-    private User user;
+    private UserResponse user;
 
     private LocalDateTime createdAt;
 
@@ -26,8 +25,8 @@ public class LikeResponseDto {
     public static LikeResponseDto fromEntity(Comment comment) {
         return LikeResponseDto.builder()
                 .id(comment.getId())
-                .folder(comment.getFolder())
-                .user(comment.getUser())
+                .folder(FolderResponse.fromEntity(comment.getFolder()))
+                .user(UserResponse.fromEntity(comment.getUser()))
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .build();
