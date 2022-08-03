@@ -5,13 +5,13 @@ import com.prgrms.team03linkbookbe.jwt.JwtAuthenticationToken;
 import com.prgrms.team03linkbookbe.user.dto.LoginRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.LoginResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.RegisterResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.UpdateRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -32,7 +32,8 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @GetMapping("/api/users/me")
-    public ResponseEntity<UserResponseDto> me(@AuthenticationPrincipal JwtAuthentication authentication) {
+    public ResponseEntity<UserResponseDto> me(
+        @AuthenticationPrincipal JwtAuthentication authentication) {
         UserResponseDto responseDto = userService.findByEmail(authentication.email);
         return ResponseEntity.ok(responseDto);
     }
@@ -44,10 +45,14 @@ public class UserController {
         Authentication authentication = authenticationManager.authenticate(jwtAuthenticationToken);
         JwtAuthenticationToken authenticated = (JwtAuthenticationToken) authentication;
         JwtAuthentication principal = (JwtAuthentication) authenticated.getPrincipal();
-        LoginResponseDto responseDto = LoginResponseDto.builder()
-            .accessToken(principal.accessToken)
-            .refreshToken(principal.refreshToken)
-            .build();
+        User user = (User) authenticated.getDetails();
+        Boolean isFirstLogin = false;
+        if(user.getLastLoginAt() == null) {
+            isFirstLogin = true;
+        }
+        userService.updateLastLoginAt(user);
+        LoginResponseDto responseDto = LoginResponseDto.fromEntity(principal.accessToken,
+            principal.refreshToken, user, isFirstLogin);
         return ResponseEntity.ok().body(responseDto);
     }
 
@@ -58,7 +63,8 @@ public class UserController {
     }
 
     @PatchMapping("/api/users")
-    public ResponseEntity<Void> update(@RequestBody UpdateRequestDto requestDto, @AuthenticationPrincipal JwtAuthentication authentication) {
+    public ResponseEntity<Void> update(@RequestBody UpdateRequestDto requestDto,
+        @AuthenticationPrincipal JwtAuthentication authentication) {
         userService.updateUser(requestDto, authentication.email);
         return ResponseEntity.ok().build();
     }

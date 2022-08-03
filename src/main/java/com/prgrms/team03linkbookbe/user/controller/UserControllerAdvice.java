@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice("com.prgrms.team03linkbookbe.user")
 public class UserControllerAdvice {
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DuplicatedEmailException.class)
     public ExceptionResponse handleDuplicatedEmailException(DuplicatedEmailException e) {
         log.info("duplicated email exception", e);
         return new ExceptionResponse(e.getExceptionCode());
     }
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(LoginFailureException.class)
     public ExceptionResponse handleLoginFailureException(LoginFailureException e) {
         log.info("login failure exception", e);
