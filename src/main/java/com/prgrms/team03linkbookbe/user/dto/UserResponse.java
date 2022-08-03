@@ -1,16 +1,13 @@
 package com.prgrms.team03linkbookbe.user.dto;
 
 import com.prgrms.team03linkbookbe.user.entity.User;
-import javax.persistence.Column;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
 public class UserResponse {
+
     private Long id;
 
     private String name;

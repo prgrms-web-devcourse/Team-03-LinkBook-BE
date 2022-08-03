@@ -33,6 +33,10 @@ public class Interest {
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
+    public void changeUser(User user) {
+        this.user = user;
+    }
+
     @Builder
     public Interest(Long id, Field field, User user) {
         this.id = id;
