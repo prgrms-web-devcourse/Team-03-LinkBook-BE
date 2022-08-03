@@ -42,10 +42,10 @@ public class RefreshTokenService {
             Claims claims = jwt.verify(refreshToken);
 
             User user = userRepository.findByEmail(claims.getEmail())
-                .orElseThrow(() -> new IllegalTokenException());
+                .orElseThrow(IllegalTokenException::new);
 
             RefreshToken findRefreshToken = refreshTokenRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new IllegalTokenException());
+                .orElseThrow(IllegalTokenException::new);
 
             if (!findRefreshToken.getToken().equals(refreshToken)) {
                 throw new IllegalTokenException();
@@ -66,7 +66,7 @@ public class RefreshTokenService {
     public String issueRefreshToken(Claims claims) {
         String newRefreshToken = jwt.createRefreshToken(claims);
         User user = userRepository.findByEmail(claims.getEmail())
-            .orElseThrow(() -> new NoDataException());
+            .orElseThrow(NoDataException::new);
 
         refreshTokenRepository.findByUserId(user.getId())
             .ifPresentOrElse(

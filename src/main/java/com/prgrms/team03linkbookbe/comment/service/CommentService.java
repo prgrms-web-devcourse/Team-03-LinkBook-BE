@@ -1,9 +1,6 @@
 package com.prgrms.team03linkbookbe.comment.service;
 
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentResponseDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponseDto;
+import com.prgrms.team03linkbookbe.comment.dto.*;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
@@ -16,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,23 +26,39 @@ public class CommentService {
     private final FolderRepository folderRepository;
 
     @Transactional
-    public CreateCommentResponseDto create(CreateCommentRequestDto requestDto, Long userId) {
-        User user = userRepository.findById(userId)
+    public CreateCommentResponse create(CreateCommentRequest requestDto, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
                 .orElseThrow(NoDataException::new);
 
-        Comment comment = CreateCommentRequestDto.toEntity(folder, user, requestDto);
+        Comment comment = CreateCommentRequest.toEntity(folder, user, requestDto);
 
-        return CreateCommentResponseDto.builder()
+        return CreateCommentResponse.builder()
                 .id(commentRepository.save(comment).getId())
                 .build();
     }
 
     @Transactional
-    public UpdateCommentResponseDto update(UpdateCommentRequestDto requestDto, Long userId) {
-        User user = userRepository.findById(userId)
+    public CommentListResponse getAllByFolder(Long folderId) {
+        Folder folder = folderRepository.findById(folderId)
+                .orElseThrow(NoDataException::new);
+
+        List<CommentResponse> list = commentRepository.findAllByFolder(folder).stream()
+                .map(CommentResponse::fromEntity).collect(Collectors.toList());
+
+        Boolean isPrivate = folder.getIsPrivate();
+
+        return CommentListResponse.builder()
+                .comments(list)
+                .isPrivate(isPrivate)
+                .build();
+    }
+
+    @Transactional
+    public UpdateCommentResponse update(UpdateCommentRequest requestDto, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
@@ -51,16 +67,16 @@ public class CommentService {
         Comment comment = commentRepository.findByIdAndUser(requestDto.getId(), user)
                 .orElseThrow(NoDataException::new);
 
-        Comment updated = UpdateCommentRequestDto.toEntity(folder, user, comment);
+        Comment updated = UpdateCommentRequest.toEntity(folder, user, comment);
 
         Comment save = commentRepository.save(updated);
 
-        return UpdateCommentResponseDto.builder().id(save.getId()).build();
+        return UpdateCommentResponse.builder().id(save.getId()).build();
     }
 
     @Transactional
-    public Long delete(Long id, Long userId) {
-        User user = userRepository.findById(userId)
+    public Long delete(Long id, String email) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(NoDataException::new);
 
         Comment comment = commentRepository.findByIdAndUser(id, user)

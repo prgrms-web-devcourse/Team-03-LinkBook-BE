@@ -1,13 +1,12 @@
-package com.prgrms.team03linkbookbe.integration.comment;
+package com.prgrms.team03linkbookbe.integration.like;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequest;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequest;
-import com.prgrms.team03linkbookbe.comment.entity.Comment;
-import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
+import com.prgrms.team03linkbookbe.like.entity.Like;
+import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import org.junit.jupiter.api.*;
@@ -25,18 +24,16 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class CommentIntegrationTest {
+class LikeIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
@@ -44,7 +41,7 @@ class CommentIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private CommentRepository commentRepository;
+    private LikeRepository likeRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -54,7 +51,7 @@ class CommentIntegrationTest {
 
     User user;
     Folder folder;
-    Comment comment;
+    Like like;
 
     @BeforeAll
     void setup() {
@@ -71,24 +68,22 @@ class CommentIntegrationTest {
                 .name("my-folder")
                 .image("url")
                 .content("halo")
-                .likes(0)
                 .isPinned(false)
                 .isPrivate(false)
                 .user(user)
                 .build();
         folderRepository.save(folder);
 
-        comment = Comment.builder()
-                .content("hi")
+        like = Like.builder()
                 .folder(folder)
                 .user(user)
                 .build();
-        commentRepository.save(comment);
+        likeRepository.save(like);
     }
 
     @AfterAll
     void teardown() {
-        commentRepository.deleteAll();
+        likeRepository.deleteAll();
         folderRepository.deleteAll();
         userRepository.deleteAll();
     }
@@ -96,26 +91,23 @@ class CommentIntegrationTest {
     @Disabled
     @Test
     @Order(1)
-    @DisplayName("댓글 등록 테스트")
+    @DisplayName("좋아요 등록 테스트")
     @WithJwtAuth(email = "test@test.com")
-    void INSERT_COMMENT_TEST() throws Exception {
-        CreateCommentRequest commentRequestDto =
-                CreateCommentRequest.builder()
+    void INSERT_LIKE_TEST() throws Exception {
+        CreateLikeRequest likeRequestDto =
+                CreateLikeRequest.builder()
                         .userId(user.getId())
                         .folderId(folder.getId())
-                        .content("thx")
                         .build();
-        this.mockMvc.perform(post("/api/comments/")
+        this.mockMvc.perform(post("/api/likes")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(commentRequestDto)))
+                        .content(objectMapper.writeValueAsString(likeRequestDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
-                        document("register-comment",
+                        document("register-like",
                                 requestFields(
-                                        fieldWithPath("content").type(JsonFieldType.STRING)
-                                                .description("content"),
                                         fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                                 .description("userId"),
                                         fieldWithPath("folderId").type(JsonFieldType.NUMBER)
@@ -128,54 +120,19 @@ class CommentIntegrationTest {
     @Disabled
     @Test
     @Order(2)
-    @DisplayName("댓글 수정 테스트")
+    @DisplayName("좋아요 삭제 테스트")
     @WithJwtAuth(email = "test@test.com")
-    void UPDATE_COMMENT_BY_ID_TEST() throws Exception {
-        UpdateCommentRequest commentRequestDto =
-                UpdateCommentRequest.builder()
-                        .id(comment.getId())
-                        .userId(user.getId())
-                        .folderId(folder.getId())
-                        .content("thx")
-                        .build();
-        this.mockMvc.perform(put("/api/comments/")
-                        .characterEncoding(StandardCharsets.UTF_8)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(commentRequestDto)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andDo(
-                        document("modify-comment",
-                                requestFields(
-                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER)
-                                                .description("commentId"),
-                                        fieldWithPath("content").type(JsonFieldType.STRING)
-                                                .description("content"),
-                                        fieldWithPath("userId").type(JsonFieldType.NUMBER)
-                                                .description("userId"),
-                                        fieldWithPath("folderId").type(JsonFieldType.NUMBER)
-                                                .description("folderId")
-                                )
-                        )
-                );
-    }
-
-    @Disabled
-    @Test
-    @Order(3)
-    @DisplayName("댓글 삭제 테스트")
-    @WithJwtAuth(email = "test@test.com")
-    void DELETE_COMMENT_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(delete("/api/comments/{id}", comment.getId())
+    void DELETE_LIKE_BY_ID_TEST() throws Exception {
+        this.mockMvc.perform(put("/api/likes/{id}", like.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
-                        document("remove-by-id-comment",
+                        document("remove-by-id-like",
                                 requestFields(
-                                        fieldWithPath("commentId").type(JsonFieldType.NUMBER)
-                                                .description("commentId")
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER)
+                                                .description("likeId")
                                 )
                         )
                 );

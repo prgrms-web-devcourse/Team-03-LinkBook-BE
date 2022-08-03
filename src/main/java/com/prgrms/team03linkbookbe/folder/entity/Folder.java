@@ -5,33 +5,20 @@ import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
-import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.user.entity.User;
+import lombok.*;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
+@Builder(toBuilder = true)
 @Table(name = "folder")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -64,6 +51,11 @@ public class Folder extends BaseDateEntity {
     @NotNull(message = "폴더의 공개여부를 선택해주세요")
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
+
+    @PositiveOrZero(message = "좋아요는 0이상 값으로 넣어주세요.")
+    @NotNull(message = "좋아요수를 넣어주세요.")
+    @Column(name = "likes", nullable = false)
+    private int likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", referencedColumnName = "id")

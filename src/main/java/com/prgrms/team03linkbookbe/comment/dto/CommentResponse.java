@@ -1,38 +1,38 @@
 package com.prgrms.team03linkbookbe.comment.dto;
 
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
-import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.user.entity.User;
+import com.prgrms.team03linkbookbe.user.dto.UserResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CommentResponseDto {
+public class CommentResponse {
     private Long id;
 
-    private List<Comment> children;
+    private List<CommentResponse> children;
 
     private String content;
 
-    private Folder folder;
-
-    private User user;
+    private UserResponse user;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    public static CommentResponseDto fromEntity(Comment comment) {
-        return CommentResponseDto.builder()
+    public static CommentResponse fromEntity(Comment comment) {
+        return CommentResponse.builder()
                 .id(comment.getId())
+                .children(comment.getChildren().stream()
+                        .map(CommentResponse::fromEntity)
+                        .collect(Collectors.toList()))
                 .content(comment.getContent())
-                .folder(comment.getFolder())
-                .user(comment.getUser())
+                .user(UserResponse.fromEntity(comment.getUser()))
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
                 .build();

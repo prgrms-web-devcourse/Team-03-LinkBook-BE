@@ -1,13 +1,11 @@
-package com.prgrms.team03linkbookbe.unit.comment.controller;
+package com.prgrms.team03linkbookbe.unit.like.controller;
 
-import com.prgrms.team03linkbookbe.comment.controller.CommentController;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequest;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentResponse;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequest;
-import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentResponse;
-import com.prgrms.team03linkbookbe.comment.service.CommentService;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
+import com.prgrms.team03linkbookbe.like.controller.LikeController;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponse;
+import com.prgrms.team03linkbookbe.like.service.LikeService;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,12 +21,12 @@ import static org.mockito.Mockito.when;
 
 @Slf4j
 @ExtendWith(MockitoExtension.class)
-class CommentControllerTest {
+class LikeControllerTest {
     @InjectMocks
-    CommentController commentController;
+    LikeController likeController;
 
     @Mock
-    CommentService commentService;
+    LikeService likeService;
 
     Folder folder;
     User user;
@@ -57,36 +55,16 @@ class CommentControllerTest {
     @DisplayName("댓글 작성 테스트")
     void INSERT_COMMENT_TEST() {
         // given
-        CreateCommentRequest requestDto = CreateCommentRequest.builder()
-                .content("LGTM")
+        CreateLikeRequest requestDto = CreateLikeRequest.builder()
                 .folderId(1L)
                 .userId(1L)
                 .build();
 
-        when(commentService.create(requestDto, user.getEmail()))
-                .thenReturn(CreateCommentResponse.builder().id(1L).build());
+        when(likeService.create(requestDto, user.getEmail()))
+                .thenReturn(CreateLikeResponse.builder().id(1L).build());
 
         // when, then
-        assertThat(commentController.create(requestDto, jwtAuthentication).getBody().getId())
-                .isEqualTo(1L);
-    }
-
-    @Test
-    @DisplayName("특정 댓글 수정 테스트")
-    void UPDATE_COMMENT_TEST() {
-        // given
-        UpdateCommentRequest requestDto = UpdateCommentRequest.builder()
-                .id(1L)
-                .content("LGTM")
-                .folderId(1L)
-                .userId(1L)
-                .build();
-
-        when(commentService.update(requestDto, user.getEmail()))
-                .thenReturn(UpdateCommentResponse.builder().id(1L).build());
-
-        // when, then
-        assertThat(commentController.update(requestDto, jwtAuthentication).getBody().getId())
+        assertThat(likeController.create(requestDto, jwtAuthentication).getBody().getId())
                 .isEqualTo(1L);
     }
 
@@ -94,9 +72,9 @@ class CommentControllerTest {
     @DisplayName("특정 댓글 삭제 테스트")
     void DELETE_COMMENT_TEST() {
         // given
-        when(commentService.delete(1L, user.getEmail())).thenReturn(null);
+        when(likeService.delete(1L, user.getEmail())).thenReturn(null);
 
         // when, then
-        assertThat(commentController.delete(1L, jwtAuthentication).getBody()).isEqualTo(1L);
+        assertThat(likeController.delete(1L, jwtAuthentication).getBody()).isEqualTo(1L);
     }
 }
