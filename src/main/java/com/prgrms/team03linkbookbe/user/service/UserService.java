@@ -24,7 +24,7 @@ public class UserService {
 
     public User login(String email, String credentials) {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new LoginFailureException());
+            .orElseThrow(LoginFailureException::new);
         user.checkPassword(passwordEncoder, credentials);
         return user;
     }
@@ -39,14 +39,14 @@ public class UserService {
 
     public UserResponseDto findByEmail(String email) {
         return userRepository.findByEmail(email)
-            .map(user -> UserResponseDto.fromEntity(user))
-            .orElseThrow(() -> new NoDataException());
+            .map(UserResponseDto::fromEntity)
+            .orElseThrow(NoDataException::new);
     }
 
     @Transactional
-    public void updateUser (UpdateRequestDto requestDto, String email) {
+    public void updateUser(UpdateRequestDto requestDto, String email) {
         User user = userRepository.findByEmailFetchJoinInterests(email)
-            .orElseThrow(() -> new NoDataException());
+            .orElseThrow(NoDataException::new);
         user.updateUser(requestDto.getName(), requestDto.getImage(), requestDto.getIntroduce(), requestDto.getInterests());
     }
 

@@ -32,7 +32,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @GetMapping("/api/users/me")
-    public ResponseEntity<UserResponseDto> me (@AuthenticationPrincipal JwtAuthentication authentication) {
+    public ResponseEntity<UserResponseDto> me(@AuthenticationPrincipal JwtAuthentication authentication) {
         UserResponseDto responseDto = userService.findByEmail(authentication.email);
         return ResponseEntity.ok(responseDto);
     }

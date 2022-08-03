@@ -69,12 +69,15 @@ public class Folder extends BaseDateEntity {
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "folder")
     private List<Bookmark> bookmarks = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "folder")
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "folder")
     private List<FolderTag> folderTags = new ArrayList<>();
 
