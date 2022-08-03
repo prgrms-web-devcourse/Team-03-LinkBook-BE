@@ -73,7 +73,6 @@ class CommentRepositoryTest {
 
     @Test
     @DisplayName("특정 폴더에 코멘트를 등록 할 수 있다.")
-    @Disabled // 빌드 실패 방지
     void INSERT_COMMENT_BY_ID_TEST() {
         // given
         Comment commentEntity = Comment.builder()
@@ -91,7 +90,6 @@ class CommentRepositoryTest {
 
     @Test
     @DisplayName("특정 코멘트에 답글을 등록 할 수 있다.")
-    @Disabled // 빌드 실패 방지
     void INSERT_REPLY_COMMENT_BY_ID_TEST() {
         // given
         Comment temp = Comment.builder()
@@ -111,7 +109,6 @@ class CommentRepositoryTest {
 
     @Test
     @DisplayName("해당 아이디의 코멘트를 수정 할 수 있다.")
-    @Disabled // 빌드 실패 방지
     void UPDATE_COMMENT_BY_ID_TEST() {
         // given
         Long id = comment.getId();
