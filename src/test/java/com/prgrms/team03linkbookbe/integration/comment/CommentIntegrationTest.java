@@ -1,11 +1,11 @@
 package com.prgrms.team03linkbookbe.integration.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
 import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
 import com.prgrms.team03linkbookbe.comment.dto.UpdateCommentRequestDto;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
-import com.prgrms.team03linkbookbe.comment.service.CommentService;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
@@ -17,7 +17,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
@@ -26,6 +25,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -94,6 +94,7 @@ class CommentIntegrationTest {
     @Test
     @Order(1)
     @DisplayName("댓글 등록 테스트")
+    @WithJwtAuth(email = "test@test.com")
     void INSERT_COMMENT_TEST() throws Exception {
         CreateCommentRequestDto commentRequestDto =
                 CreateCommentRequestDto.builder()
@@ -101,7 +102,7 @@ class CommentIntegrationTest {
                         .folderId(folder.getId())
                         .content("thx")
                         .build();
-        this.mockMvc.perform(post("/api/comments")
+        this.mockMvc.perform(post("/api/comments/")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDto)))
@@ -124,6 +125,7 @@ class CommentIntegrationTest {
     @Test
     @Order(2)
     @DisplayName("댓글 수정 테스트")
+    @WithJwtAuth(email = "test@test.com")
     void UPDATE_COMMENT_BY_ID_TEST() throws Exception {
         UpdateCommentRequestDto commentRequestDto =
                 UpdateCommentRequestDto.builder()
@@ -132,7 +134,7 @@ class CommentIntegrationTest {
                         .folderId(folder.getId())
                         .content("thx")
                         .build();
-        this.mockMvc.perform(put("/api/comments")
+        this.mockMvc.perform(put("/api/comments/")
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDto)))
@@ -157,8 +159,9 @@ class CommentIntegrationTest {
     @Test
     @Order(3)
     @DisplayName("댓글 삭제 테스트")
+    @WithJwtAuth(email = "test@test.com")
     void DELETE_COMMENT_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(put("/api/comments/{id}", comment.getId())
+        this.mockMvc.perform(delete("/api/comments/{id}", comment.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

@@ -1,8 +1,7 @@
 package com.prgrms.team03linkbookbe.integration.like;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prgrms.team03linkbookbe.comment.dto.CreateCommentRequestDto;
-import com.prgrms.team03linkbookbe.comment.entity.Comment;
+import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
@@ -92,6 +91,7 @@ class LikeIntegrationTest {
     @Test
     @Order(1)
     @DisplayName("좋아요 등록 테스트")
+    @WithJwtAuth(email = "test@test.com")
     void INSERT_LIKE_TEST() throws Exception {
         CreateLikeRequestDto likeRequestDto =
                 CreateLikeRequestDto.builder()
@@ -119,6 +119,7 @@ class LikeIntegrationTest {
     @Test
     @Order(2)
     @DisplayName("좋아요 삭제 테스트")
+    @WithJwtAuth(email = "test@test.com")
     void DELETE_LIKE_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(put("/api/likes/{id}", like.getId())
                         .characterEncoding(StandardCharsets.UTF_8)

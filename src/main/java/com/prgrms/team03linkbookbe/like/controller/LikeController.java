@@ -3,8 +3,6 @@ package com.prgrms.team03linkbookbe.like.controller;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequestDto;
 import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponseDto;
-import com.prgrms.team03linkbookbe.like.dto.UpdateLikeRequestDto;
-import com.prgrms.team03linkbookbe.like.dto.UpdateLikeResponseDto;
 import com.prgrms.team03linkbookbe.like.service.LikeService;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import lombok.RequiredArgsConstructor;
