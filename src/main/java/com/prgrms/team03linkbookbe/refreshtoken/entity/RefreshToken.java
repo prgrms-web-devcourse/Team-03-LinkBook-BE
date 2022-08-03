@@ -24,22 +24,22 @@ public class RefreshToken extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, columnDefinition = "varchar(500)")
-    private String value;
+    @Column(name = "token", nullable = false, columnDefinition = "varchar(500)")
+    private String token;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id", nullable = false)
+    @JoinColumn(name = "users_id")
     private User user;
 
     @Builder
-    public RefreshToken(Long id, String value, User user) {
+    public RefreshToken(Long id, String token, User user) {
         this.id = id;
-        this.value = value;
+        this.token = token;
         this.user = user;
     }
 
-    public void changeValue(String value) {
-        this.value = value;
+    public void changeToken(String token) {
+        this.token = token;
     }
 
 }

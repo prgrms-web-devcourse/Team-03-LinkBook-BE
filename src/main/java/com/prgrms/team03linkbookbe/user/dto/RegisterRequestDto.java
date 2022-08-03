@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 @Builder
@@ -21,12 +20,9 @@ public class RegisterRequestDto {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
-    public User toEntity(PasswordEncoder passwordEncoder) {
+    public User toEntity() {
         return User.builder()
-            .email(this.getEmail())
-            .password(passwordEncoder.encode(password))
-            .name("익명의사용자")
-            .role("ROLE_USER")
+            .email(email)
             .build();
     }
 
