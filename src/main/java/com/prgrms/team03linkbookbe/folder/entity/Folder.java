@@ -65,6 +65,10 @@ public class Folder extends BaseDateEntity {
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
+    @NotNull(message = "좋아요수를 넣어주세요.")
+    @Column(name = "likes", nullable = false)
+    private Integer likes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
