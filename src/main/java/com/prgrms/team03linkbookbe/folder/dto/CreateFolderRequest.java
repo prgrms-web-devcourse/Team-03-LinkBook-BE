@@ -6,6 +6,7 @@ import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.Set;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class CreateFolderRequest {
 
     @NotBlank(message = "폴더의 이름을 입력해주세요")
-    private String name;
+    private String title;
 
     @NotBlank(message = "폴더의 이미지를 설정해주세요")
     private String image;
@@ -25,10 +26,10 @@ public class CreateFolderRequest {
 
     private Long originId;
 
-    @NotBlank(message = "폴더 고정여부를 설정해주세요")
+    @NotNull(message = "폴더 고정여부를 설정해주세요")
     private Boolean isPinned;
 
-    @NotBlank(message = "폴더 공개여부를 설정해주세요")
+    @NotNull(message = "폴더 공개여부를 설정해주세요")
     private Boolean isPrivate;
 
     private Set<TagCategory> tags;
@@ -41,7 +42,8 @@ public class CreateFolderRequest {
 
     public Folder toEntity() {
         return Folder.builder()
-            .name(this.getName())
+            .likes(0)
+            .title(this.getTitle())
             .image(this.getImage())
             .content(this.getContent())
             .originId(this.getOriginId())

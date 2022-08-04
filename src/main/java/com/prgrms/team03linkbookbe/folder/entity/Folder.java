@@ -9,6 +9,7 @@ import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,9 +20,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -43,8 +47,8 @@ public class Folder extends BaseDateEntity {
 
     @Size(max = 50, message = "폴더의 이름은 50자 이하로 입력해주세요")
     @NotBlank(message = "폴더의 이름을 입력해주세요")
-    @Column(name = "name", nullable = false, columnDefinition = "varchar(50)")
-    private String name;
+    @Column(name = "title", nullable = false, columnDefinition = "varchar(50)")
+    private String title;
 
     @NotBlank(message = "폴더의 이미지를 설정해주세요")
     @Column(name = "image", nullable = false, columnDefinition = "varchar(1000)")
@@ -65,21 +69,27 @@ public class Folder extends BaseDateEntity {
     @Column(name = "is_private", nullable = false)
     private Boolean isPrivate;
 
+    @PositiveOrZero
+    @NotNull(message = "좋아요수를 넣어주세요.")
+    @Column(name = "likes", nullable = false)
+    private int likes;
+
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "folder")
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<Bookmark> bookmarks = new ArrayList<>();
 
-    @OneToMany(mappedBy = "folder")
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "folder")
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<FolderTag> folderTags = new ArrayList<>();
 
     public void modifyFolder(CreateFolderRequest dto) {
-        this.name = dto.getName();
+        this.title = dto.getTitle();
         this.image = dto.getImage();
         this.isPinned = dto.getIsPinned();
         this.isPrivate = dto.getIsPrivate();

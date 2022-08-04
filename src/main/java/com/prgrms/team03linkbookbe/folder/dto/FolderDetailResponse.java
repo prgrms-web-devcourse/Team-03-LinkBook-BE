@@ -1,5 +1,6 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.comment.dto.CommentResponseDto;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
@@ -12,16 +13,18 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FolderDetailResponse {
 
     private Long id;
 
-    private String name;
+    private String title;
 
     private String image;
 
@@ -41,29 +44,25 @@ public class FolderDetailResponse {
 
     private int likes;
 
-    private List<CommentResponseDto> comments;
-
     private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
 
 
-    public static FolderDetailResponse fromEntity(Folder folder, int likes) {
+    public static FolderDetailResponse fromEntity(Folder folder) {
         return FolderDetailResponse.builder()
             .id(folder.getId())
-            .name(folder.getName())
+            .title(folder.getTitle())
+            .likes(folder.getLikes())
             .image(folder.getImage())
             .content(folder.getContent())
             .originId(folder.getOriginId())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
             .user(UserResponse.fromEntity(folder.getUser()))
+            .tags(folder.getFolderTags().stream().map(f -> f.getTag().getName()).collect(Collectors.toList()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
                 Collectors.toList()))
-            .comments(folder.getComments().stream().map(CommentResponseDto::fromEntity).collect(
-                Collectors.toList()))
             .createdAt(folder.getCreatedAt())
-            .updatedAt(folder.getUpdatedAt())
             .build();
     }
 

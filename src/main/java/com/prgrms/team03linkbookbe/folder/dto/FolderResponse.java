@@ -17,7 +17,7 @@ public class FolderResponse {
 
     private Long id;
 
-    private String name;
+    private String title;
 
     private String image;
 
@@ -29,24 +29,23 @@ public class FolderResponse {
 
     private List<TagCategory> tags;
 
-    private Long likes;
+    private int likes;
 
     private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
 
 
     public static FolderResponse fromEntity(Folder folder) {
         return FolderResponse.builder()
             .id(folder.getId())
-            .name(folder.getName())
+            .title(folder.getTitle())
             .image(folder.getImage())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
+            .likes(folder.getLikes())
             .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName()).collect(Collectors.toList()))
             .user(UserResponse.fromEntity(folder.getUser()))
             .createdAt(folder.getCreatedAt())
-            .updatedAt(folder.getUpdatedAt())
             .build();
     }
 
