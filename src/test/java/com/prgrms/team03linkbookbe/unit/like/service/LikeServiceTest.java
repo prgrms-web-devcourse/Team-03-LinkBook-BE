@@ -65,8 +65,8 @@ class LikeServiceTest {
     @DisplayName("좋아요 등록 테스트")
     void INSERT_COMMENT_TEST() {
         // given
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         Like like = CreateLikeRequest.toEntity(folder, user);
         like.toBuilder().id(1L).build();
@@ -80,9 +80,13 @@ class LikeServiceTest {
     @DisplayName("좋아요 삭제 테스트")
     void DELETE_COMMENT_TEST() {
         // given
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(likeRepository.findByIdAndUser(1L, user))
-                .thenReturn(Optional.of(Like.builder().id(1L).build()));
+                .thenReturn(Optional.of(Like.builder()
+                        .id(1L)
+                        .user(user)
+                        .folder(folder)
+                        .build()));
 
         // when
         Long deleteLike = likeService.delete(1L, user.getEmail());

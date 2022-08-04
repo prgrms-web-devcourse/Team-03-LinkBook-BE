@@ -70,7 +70,7 @@ class CommentServiceTest {
     void INSERT_COMMENT_TEST() {
         // given
         when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         Comment comment = CreateCommentRequest.toEntity(folder, user, requestDto1);
         comment.toBuilder().id(1L).build();
@@ -92,7 +92,7 @@ class CommentServiceTest {
     void UPDATE_COMMENT_TEST() {
         // given
         when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         Comment comment = CreateCommentRequest.toEntity(folder, user, requestDto1);
         comment.toBuilder().id(1L).build();
@@ -119,9 +119,12 @@ class CommentServiceTest {
     @DisplayName("댓글 삭제 테스트")
     void DELETE_COMMENT_TEST() {
         // given
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(commentRepository.findByIdAndUser(1L, user))
-                .thenReturn(Optional.of(Comment.builder().id(1L).build()));
+                .thenReturn(Optional.of(Comment.builder()
+                        .id(1L)
+                        .user(user)
+                        .build()));
 
         // when
         Long deleteComment = commentService.delete(1L, user.getEmail());
