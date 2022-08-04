@@ -9,6 +9,7 @@ import com.prgrms.team03linkbookbe.jwt.JwtAuthenticationProvider;
 import com.prgrms.team03linkbookbe.jwt.exception.AccessDeniedException;
 import com.prgrms.team03linkbookbe.refreshtoken.service.RefreshTokenService;
 import com.prgrms.team03linkbookbe.user.service.UserService;
+import java.util.Arrays;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Slf4j
 @Configuration
@@ -35,6 +39,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfigure {
 
     private final JwtConfigure jwtConfigure;
+
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -74,7 +91,7 @@ public class WebSecurityConfigure {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, Jwt jwt) throws Exception {
-        return http
+        http
             .authorizeRequests()
             .antMatchers(
                 "/h2-console/**",
@@ -118,7 +135,12 @@ public class WebSecurityConfigure {
             .addFilterBefore(jwtAuthenticationFilter(jwt),
                 UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationFilter.class)
-            .build();
+            /**
+             * CORS 추가
+             */
+            .cors().configurationSource(corsConfigurationSource());
+
+            return http.build();
     }
 
     @Bean
@@ -139,7 +161,6 @@ public class WebSecurityConfigure {
             response.getWriter().close();
         };
     }
-
 }
 
 
