@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CreateCommentRequestDto {
+public class CreateCommentRequest {
     private Long parentId;
 
     @NotNull(message = "내용을 입력해주세요.")
@@ -27,7 +27,7 @@ public class CreateCommentRequestDto {
     private Long userId;
 
     public static Comment toEntity(Folder folder, User user,
-                                   CreateCommentRequestDto commentRequestDto) {
+                                   CreateCommentRequest commentRequestDto) {
         return Comment.builder()
                 .content(commentRequestDto.getContent())
                 .folder(folder)

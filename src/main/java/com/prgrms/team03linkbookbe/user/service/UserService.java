@@ -1,53 +1,80 @@
 package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
+import com.prgrms.team03linkbookbe.interest.entity.Interest;
+import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
+import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.RegisterResponseDto;
-import com.prgrms.team03linkbookbe.user.dto.UpdateRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
+import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
+import com.prgrms.team03linkbookbe.user.dto.UserDetailResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
+    private final InterestRepository interestRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Transactional
+    public void register(RegisterRequestDto requestDto) {
+        if (userRepository.existsByEmail(requestDto.getEmail())) {
+            throw new DuplicatedEmailException();
+        }
+        User user = requestDto.toEntity();
+        user.encodePassword(passwordEncoder.encode(requestDto.getPassword()));
+        User saveUser = userRepository.save(user);
+    }
 
     public User login(String email, String credentials) {
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new LoginFailureException());
+            .orElseThrow(LoginFailureException::new);
         user.checkPassword(passwordEncoder, credentials);
         return user;
     }
 
     @Transactional
-    public void register(RegisterRequestDto requestDto) {
-        if(userRepository.existsByEmail(requestDto.getEmail())) {
-            throw new DuplicatedEmailException();
-        }
-        userRepository.save(requestDto.toEntity(passwordEncoder));
+    public void updateLastLoginAt(User user) {
+        User findUser = userRepository.findById(user.getId())
+            .orElseThrow(() -> new LoginFailureException());
+        findUser.updateLastLoginAt(LocalDateTime.now());
     }
 
-    public UserResponseDto findByEmail(String email) {
+    public MeResponseDto me(String email) {
         return userRepository.findByEmail(email)
-            .map(user -> UserResponseDto.fromEntity(user))
-            .orElseThrow(() -> new NoDataException());
+            .map(MeResponseDto::fromEntity)
+            .orElseThrow(NoDataException::new);
     }
 
     @Transactional
-    public void updateUser (UpdateRequestDto requestDto, String email) {
+    public void updateUser(UserUpdateRequestDto requestDto, String email) {
         User user = userRepository.findByEmailFetchJoinInterests(email)
             .orElseThrow(() -> new NoDataException());
-        user.updateUser(requestDto.getName(), requestDto.getImage(), requestDto.getIntroduce(), requestDto.getInterests());
+        List<Interest> interests = user.getInterests();
+        for (Interest interest : interests) {
+            interestRepository.delete(interest);
+        }
+
+        User updateUser = requestDto.toEntity();
+        List<Interest> updateInterests = updateUser.getInterests();
+        user.updateUser(updateUser.getName(), updateUser.getImage(), updateUser.getIntroduce(), updateUser.getInterests());
+        for (Interest interest : updateInterests) {
+            interest.changeUser(user);
+            interestRepository.save(interest);
+        }
     }
 
 }

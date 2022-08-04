@@ -2,11 +2,10 @@ package com.prgrms.team03linkbookbe.folder.dto;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
-import com.prgrms.team03linkbookbe.comment.dto.CommentResponseDto;
+import com.prgrms.team03linkbookbe.comment.dto.CommentResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
-import com.prgrms.team03linkbookbe.user.dto.UserResponse;
+import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +35,7 @@ public class FolderDetailResponse {
 
     private Boolean isPrivate;
 
-    private UserResponse user;
+    private UserSimpleResponseDto user;
 
     private List<BookmarkResponse> bookmarks;
 
@@ -58,10 +57,10 @@ public class FolderDetailResponse {
             .originId(folder.getOriginId())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
-            .user(UserResponse.fromEntity(folder.getUser()))
             .tags(folder.getFolderTags().stream().map(f -> f.getTag().getName()).collect(Collectors.toList()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
                 Collectors.toList()))
+            .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .createdAt(folder.getCreatedAt())
             .build();
     }

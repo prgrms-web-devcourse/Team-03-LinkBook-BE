@@ -1,9 +1,8 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
-import com.prgrms.team03linkbookbe.user.dto.UserResponse;
+import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +24,7 @@ public class FolderResponse {
 
     private Boolean isPrivate;
 
-    private UserResponse user;
+    private UserSimpleResponseDto user;
 
     private List<TagCategory> tags;
 
@@ -44,7 +43,7 @@ public class FolderResponse {
             .isPrivate(folder.getIsPrivate())
             .likes(folder.getLikes())
             .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName()).collect(Collectors.toList()))
-            .user(UserResponse.fromEntity(folder.getUser()))
+            .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .createdAt(folder.getCreatedAt())
             .build();
     }

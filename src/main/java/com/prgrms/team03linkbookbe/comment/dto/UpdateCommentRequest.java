@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UpdateCommentRequestDto {
+public class UpdateCommentRequest {
     @Positive(message = "id는 양수로 입력해주세요.")
     @NotNull(message = "코멘트 아이디를 입력해주세요.")
     private Long id;
