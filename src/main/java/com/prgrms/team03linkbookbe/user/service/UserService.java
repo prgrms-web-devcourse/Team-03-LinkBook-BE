@@ -1,6 +1,7 @@
 package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
+import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserDetailResponseDto;
@@ -46,9 +47,9 @@ public class UserService {
         findUser.updateLastLoginAt(LocalDateTime.now());
     }
 
-    public UserDetailResponseDto findByEmail(String email) {
+    public MeResponseDto me(String email) {
         return userRepository.findByEmail(email)
-            .map(UserDetailResponseDto::fromEntity)
+            .map(MeResponseDto::fromEntity)
             .orElseThrow(NoDataException::new);
     }
 

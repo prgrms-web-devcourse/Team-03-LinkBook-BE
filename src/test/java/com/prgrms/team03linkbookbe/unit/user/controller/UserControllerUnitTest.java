@@ -15,6 +15,7 @@ import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthenticationToken;
 import com.prgrms.team03linkbookbe.user.controller.UserController;
 import com.prgrms.team03linkbookbe.user.dto.LoginRequestDto;
+import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserDetailResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
@@ -133,22 +134,26 @@ public class UserControllerUnitTest {
     @WithJwtAuth(email = "example1@gmail.com")
     void ME_TEST() throws Exception {
         // given
-        UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
-            .email(email)
-            .image("이미지URL")
-            .name("닉네임")
-            .role("ROLE_USER")
+        MeResponseDto responseDto = MeResponseDto.builder()
+            .user(
+                UserDetailResponseDto.builder()
+                    .email(email)
+                    .image("이미지URL")
+                    .name("닉네임")
+                    .role("ROLE_USER")
+                    .build()
+            )
             .build();
 
-        given(service.findByEmail(email)).willReturn(responseDto);
+        given(service.me(email)).willReturn(responseDto);
 
         // when & then
         mockMvc.perform(get("/api/users/me"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.email").value(email))
-            .andExpect(jsonPath("$.image").value("이미지URL"))
-            .andExpect(jsonPath("$.name").value("닉네임"))
-            .andExpect(jsonPath("$.role").value("ROLE_USER"));
+            .andExpect(jsonPath("$.user.email").value(email))
+            .andExpect(jsonPath("$.user.image").value("이미지URL"))
+            .andExpect(jsonPath("$.user.name").value("닉네임"))
+            .andExpect(jsonPath("$.user.role").value("ROLE_USER"));
     }
 
     @Test

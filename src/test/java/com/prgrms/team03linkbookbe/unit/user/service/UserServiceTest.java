@@ -1,6 +1,7 @@
 package com.prgrms.team03linkbookbe.unit.user.service;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -8,9 +9,9 @@ import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
 import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
+import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.UserDetailResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
@@ -154,10 +155,10 @@ public class UserServiceTest {
             given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
             // When
-            UserDetailResponseDto responseDto = userService.findByEmail(email);
+            MeResponseDto responseDto = userService.me(email);
 
             // Then
-            assertThat(responseDto.getEmail()).isEqualTo(email);
+            assertThat(responseDto.getUser().getEmail()).isEqualTo(email);
         }
 
         @Test
@@ -167,7 +168,7 @@ public class UserServiceTest {
             given(userRepository.findByEmail(email)).willReturn(Optional.empty());
 
             // When Then
-            assertThatThrownBy(() -> userService.findByEmail(email))
+            assertThatThrownBy(() -> userService.me(email))
                 .isInstanceOf(NoDataException.class);
         }
     }
@@ -175,6 +176,7 @@ public class UserServiceTest {
     @DisplayName("updateUser 메서드 : ")
     @Nested
     class UpdateUser {
+
         InterestDto interestRequestDto = InterestDto.builder()
             .field(Field.backEndDeveloper)
             .build();
@@ -214,7 +216,6 @@ public class UserServiceTest {
             // When
             userService.updateUser(updateRequestDto, email);
 
-
             // Then
             assertThat(user.getInterests().get(0).getField()).isEqualTo(Field.backEndDeveloper);
             assertThat(user.getName()).isEqualTo(name);
@@ -224,7 +225,7 @@ public class UserServiceTest {
 
         @Test
         @DisplayName("존재하지 않는 사용자라면 수정할 수 없다.")
-        void NO_EXIST_EXCEPTION () {
+        void NO_EXIST_EXCEPTION() {
             // Given
             given(userRepository.findByEmailFetchJoinInterests(email))
                 .willReturn(Optional.empty());
