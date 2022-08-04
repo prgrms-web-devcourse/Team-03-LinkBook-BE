@@ -6,19 +6,25 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class UserResponse {
+public class UserSimpleResponseDto {
 
     private Long id;
+
+    private String email;
 
     private String name;
 
     private String image;
 
-    public static UserResponse fromEntity(User user) {
-        return UserResponse.builder()
+    private String introduce;
+
+    public static UserSimpleResponseDto fromEntity(User user) {
+        return UserSimpleResponseDto.builder()
             .id(user.getId())
+            .email(user.getEmail())
             .name(user.getName())
             .image(user.getImage())
+            .introduce(user.getIntroduce())
             .build();
     }
 }

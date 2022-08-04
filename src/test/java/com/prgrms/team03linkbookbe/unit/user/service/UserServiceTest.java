@@ -9,9 +9,8 @@ import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
 import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.RegisterResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
+import com.prgrms.team03linkbookbe.user.dto.UserDetailResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
@@ -68,11 +67,8 @@ public class UserServiceTest {
                 "$2a$10$VgKG4LYAucDmh0PoSxjD6OaW8ADf7VUMf5ysPsQr5vh1QoVI7yXu6");
             given(userRepository.save(any(User.class))).willReturn(user);
 
-            // When
-            RegisterResponseDto responseDto = userService.register(requestDto);
-
-            // Then
-            assertThat(responseDto.getUserId()).isEqualTo(1L);
+            // When & Then
+            userService.register(requestDto);
         }
 
         @Test
@@ -158,7 +154,7 @@ public class UserServiceTest {
             given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
 
             // When
-            UserResponseDto responseDto = userService.findByEmail(email);
+            UserDetailResponseDto responseDto = userService.findByEmail(email);
 
             // Then
             assertThat(responseDto.getEmail()).isEqualTo(email);

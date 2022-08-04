@@ -14,21 +14,15 @@ public class LoginResponseDto {
 
     private final Boolean isFirstLogin;
 
-    private final UserLoginResponseDto userDetail;
+    private final UserSimpleResponseDto user;
 
-    public static LoginResponseDto fromEntity(String accessToken, String refreshToken, User user, Boolean isFirstLogin) {
-        UserLoginResponseDto userLoginResponseDto = UserLoginResponseDto.builder()
-            .id(user.getId())
-            .name(user.getName())
-            .email(user.getEmail())
-            .image(user.getImage())
-            .build();
-
+    public static LoginResponseDto fromEntity(String accessToken, String refreshToken, User user,
+        Boolean isFirstLogin) {
         return LoginResponseDto.builder()
             .accessToken(accessToken)
             .refreshToken(refreshToken)
             .isFirstLogin(isFirstLogin)
-            .userDetail(userLoginResponseDto)
+            .user(UserSimpleResponseDto.fromEntity(user))
             .build();
     }
 }

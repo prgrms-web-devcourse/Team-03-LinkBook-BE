@@ -2,9 +2,8 @@ package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.RegisterResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
+import com.prgrms.team03linkbookbe.user.dto.UserDetailResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
@@ -24,16 +23,13 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public RegisterResponseDto register(RegisterRequestDto requestDto) {
+    public void register(RegisterRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new DuplicatedEmailException();
         }
         User user = requestDto.toEntity();
         user.encodePassword(passwordEncoder.encode(requestDto.getPassword()));
         User saveUser = userRepository.save(user);
-        return RegisterResponseDto.builder()
-            .userId(saveUser.getId())
-            .build();
     }
 
     public User login(String email, String credentials) {
@@ -50,9 +46,9 @@ public class UserService {
         findUser.updateLastLoginAt(LocalDateTime.now());
     }
 
-    public UserResponseDto findByEmail(String email) {
+    public UserDetailResponseDto findByEmail(String email) {
         return userRepository.findByEmail(email)
-            .map(UserResponseDto::fromEntity)
+            .map(UserDetailResponseDto::fromEntity)
             .orElseThrow(NoDataException::new);
     }
 

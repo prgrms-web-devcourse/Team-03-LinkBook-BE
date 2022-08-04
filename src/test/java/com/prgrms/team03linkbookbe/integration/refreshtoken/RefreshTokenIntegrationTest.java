@@ -81,6 +81,7 @@ public class RefreshTokenIntegrationTest {
             .password("비밀번호")
             .image("이미지URL")
             .name("닉네임")
+            .introduce("반갑습니다")
             .role("ROLE_USER")
             .build();
 
@@ -109,16 +110,18 @@ public class RefreshTokenIntegrationTest {
                 responseFields(
                     fieldWithPath("accessToken").type(JsonFieldType.STRING)
                         .description("accessToken"),
-                    fieldWithPath("userDetail").type(JsonFieldType.OBJECT)
-                        .description("userDetail"),
-                    fieldWithPath("userDetail.id").type(JsonFieldType.NUMBER)
-                        .description("userDetail.id"),
-                    fieldWithPath("userDetail.email").type(JsonFieldType.STRING)
-                        .description("userDetail.email"),
-                    fieldWithPath("userDetail.name").type(JsonFieldType.STRING)
-                        .description("userDetail.name"),
-                    fieldWithPath("userDetail.image").type(JsonFieldType.STRING)
-                        .description("userDetail.image")
+                    fieldWithPath("user").type(JsonFieldType.OBJECT)
+                        .description("user"),
+                    fieldWithPath("user.id").type(JsonFieldType.NUMBER)
+                        .description("user.id"),
+                    fieldWithPath("user.email").type(JsonFieldType.STRING)
+                        .description("user.email"),
+                    fieldWithPath("user.name").type(JsonFieldType.STRING)
+                        .description("user.name"),
+                    fieldWithPath("user.image").type(JsonFieldType.STRING)
+                        .description("user.image"),
+                    fieldWithPath("user.introduce").type(JsonFieldType.STRING)
+                        .description("user.introduce")
                 )
             ));
     }
