@@ -51,6 +51,7 @@ class CommentRepositoryTest {
                 .content("halo")
                 .isPinned(false)
                 .isPrivate(false)
+                .likes(0)
                 .user(user1)
                 .build();
         em.persist(folder);
@@ -93,19 +94,33 @@ class CommentRepositoryTest {
     @DisplayName("특정 코멘트에 답글을 등록 할 수 있다.")
     void INSERT_REPLY_COMMENT_BY_ID_TEST() {
         // given
-        Comment commentEntity = Comment.builder()
+        Comment temp = Comment.builder()
+                .parent(comment)
                 .content("sup")
-                .parentId(comment.getId())
                 .folder(folder)
                 .user(user1)
                 .build();
 
         // when
-        Comment save = commentRepository.save(commentEntity);
+        commentRepository.save(temp);
+        comment = comment.toBuilder()
+                .children(
+                        commentRepository.findAllByParentId(comment.getId())
+                )
+                .build();
 
         // then
-        assertThat(save.getParentId()).isEqualTo(comment.getId());
-        assertThat(save.getContent()).isEqualTo("sup");
+        assertThat(temp.getId()).isEqualTo(comment.getChildren().get(0).getId());
+    }
+
+    @Test
+    @DisplayName("특정 폴더의 댓글을 불러 올 수 있다.")
+    void GET_COMMENTS_BY_FOLDER_TEST() {
+        // given, when
+        List<Comment> list = commentRepository.findAllByFolder(folder);
+
+        // then
+        assertThat(list).hasSize(1);
     }
 
     @Test
