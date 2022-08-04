@@ -46,7 +46,7 @@ class CommentRepositoryTest {
         em.persist(user1);
 
         folder = Folder.builder()
-                .name("my-folder")
+                .title("my-folder")
                 .image("url")
                 .content("halo")
                 .isPinned(false)

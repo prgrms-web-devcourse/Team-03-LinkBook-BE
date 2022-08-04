@@ -2,6 +2,8 @@ package com.prgrms.team03linkbookbe.bookmark.dto;
 
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,10 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookmarkRequest {
 
+    @NotBlank(message = "url을 입력하세요")
     private String url;
 
+    @NotBlank(message = "북마크이름을 입력하세요")
     private String title;
 
+    @NotNull(message = "폴더를 입력하세요")
     private Long folderId;
 
     public Bookmark toEntity(Folder folder){

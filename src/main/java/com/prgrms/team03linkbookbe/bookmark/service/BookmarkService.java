@@ -7,23 +7,25 @@ import com.prgrms.team03linkbookbe.bookmark.repository.BookMarkRepository;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
+import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
+import com.prgrms.team03linkbookbe.user.entity.User;
+import com.prgrms.team03linkbookbe.user.repository.UserRepository;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 @Transactional
+@RequiredArgsConstructor
 public class BookmarkService {
 
-    BookMarkRepository bookMarkRepository;
-    FolderRepository folderRepository;
+    private final BookMarkRepository bookMarkRepository;
+    private final FolderRepository folderRepository;
 
-    public BookmarkService(
-        BookMarkRepository bookMarkRepository,
-        FolderRepository folderRepository) {
-        this.bookMarkRepository = bookMarkRepository;
-        this.folderRepository = folderRepository;
-    }
 
     // 북마크 생성
     public void create(BookmarkRequest dto) {
@@ -36,26 +38,30 @@ public class BookmarkService {
     }
 
     // 북마크 수정
-    public void update(Long userId, Long bookmarkId, BookmarkRequest dto) {
+    public void update(String email, Long bookmarkId, BookmarkRequest dto) {
         Folder folder = folderRepository.findById(dto.getFolderId())
             .orElseThrow(NoDataException::new);
 
         Bookmark bookmark = bookMarkRepository.findById(bookmarkId)
             .orElseThrow(NoDataException::new);
 
-        if (!bookmark.getFolder().getUser().getId().equals(userId)) {
+        if (!bookmark.getFolder().getUser().getEmail().equals(email)) {
             throw new AccessDeniedException("자신의 북마크만 수정가능합니다");
         }
 
         bookmark.modifyBookmark(dto, folder);
+        log.info(bookmark.toString());
+
     }
 
     // 북마크 삭제
-    public void delete(Long userId, Long bookmarkId) {
+    public void delete(String email, Long bookmarkId) {
         Bookmark bookmark = bookMarkRepository.findById(bookmarkId)
             .orElseThrow(NoDataException::new);
 
-        if (!bookmark.getFolder().getUser().getId().equals(userId)) {
+
+
+        if (!bookmark.getFolder().getUser().getEmail().equals(email)) {
             throw new AccessDeniedException("자신의 북마크만 삭제가능합니다");
         }
 
