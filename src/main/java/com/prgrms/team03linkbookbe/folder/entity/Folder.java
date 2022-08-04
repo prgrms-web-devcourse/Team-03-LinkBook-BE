@@ -24,6 +24,10 @@ import javax.validation.constraints.Min;
 import lombok.*;
 
 import javax.persistence.*;
+
+import lombok.*;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -80,11 +84,11 @@ public class Folder extends BaseDateEntity {
     @Builder.Default
     @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<Bookmark> bookmarks = new ArrayList<>();
-
+    
     @Builder.Default
     @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
-
+    
     @Builder.Default
     @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<FolderTag> folderTags = new ArrayList<>();
