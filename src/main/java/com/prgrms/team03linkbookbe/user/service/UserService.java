@@ -1,6 +1,8 @@
 package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
+import com.prgrms.team03linkbookbe.interest.entity.Interest;
+import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
@@ -10,17 +12,21 @@ import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
+    private final InterestRepository interestRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -57,9 +63,18 @@ public class UserService {
     public void updateUser(UserUpdateRequestDto requestDto, String email) {
         User user = userRepository.findByEmailFetchJoinInterests(email)
             .orElseThrow(() -> new NoDataException());
+        List<Interest> interests = user.getInterests();
+        for (Interest interest : interests) {
+            interestRepository.delete(interest);
+        }
+
         User updateUser = requestDto.toEntity();
-        user.updateUser(updateUser.getName(), updateUser.getImage(), updateUser.getIntroduce(),
-            updateUser.getInterests());
+        List<Interest> updateInterests = updateUser.getInterests();
+        user.updateUser(updateUser.getName(), updateUser.getImage(), updateUser.getIntroduce(), updateUser.getInterests());
+        for (Interest interest : updateInterests) {
+            interest.changeUser(user);
+            interestRepository.save(interest);
+        }
     }
 
 }

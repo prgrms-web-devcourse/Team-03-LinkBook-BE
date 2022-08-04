@@ -9,6 +9,7 @@ import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
 import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
+import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
@@ -41,6 +42,9 @@ public class UserServiceTest {
 
     @Mock
     PasswordEncoder passwordEncoder;
+
+    @Mock
+    InterestRepository interestRepository;
 
     @DisplayName("register 메서드 : ")
     @Nested
@@ -178,7 +182,7 @@ public class UserServiceTest {
     class UpdateUser {
 
         InterestDto interestRequestDto = InterestDto.builder()
-            .field(Field.backEndDeveloper)
+            .field(Field.backEndDeveloper.getField())
             .build();
         List<InterestDto> interestRequestDtos = List.of(interestRequestDto);
 
