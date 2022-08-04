@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 
 @Builder
 @Getter
-public class UserResponseDto {
+public class UserDetailResponseDto {
+
+    private final Long id;
 
     private final String email;
 
@@ -28,10 +28,10 @@ public class UserResponseDto {
 
     private final LocalDateTime updatedAt;
 
-    private List<InterestDto> interestDtos;
+    private List<InterestDto> interests;
 
-    public static UserResponseDto fromEntity(User user) {
-        return UserResponseDto.builder()
+    public static UserDetailResponseDto fromEntity(User user) {
+        return UserDetailResponseDto.builder()
             .email(user.getEmail())
             .name(user.getName())
             .image(user.getImage())
@@ -39,7 +39,7 @@ public class UserResponseDto {
             .role(user.getRole())
             .createdAt(user.getCreatedAt())
             .updatedAt(user.getUpdatedAt())
-            .interestDtos(user.getInterests().stream()
+            .interests(user.getInterests().stream()
                 .map((interest) -> InterestDto.builder()
                     .field(interest.getField())
                     .build())

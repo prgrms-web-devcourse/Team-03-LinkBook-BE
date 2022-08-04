@@ -4,9 +4,9 @@ import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthenticationToken;
 import com.prgrms.team03linkbookbe.user.dto.LoginRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.LoginResponseDto;
+import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +31,9 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
 
     @GetMapping("/api/users/me")
-    public ResponseEntity<UserResponseDto> me(
+    public ResponseEntity<MeResponseDto> me(
         @AuthenticationPrincipal JwtAuthentication authentication) {
-        UserResponseDto responseDto = userService.findByEmail(authentication.email);
+        MeResponseDto responseDto = userService.me(authentication.email);
         return ResponseEntity.ok(responseDto);
     }
 
