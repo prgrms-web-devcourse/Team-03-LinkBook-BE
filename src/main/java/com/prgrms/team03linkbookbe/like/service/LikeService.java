@@ -1,6 +1,5 @@
 package com.prgrms.team03linkbookbe.like.service;
 
-import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.dto.FolderResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
@@ -12,10 +11,12 @@ import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -30,10 +31,10 @@ public class LikeService {
     @Transactional
     public CreateLikeResponse create(CreateLikeRequest requestDto, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(NoDataException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
-                .orElseThrow(NoDataException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당 폴더는 존재하지 않습니다."));
 
         Like like = CreateLikeRequest.toEntity(folder, user);
 
@@ -51,7 +52,7 @@ public class LikeService {
     @Transactional
     public List<FolderResponse> getLikedFoldersByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(NoDataException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
         List<Like> likes = likeRepository.findAllByUser(user);
 
@@ -63,10 +64,14 @@ public class LikeService {
     @Transactional
     public Long delete(Long id, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(NoDataException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
         Like like = likeRepository.findByIdAndUser(id, user)
-                .orElseThrow(NoDataException::new);
+                .orElseThrow(() -> new IllegalArgumentException("해당 좋아요는 존재하지 않습니다."));
+
+        if (!Objects.equals(user.getId(), like.getUser().getId())) {
+            throw new AccessDeniedException("자신의 좋아요만 삭제 가능합니다.");
+        }
 
         likeRepository.delete(like);
 
