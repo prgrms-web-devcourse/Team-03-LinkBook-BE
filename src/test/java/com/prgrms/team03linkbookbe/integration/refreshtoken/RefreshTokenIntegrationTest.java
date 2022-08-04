@@ -21,6 +21,7 @@ import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.util.Calendar;
 import java.util.Date;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ public class RefreshTokenIntegrationTest {
     RefreshTokenRepository refreshTokenRepository;
 
     @Test
+    @Disabled
     @DisplayName("액세스 토큰 재발급 테스트")
     void REISSUE_ACCESS_TOKEN_TEST() throws Exception {
         // given
