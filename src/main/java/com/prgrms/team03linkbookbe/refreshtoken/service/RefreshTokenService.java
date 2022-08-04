@@ -1,9 +1,7 @@
 package com.prgrms.team03linkbookbe.refreshtoken.service;
 
-import com.auth0.jwt.JWT;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.jwt.Jwt;
 import com.prgrms.team03linkbookbe.jwt.Jwt.Claims;
@@ -14,7 +12,6 @@ import com.prgrms.team03linkbookbe.refreshtoken.entity.RefreshToken;
 import com.prgrms.team03linkbookbe.refreshtoken.repository.RefreshTokenRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,8 +30,7 @@ public class RefreshTokenService {
     @Transactional
     public AccessTokenResponseDto reissueAccessToken(String accessToken, String refreshToken) {
 
-        DecodedJWT decodedJWT = com.auth0.jwt.JWT.decode(accessToken);
-        if (decodedJWT.getExpiresAt().after(new Date())) {
+        if (jwt.isExpiredToken(accessToken)) {
             log.info("AccessToken not Expired, AccessToken reissue denied");
             throw new IllegalTokenException();
         }
@@ -42,19 +38,18 @@ public class RefreshTokenService {
         try {
             Claims claims = jwt.verify(refreshToken);
 
-            // refreshToken DB 검사
             User user = userRepository.findByEmail(claims.getEmail())
-                .orElseThrow(() -> new IllegalTokenException());
+                .orElseThrow(IllegalTokenException::new);
 
             RefreshToken findRefreshToken = refreshTokenRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new IllegalTokenException());
+                .orElseThrow(IllegalTokenException::new);
 
-            if (!findRefreshToken.getValue().equals(refreshToken)) {
+            if (!findRefreshToken.getToken().equals(refreshToken)) {
                 throw new IllegalTokenException();
             }
 
             String newAccessToken = jwt.createAccessToken(claims);
-            return AccessTokenResponseDto.builder().accessToken(newAccessToken).build();
+            return AccessTokenResponseDto.fromEntity(newAccessToken, user);
         } catch (TokenExpiredException e) {
             throw new RefreshTokenExpiredException();
         } catch (JWTVerificationException e) {
@@ -68,17 +63,17 @@ public class RefreshTokenService {
     public String issueRefreshToken(Claims claims) {
         String newRefreshToken = jwt.createRefreshToken(claims);
         User user = userRepository.findByEmail(claims.getEmail())
-            .orElseThrow(() -> new NoDataException());
+            .orElseThrow(NoDataException::new);
 
         refreshTokenRepository.findByUserId(user.getId())
             .ifPresentOrElse(
                 refreshToken -> {
-                    refreshToken.changeValue(newRefreshToken);
+                    refreshToken.changeToken(newRefreshToken);
                     log.info("refreshToken update, email : {}", user.getEmail());
                 },
                 () -> {
                     refreshTokenRepository.save(RefreshToken.builder()
-                            .value(newRefreshToken)
+                            .token(newRefreshToken)
                             .user(user)
                         .build());
                     log.info("refreshToken create, email : {}", user.getEmail());

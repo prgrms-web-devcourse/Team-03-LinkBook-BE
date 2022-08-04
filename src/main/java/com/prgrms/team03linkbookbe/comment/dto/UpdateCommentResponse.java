@@ -6,6 +6,6 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UpdateCommentResponseDto {
+public class UpdateCommentResponse {
     private Long id;
 }

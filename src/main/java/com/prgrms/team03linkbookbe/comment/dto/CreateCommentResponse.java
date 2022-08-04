@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CreateCommentResponseDto {
+public class CreateCommentResponse {
     Long id;
 }

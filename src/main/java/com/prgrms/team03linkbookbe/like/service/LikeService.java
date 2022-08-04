@@ -1,0 +1,84 @@
+package com.prgrms.team03linkbookbe.like.service;
+
+import com.prgrms.team03linkbookbe.folder.dto.FolderResponse;
+import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeRequest;
+import com.prgrms.team03linkbookbe.like.dto.CreateLikeResponse;
+import com.prgrms.team03linkbookbe.like.entity.Like;
+import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
+import com.prgrms.team03linkbookbe.user.entity.User;
+import com.prgrms.team03linkbookbe.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class LikeService {
+    private final LikeRepository likeRepository;
+    private final UserRepository userRepository;
+    private final FolderRepository folderRepository;
+
+    @Transactional
+    public CreateLikeResponse create(CreateLikeRequest requestDto, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+
+        Folder folder = folderRepository.findById(requestDto.getFolderId())
+                .orElseThrow(() -> new IllegalArgumentException("해당 폴더는 존재하지 않습니다."));
+
+        Like like = CreateLikeRequest.toEntity(folder, user);
+
+        Long id = likeRepository.save(like).getId();
+
+        folderRepository.save(folder.toBuilder()
+                .likes(likeRepository.countByFolderEquals(folder))
+                .build());
+
+        return CreateLikeResponse.builder()
+                .id(id)
+                .build();
+    }
+
+    @Transactional
+    public List<FolderResponse> getLikedFoldersByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+
+        List<Like> likes = likeRepository.findAllByUser(user);
+
+        return likes.stream().map(o ->
+                        FolderResponse.fromEntity(o.getFolder()))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Long delete(Long id, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+
+        Like like = likeRepository.findByIdAndUser(id, user)
+                .orElseThrow(() -> new IllegalArgumentException("해당 좋아요는 존재하지 않습니다."));
+
+        if (!Objects.equals(user.getId(), like.getUser().getId())) {
+            throw new AccessDeniedException("자신의 좋아요만 삭제 가능합니다.");
+        }
+
+        likeRepository.delete(like);
+
+        folderRepository.save(like.getFolder().toBuilder()
+                .likes(likeRepository.countByFolderEquals(like.getFolder()))
+                .build());
+
+        return like.getId();
+    }
+}

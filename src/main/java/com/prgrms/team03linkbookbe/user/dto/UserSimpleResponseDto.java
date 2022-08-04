@@ -1,28 +1,30 @@
 package com.prgrms.team03linkbookbe.user.dto;
 
 import com.prgrms.team03linkbookbe.user.entity.User;
-import javax.persistence.Column;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Builder
 @Getter
-public class UserResponse {
+public class UserSimpleResponseDto {
+
     private Long id;
+
+    private String email;
 
     private String name;
 
     private String image;
 
+    private String introduce;
 
-    public static UserResponse fromEntity(User user){
-        return UserResponse.builder()
+    public static UserSimpleResponseDto fromEntity(User user) {
+        return UserSimpleResponseDto.builder()
             .id(user.getId())
+            .email(user.getEmail())
             .name(user.getName())
             .image(user.getImage())
+            .introduce(user.getIntroduce())
             .build();
     }
 }

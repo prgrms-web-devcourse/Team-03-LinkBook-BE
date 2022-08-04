@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Getter
 @ToString
@@ -22,26 +24,30 @@ public class Comment extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "parent_id", nullable = true)
-    private Long parentId;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    private List<Comment> children = new ArrayList<>();
 
     @Size(min = 1, max = 1000, message = "댓글은 1~1000자 까지 가능합니다.")
     @Column(name = "content", nullable = false, columnDefinition = "varchar(1000)")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private Folder folder;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "users_id", referencedColumnName = "id")
     private User user;
 
     @Builder(toBuilder = true)
-    public Comment(Long id, String content, Long parentId,
-                   Folder folder, User user) {
+    public Comment(Long id, Comment parent, List<Comment> children, String content, Folder folder, User user) {
         this.id = id;
-        this.parentId = parentId;
+        this.parent = parent;
+        this.children = children;
         this.content = content;
         this.folder = folder;
         this.user = user;
@@ -52,11 +58,11 @@ public class Comment extends BaseDateEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return Objects.equals(id, comment.id) && Objects.equals(parentId, comment.parentId) && Objects.equals(content, comment.content) && Objects.equals(folder, comment.folder) && Objects.equals(user, comment.user);
+        return Objects.equals(id, comment.id) && Objects.equals(parent, comment.parent) && Objects.equals(children, comment.children) && Objects.equals(content, comment.content) && Objects.equals(folder, comment.folder) && Objects.equals(user, comment.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, parentId, content, folder, user);
+        return Objects.hash(id, parent, children, content, folder, user);
     }
 }
