@@ -81,7 +81,7 @@ public class WebSecurityConfigure {
                 "/api/users/login", "/api/users/register", "/api/refresh-token"
             ).permitAll()
             .antMatchers(HttpMethod.GET,
-                "/api/comments/**", "/api/folders/**"
+                "/api/comments/**", "/api/folders/**", "/api/likes/**"
             ).permitAll()
             .anyRequest().hasAnyRole("USER")
             .and()
