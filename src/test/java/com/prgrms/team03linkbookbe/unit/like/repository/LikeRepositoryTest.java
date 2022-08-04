@@ -42,7 +42,7 @@ class LikeRepositoryTest {
         em.persist(user);
 
         folder = Folder.builder()
-                .name("my-folder")
+                .title("my-folder")
                 .image("url")
                 .content("halo")
                 .isPinned(false)
