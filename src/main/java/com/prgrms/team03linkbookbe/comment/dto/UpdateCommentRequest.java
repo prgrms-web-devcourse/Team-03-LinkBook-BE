@@ -31,6 +31,7 @@ public class UpdateCommentRequest {
     public static Comment toEntity(Folder folder, User user,
                                    Comment comment) {
         return Comment.builder()
+                .id(comment.getId())
                 .content(comment.getContent())
                 .folder(folder)
                 .user(user)
