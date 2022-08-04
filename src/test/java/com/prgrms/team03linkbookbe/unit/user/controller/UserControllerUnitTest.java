@@ -3,6 +3,7 @@ package com.prgrms.team03linkbookbe.unit.user.controller;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,10 +16,13 @@ import com.prgrms.team03linkbookbe.jwt.JwtAuthenticationToken;
 import com.prgrms.team03linkbookbe.user.controller.UserController;
 import com.prgrms.team03linkbookbe.user.dto.LoginRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
+import com.prgrms.team03linkbookbe.user.dto.RegisterResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
+import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.service.UserService;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,16 +59,24 @@ public class UserControllerUnitTest {
     @MockBean
     private AuthenticationManager authenticationManager;
 
+    String email = "example1@gmail.com";
+    String password = "qwer1234!!";
+
     @Test
     @DisplayName("회원가입 테스트")
     @WithMockUser
     void REGISTER_TEST() throws Exception {
         // given
         RegisterRequestDto requestDto = RegisterRequestDto.builder()
-            .email("example1@gmail.com")
-            .password("qwer1234!!")
+            .email(email)
+            .password(password)
             .build();
-        doNothing().when(service).register(requestDto);
+
+        RegisterResponseDto responseDto = RegisterResponseDto.builder()
+            .userId(1L)
+            .build();
+
+        given(service.register(requestDto)).willReturn(responseDto);
 
         // when & then
         mockMvc.perform(post("/api/users/register")
@@ -76,12 +88,13 @@ public class UserControllerUnitTest {
 
     @Test
     @DisplayName("로그인 테스트")
+    @WithMockUser
     void LOGIN_TEST() throws Exception {
         // given
-        String email = "example1@gmail.com";
-        String password = "qwer1234!!";
-
         User user = User.builder()
+            .email(email)
+            .name("닉네임")
+            .image("이미지URL")
             .build();
 
         LoginRequestDto requestDto = LoginRequestDto.builder()
@@ -100,6 +113,7 @@ public class UserControllerUnitTest {
         roles.add(new SimpleGrantedAuthority("ROLE_USER"));
         JwtAuthenticationToken authenticated =
             new JwtAuthenticationToken(jwtAuthentication, password, roles);
+        authenticated.setDetails(user);
 
         given(authenticationManager.authenticate(jwtAuthenticationToken)).willReturn(
             authenticated);
@@ -111,7 +125,10 @@ public class UserControllerUnitTest {
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.accessToken").value(accessToken))
-            .andExpect(jsonPath("$.refreshToken").value(refreshToken));
+            .andExpect(jsonPath("$.refreshToken").value(refreshToken))
+            .andExpect(jsonPath("$.userDetail.email").value(email))
+            .andExpect(jsonPath("$.userDetail.name").value("닉네임"))
+            .andExpect(jsonPath("$.userDetail.image").value("이미지URL"));
     }
 
     @Test
@@ -119,10 +136,9 @@ public class UserControllerUnitTest {
     @WithJwtAuth(email = "example1@gmail.com")
     void ME_TEST() throws Exception {
         // given
-        String email = "example1@gmail.com";
         UserResponseDto responseDto = UserResponseDto.builder()
             .email(email)
-            .image("사용자 이미지 URL")
+            .image("이미지URL")
             .name("닉네임")
             .role("ROLE_USER")
             .build();
@@ -130,7 +146,29 @@ public class UserControllerUnitTest {
         given(service.findByEmail(email)).willReturn(responseDto);
 
         // when & then
-        mockMvc.perform(get("/api/users/me")
+        mockMvc.perform(get("/api/users/me"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.email").value(email))
+            .andExpect(jsonPath("$.image").value("이미지URL"))
+            .andExpect(jsonPath("$.name").value("닉네임"))
+            .andExpect(jsonPath("$.role").value("ROLE_USER"));
+    }
+
+    @Test
+    @DisplayName("사용자 정보 업데이트 테스트")
+    @WithJwtAuth(email = "example1@gmail.com")
+    void USER_UPDATE_TEST() throws Exception {
+        UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
+            .name("바꿀닉네임")
+            .image("바꿀이미지URL")
+            .interests(Collections.emptyList())
+            .build();
+
+        doNothing().when(service).updateUser(requestDto, email);
+
+        mockMvc.perform(patch("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto))
                 .with(SecurityMockMvcRequestPostProcessors.csrf()))
             .andExpect(status().isOk());
     }

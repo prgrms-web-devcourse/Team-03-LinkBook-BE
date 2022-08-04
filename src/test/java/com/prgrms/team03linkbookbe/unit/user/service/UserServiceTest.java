@@ -10,7 +10,7 @@ import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterResponseDto;
-import com.prgrms.team03linkbookbe.user.dto.UpdateRequestDto;
+import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
@@ -187,7 +187,7 @@ public class UserServiceTest {
         String name = "updateName";
         String url = "updateUrl";
         String introduce = "updateIntroduce";
-        UpdateRequestDto updateRequestDto = UpdateRequestDto.builder()
+        UserUpdateRequestDto updateRequestDto = UserUpdateRequestDto.builder()
             .name(name)
             .image(url)
             .introduce(introduce)
