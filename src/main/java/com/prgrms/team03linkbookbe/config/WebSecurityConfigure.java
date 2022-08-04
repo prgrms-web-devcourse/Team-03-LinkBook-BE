@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,7 +27,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Slf4j
 @Configuration
@@ -52,17 +52,20 @@ public class WebSecurityConfigure {
     }
 
     @Bean
-    public JwtAuthenticationProvider jwtAuthenticationProvider(Jwt jwt, UserService userService, RefreshTokenService refreshTokenService) {
+    public JwtAuthenticationProvider jwtAuthenticationProvider(Jwt jwt, UserService userService,
+        RefreshTokenService refreshTokenService) {
         return new JwtAuthenticationProvider(jwt, userService, refreshTokenService);
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig)
+        throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
     public JwtAuthenticationFilter jwtAuthenticationFilter(Jwt jwt) {
-        return new JwtAuthenticationFilter(jwtConfigure.getAccessHeader(), jwtConfigure.getRefreshHeader(), jwt);
+        return new JwtAuthenticationFilter(jwtConfigure.getAccessHeader(),
+            jwtConfigure.getRefreshHeader(), jwt);
     }
 
     public ExceptionHandlerFilter exceptionHandlerFilter() {
@@ -73,7 +76,13 @@ public class WebSecurityConfigure {
     public SecurityFilterChain filterChain(HttpSecurity http, Jwt jwt) throws Exception {
         return http
             .authorizeRequests()
-            .antMatchers("/api/users/login", "/api/users/register", "/h2-console/**", "/api/refresh-token").permitAll()
+            .antMatchers(
+                "/h2-console/**",
+                "/api/users/login", "/api/users/register", "/api/refresh-token"
+            ).permitAll()
+            .antMatchers(HttpMethod.GET,
+                "/api/comments/**", "/api/folders/**"
+            ).permitAll()
             .anyRequest().hasAnyRole("USER")
             .and()
             /**
@@ -106,7 +115,8 @@ public class WebSecurityConfigure {
             /**
              * JwtAuthenticationFilter FilterChain 추가
              */
-            .addFilterBefore(jwtAuthenticationFilter(jwt), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthenticationFilter(jwt),
+                UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(exceptionHandlerFilter(), JwtAuthenticationFilter.class)
             .build();
     }
