@@ -1,6 +1,7 @@
 package com.prgrms.team03linkbookbe.user.dto;
 
 import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
+import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.List;
@@ -33,7 +34,7 @@ public class UserUpdateRequestDto {
             .build();
         List<Interest> interestList = interests.stream().map(
             (interest) -> Interest.builder()
-                .field(interest.getField())
+                .field(Field.getEnum(interest.getField()))
                 .user(user)
                 .build()).collect(Collectors.toList());
         for (Interest interest : interestList) {

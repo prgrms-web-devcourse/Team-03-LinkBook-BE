@@ -41,7 +41,7 @@ public class UserDetailResponseDto {
             .updatedAt(user.getUpdatedAt())
             .interests(user.getInterests().stream()
                 .map((interest) -> InterestDto.builder()
-                    .field(interest.getField())
+                    .field(interest.getField().getField())
                     .build())
                 .collect(Collectors.toList()))
             .build();

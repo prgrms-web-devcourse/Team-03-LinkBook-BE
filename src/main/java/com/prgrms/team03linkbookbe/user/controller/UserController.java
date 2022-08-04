@@ -64,6 +64,7 @@ public class UserController {
     @PatchMapping("/api/users")
     public ResponseEntity<Void> update(@RequestBody UserUpdateRequestDto requestDto,
         @AuthenticationPrincipal JwtAuthentication authentication) {
+        log.info("{}", authentication.email);
         userService.updateUser(requestDto, authentication.email);
         return ResponseEntity.ok().build();
     }

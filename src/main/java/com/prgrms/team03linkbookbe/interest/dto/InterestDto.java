@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InterestDto {
 
-    private Field field;
-    
+    private String field;
+
 }

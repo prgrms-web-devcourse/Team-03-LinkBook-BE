@@ -61,6 +61,11 @@ public class Jwt {
         return new Claims(jwtVerifier.verify(token));
     }
 
+    public Boolean isExpiredToken(String accessToken) {
+        DecodedJWT decodedJWT = com.auth0.jwt.JWT.decode(accessToken);
+        return decodedJWT.getExpiresAt().after(new Date());
+    }
+
     static public class Claims {
         private String email;
         private String[] roles;

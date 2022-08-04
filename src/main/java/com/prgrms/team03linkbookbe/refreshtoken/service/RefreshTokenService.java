@@ -2,7 +2,6 @@ package com.prgrms.team03linkbookbe.refreshtoken.service;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.jwt.Jwt;
 import com.prgrms.team03linkbookbe.jwt.Jwt.Claims;
@@ -13,7 +12,6 @@ import com.prgrms.team03linkbookbe.refreshtoken.entity.RefreshToken;
 import com.prgrms.team03linkbookbe.refreshtoken.repository.RefreshTokenRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
-import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,8 +30,7 @@ public class RefreshTokenService {
     @Transactional
     public AccessTokenResponseDto reissueAccessToken(String accessToken, String refreshToken) {
 
-        DecodedJWT decodedJWT = com.auth0.jwt.JWT.decode(accessToken);
-        if (decodedJWT.getExpiresAt().after(new Date())) {
+        if (jwt.isExpiredToken(accessToken)) {
             log.info("AccessToken not Expired, AccessToken reissue denied");
             throw new IllegalTokenException();
         }

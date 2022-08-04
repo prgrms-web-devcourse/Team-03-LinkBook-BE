@@ -1,6 +1,7 @@
 package com.prgrms.team03linkbookbe.interest.entity;
 
 import com.prgrms.team03linkbookbe.user.entity.User;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
