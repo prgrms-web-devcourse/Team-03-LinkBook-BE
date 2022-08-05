@@ -73,7 +73,7 @@ class BookmarkServiceTest {
             .folderId(1L)
             .build();
 
-        User user = User.builder().id(1L).build();
+        User user = User.builder().id(1L).email("test@gmail.com").build();
         Folder folder = Folder.builder().id(1L).user(user).build();
         Bookmark bookmark = Bookmark.builder().id(1L).folder(folder).build();
 
@@ -85,7 +85,7 @@ class BookmarkServiceTest {
             .when(bookmarkRepository)
             .findById(any(Long.class));
 
-        bookmarkService.update(1L,1L, dto);
+        bookmarkService.update("test@gmail.com",1L, dto);
 
         verify(folderRepository, times(1)).findById(any(Long.class));
         verify(bookmarkRepository, times(1)).findById(any(Long.class));
@@ -95,7 +95,7 @@ class BookmarkServiceTest {
     @Test
     @DisplayName("북마크를 삭제할 수 있다.")
     void DELETE_BOOKMARK_TEST(){
-        User user = User.builder().id(1L).build();
+        User user = User.builder().id(1L).email("test@gmail.com").build();
         Folder folder = Folder.builder().id(1L).user(user).build();
         Bookmark bookmark = Bookmark.builder().id(1L).folder(folder).build();
 
@@ -107,7 +107,7 @@ class BookmarkServiceTest {
             .when(bookmarkRepository)
             .delete(any(Bookmark.class));
 
-        bookmarkService.delete(1L,1L);
+        bookmarkService.delete("test@gmail.com",1L);
 
 
         verify(bookmarkRepository, times(1)).findById(any(Long.class));

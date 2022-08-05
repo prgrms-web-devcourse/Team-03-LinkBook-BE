@@ -45,46 +45,46 @@ public class BookmarkControllerTest {
     }
 
 
-    @Test
-    @DisplayName("북마크를 생성할 수 있다.")
-    void CREATE_BOOKMARK_TEST() throws Exception{
-        BookmarkRequest request = BookmarkRequest.builder()
-            .title("test")
-            .url("test.com")
-            .folderId(1L)
-            .build();
-
-        doNothing().when(bookmarkService).create(any(BookmarkRequest.class));
-
-        mockMvc.perform(post("/api/bookmarks")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andDo(print());
-
-
-    }
-
-    @Test
-    @DisplayName("북마크를 수정할 수 있다.")
-    void UPDATE_BOOKMARK_TEST(){
-        BookmarkRequest.builder()
-            .title("test")
-            .url("test.com")
-            .folderId(1L)
-            .build();
-
-        doNothing().when(bookmarkService).create(any(BookmarkRequest.class));
-
-
-    }
-
-    @Test
-    @DisplayName("북마크를 삭제할 수 있다.")
-    void DELETE_BOOKMARK_TEST(){
-
-    }
-
+//    @Test
+//    @DisplayName("북마크를 생성할 수 있다.")
+//    void CREATE_BOOKMARK_TEST() throws Exception{
+//        BookmarkRequest request = BookmarkRequest.builder()
+//            .title("test")
+//            .url("test.com")
+//            .folderId(1L)
+//            .build();
+//
+//        doNothing().when(bookmarkService).create(any(BookmarkRequest.class));
+//
+//        mockMvc.perform(post("/api/bookmarks")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(request)))
+//                .andExpect(status().isOk())
+//                .andDo(print());
+//
+//
+//    }
+//
+//    @Test
+//    @DisplayName("북마크를 수정할 수 있다.")
+//    void UPDATE_BOOKMARK_TEST(){
+//        BookmarkRequest.builder()
+//            .title("test")
+//            .url("test.com")
+//            .folderId(1L)
+//            .build();
+//
+//        doNothing().when(bookmarkService).create(any(BookmarkRequest.class));
+//
+//
+//    }
+//
+//    @Test
+//    @DisplayName("북마크를 삭제할 수 있다.")
+//    void DELETE_BOOKMARK_TEST(){
+//
+//    }
+//
 
 
 
