@@ -82,11 +82,11 @@ class CommentControllerTest {
                 .userId(1L)
                 .build();
 
-        when(commentService.update(requestDto, user.getEmail()))
+        when(commentService.update(1L, requestDto, user.getEmail()))
                 .thenReturn(UpdateCommentResponse.builder().id(1L).build());
 
         // when, then
-        assertThat(commentController.update(requestDto, jwtAuthentication).getBody().getId())
+        assertThat(commentController.update(1L, requestDto, jwtAuthentication).getBody().getId())
                 .isEqualTo(1L);
     }
 

@@ -106,10 +106,17 @@ class CommentServiceTest {
                 .userId(requestDto1.getUserId())
                 .build();
 
+        when(commentRepository.getReferenceById(1L)).thenReturn(Comment.builder()
+                .id(id)
+                .content("test")
+                .user(User.builder().build())
+                .folder(Folder.builder().build())
+                .build());
+
         // when
         when(commentRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(comment));
         UpdateCommentResponse updateCommentResponse =
-                commentService.update(updateCommentRequest, user.getEmail());
+                commentService.update(id, updateCommentRequest, user.getEmail());
 
         // then
         assertThat(updateCommentResponse.getId()).isEqualTo(id);

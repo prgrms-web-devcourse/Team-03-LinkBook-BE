@@ -34,4 +34,14 @@ public class CreateCommentRequest {
                 .user(user)
                 .build();
     }
+
+    public static Comment toEntity(Folder folder, User user, Comment parent,
+                                   CreateCommentRequest commentRequestDto) {
+        return Comment.builder()
+                .content(commentRequestDto.getContent())
+                .folder(folder)
+                .parent(parent)
+                .user(user)
+                .build();
+    }
 }

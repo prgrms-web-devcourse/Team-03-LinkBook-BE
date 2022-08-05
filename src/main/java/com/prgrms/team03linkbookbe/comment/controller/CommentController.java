@@ -35,14 +35,15 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getAllByFolder(id));
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}")
     public ResponseEntity<UpdateCommentResponse> update(
+            @PathVariable Long id,
             @Valid @RequestBody UpdateCommentRequest requestDto,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication
     ) {
 
         UpdateCommentResponse responseDto =
-                commentService.update(requestDto, jwtAuthentication.email);
+                commentService.update(id, requestDto, jwtAuthentication.email);
 
         return ResponseEntity.ok(responseDto);
     }
