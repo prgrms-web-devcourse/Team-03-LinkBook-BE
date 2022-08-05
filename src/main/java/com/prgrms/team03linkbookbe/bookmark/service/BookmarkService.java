@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BookmarkService {
 
-    private final BookMarkRepository bookMarkRepository;
+    private final BookmarkRepository bookMarkRepository;
     private final FolderRepository folderRepository;
 
 
@@ -34,7 +34,7 @@ public class BookmarkService {
             .orElseThrow(NoDataException::new);
 
         Bookmark bookmark = dto.toEntity(folder);
-        bookmarkRepository.save(bookmark);
+        bookMarkRepository.save(bookmark);
 
     }
 
@@ -43,7 +43,7 @@ public class BookmarkService {
         Folder folder = folderRepository.findById(dto.getFolderId())
             .orElseThrow(NoDataException::new);
 
-        Bookmark bookmark = bookmarkRepository.findById(bookmarkId)
+        Bookmark bookmark = bookMarkRepository.findById(bookmarkId)
             .orElseThrow(NoDataException::new);
 
         if (!bookmark.getFolder().getUser().getEmail().equals(email)) {
@@ -64,7 +64,7 @@ public class BookmarkService {
             throw new AccessDeniedException("자신의 북마크만 삭제가능합니다");
         }
 
-        bookmarkRepository.delete(bookmark);
+        bookMarkRepository.delete(bookmark);
 
     }
 }
