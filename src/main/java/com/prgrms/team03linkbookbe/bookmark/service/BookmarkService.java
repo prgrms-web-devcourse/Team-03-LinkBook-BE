@@ -3,14 +3,10 @@ package com.prgrms.team03linkbookbe.bookmark.service;
 
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
-import com.prgrms.team03linkbookbe.bookmark.repository.BookMarkRepository;
+import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
-import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
-import com.prgrms.team03linkbookbe.user.entity.User;
-import com.prgrms.team03linkbookbe.user.repository.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -23,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BookmarkService {
 
-    private final BookMarkRepository bookMarkRepository;
+    private final BookmarkRepository bookMarkRepository;
     private final FolderRepository folderRepository;
 
 
@@ -58,8 +54,6 @@ public class BookmarkService {
     public void delete(String email, Long bookmarkId) {
         Bookmark bookmark = bookMarkRepository.findById(bookmarkId)
             .orElseThrow(NoDataException::new);
-
-
 
         if (!bookmark.getFolder().getUser().getEmail().equals(email)) {
             throw new AccessDeniedException("자신의 북마크만 삭제가능합니다");

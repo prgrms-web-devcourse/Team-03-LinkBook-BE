@@ -19,10 +19,10 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
-      # 설정 파일 생성 및 write
+      # main 설정 파일 생성 및 write
       - name: make env file
         run: |
-          # 설정 파일 디렉토리로 이동
+          # main 설정 파일 디렉토리로 이동
           cd ./src/main/resources
           
           # application-database.yaml 파일 생성
@@ -30,6 +30,26 @@ jobs:
 
           # GitHub-Actions 에서 설정한 값을 application-database.yaml 파일에 쓰기
           echo "${{ secrets.DATABASE }}" >> ./application-database.yaml
+          
+          # application-jwt.yaml 파일 생성
+          touch ./application-jwt.yaml
+          
+          # GitHub-Actions 에서 설정한 값을 application-jwt.yaml 파일에 쓰기
+          echo "${{ secrets.JWT }}" >> ./application-jwt.yaml
+
+        shell: bash
+        
+      # test 설정 파일 생성 및 write
+      - name: make env file
+        run: |
+          # test 설정 파일 디렉토리로 이동
+          cd ./src/test/resources
+          
+          # application-database.yaml 파일 생성
+          touch ./application-database.yaml
+          
+          # GitHub-Actions 에서 설정한 값을 application-database.yaml 파일에 쓰기
+          echo "${{ secrets.DATABASE_TEST }}" >> ./application-database.yaml
           
           # application-jwt.yaml 파일 생성
           touch ./application-jwt.yaml
