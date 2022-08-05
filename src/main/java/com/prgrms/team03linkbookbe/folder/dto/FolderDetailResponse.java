@@ -59,6 +59,7 @@ public class FolderDetailResponse {
             .originId(folder.getOriginId())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
+            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName()).collect(Collectors.toList()))
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
                 Collectors.toList()))
