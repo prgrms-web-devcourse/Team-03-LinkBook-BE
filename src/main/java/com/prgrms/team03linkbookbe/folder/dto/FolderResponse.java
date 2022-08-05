@@ -20,6 +20,8 @@ public class FolderResponse {
 
     private String image;
 
+    private String content;
+
     private Boolean isPinned;
 
     private Boolean isPrivate;
