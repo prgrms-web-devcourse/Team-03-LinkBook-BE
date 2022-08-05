@@ -28,11 +28,11 @@ public class FolderTag {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tag_id")
+    @JoinColumn(name = "tag_id", referencedColumnName = "id")
     private Tag tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "folder_id")
+    @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private Folder folder;
 
 

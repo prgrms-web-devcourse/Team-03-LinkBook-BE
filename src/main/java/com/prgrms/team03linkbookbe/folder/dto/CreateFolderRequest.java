@@ -42,6 +42,7 @@ public class CreateFolderRequest {
 
     public Folder toEntity() {
         return Folder.builder()
+            .likes(0)
             .title(this.getTitle())
             .image(this.getImage())
             .content(this.getContent())

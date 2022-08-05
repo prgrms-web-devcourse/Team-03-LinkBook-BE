@@ -2,6 +2,7 @@ package com.prgrms.team03linkbookbe.bookmark.controller;
 
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.service.BookmarkService;
+import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -35,15 +36,15 @@ public class BookmarkController {
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable Long id,
         @Valid @RequestBody BookmarkRequest bookmarkRequest,
-        @AuthenticationPrincipal User user) {
-        bookmarkService.update(user.getId(), id, bookmarkRequest);
+        @AuthenticationPrincipal JwtAuthentication auth) {
+        bookmarkService.update(auth.email, id, bookmarkRequest);
     }
 
     @DeleteMapping("/api/bookmarks/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Long id,
-        @AuthenticationPrincipal User user) {
-        bookmarkService.delete(user.getId(), id);
+        @AuthenticationPrincipal JwtAuthentication auth) {
+        bookmarkService.delete(auth.email, id);
     }
 
 

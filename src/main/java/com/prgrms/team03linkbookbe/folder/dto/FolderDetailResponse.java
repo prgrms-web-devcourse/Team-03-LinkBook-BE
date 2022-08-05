@@ -1,8 +1,10 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.comment.dto.CommentResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
 import java.time.LocalDateTime;
@@ -11,9 +13,11 @@ import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FolderDetailResponse {
@@ -40,17 +44,16 @@ public class FolderDetailResponse {
 
     private int likes;
 
-    private List<CommentResponse> comments;
-
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
 
-    public static FolderDetailResponse fromEntity(Folder folder, int likes) {
+    public static FolderDetailResponse fromEntity(Folder folder) {
         return FolderDetailResponse.builder()
             .id(folder.getId())
             .title(folder.getTitle())
+            .likes(folder.getLikes())
             .image(folder.getImage())
             .content(folder.getContent())
             .originId(folder.getOriginId())
@@ -59,10 +62,7 @@ public class FolderDetailResponse {
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
                 Collectors.toList()))
-            .comments(folder.getComments().stream().map(CommentResponse::fromEntity).collect(
-                Collectors.toList()))
             .createdAt(folder.getCreatedAt())
-            .updatedAt(folder.getUpdatedAt())
             .build();
     }
 
