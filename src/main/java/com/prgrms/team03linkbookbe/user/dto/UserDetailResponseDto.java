@@ -32,6 +32,7 @@ public class UserDetailResponseDto {
 
     public static UserDetailResponseDto fromEntity(User user) {
         return UserDetailResponseDto.builder()
+            .id(user.getId())
             .email(user.getEmail())
             .name(user.getName())
             .image(user.getImage())

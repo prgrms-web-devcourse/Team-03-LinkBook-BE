@@ -22,9 +22,13 @@ public class RegisterRequestDto {
     @NotBlank(message = "Password cannot be blank")
     private String password;
 
+    @NotBlank(message = "이미지 URL을 입력해주세요.")
+    private String image;
+
     public User toEntity() {
         return User.builder()
             .email(email)
+            .image(image)
             .build();
     }
 
