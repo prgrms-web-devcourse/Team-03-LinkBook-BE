@@ -6,7 +6,6 @@ import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -44,7 +43,7 @@ public class User extends BaseDateEntity {
     @Column(name = "name", nullable = false, columnDefinition = "varchar(20)")
     private String name;
 
-    @Column(name = "image")
+    @Column(name = "image", nullable = false)
     private String image;
 
     @Column(name = "introduce", columnDefinition = "varchar(50)")
@@ -94,7 +93,7 @@ public class User extends BaseDateEntity {
 
     public void addInterest(Interest interest) {
         this.interests.add(interest);
-        if(interest.getUser() != this) {
+        if (interest.getUser() != this) {
             interest.changeUser(this);
         }
     }

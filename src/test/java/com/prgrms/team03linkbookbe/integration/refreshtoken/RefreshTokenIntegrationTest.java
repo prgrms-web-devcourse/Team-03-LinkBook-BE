@@ -52,7 +52,6 @@ public class RefreshTokenIntegrationTest {
     RefreshTokenRepository refreshTokenRepository;
 
     @Test
-    @Disabled
     @DisplayName("액세스 토큰 재발급 테스트")
     void REISSUE_ACCESS_TOKEN_TEST() throws Exception {
         // given
