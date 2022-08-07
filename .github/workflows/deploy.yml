@@ -62,15 +62,8 @@ jobs:
         shell: bash
 
       # Gradle build
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build Gradle wrapper
-        run: gradle wrap
-
       - name: Build with Gradle
-        run: ./gradlew build
-        shell: bash
+        run: ./gradlew bootJar
 
       # Spring 어플리케이션 Docker Image 빌드
       - name: Build Docker Image For Spring
