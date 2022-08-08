@@ -156,7 +156,7 @@ public class UserServiceTest {
         @DisplayName("이메일로 사용자 정보를 찾아서 반환할 수 있다.")
         void FIND_BY_EMAIL_TEST() {
             // Given
-            given(userRepository.findByEmail(email)).willReturn(Optional.of(user));
+            given(userRepository.findByEmailFetchJoinInterests(email)).willReturn(Optional.of(user));
 
             // When
             MeResponseDto responseDto = userService.me(email);
@@ -169,7 +169,7 @@ public class UserServiceTest {
         @DisplayName("존재하지 않는 사용자 이메일로 조회할 수 없다.")
         void NO_EXIST_USER() {
             // Given
-            given(userRepository.findByEmail(email)).willReturn(Optional.empty());
+            given(userRepository.findByEmailFetchJoinInterests(email)).willReturn(Optional.empty());
 
             // When Then
             assertThatThrownBy(() -> userService.me(email))

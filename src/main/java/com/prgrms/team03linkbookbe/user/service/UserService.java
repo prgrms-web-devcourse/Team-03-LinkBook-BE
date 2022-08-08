@@ -54,7 +54,7 @@ public class UserService {
     }
 
     public MeResponseDto me(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailFetchJoinInterests(email)
             .map(MeResponseDto::fromEntity)
             .orElseThrow(NoDataException::new);
     }
