@@ -1,7 +1,6 @@
 package com.prgrms.team03linkbookbe.tag.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -21,13 +20,12 @@ public enum TagCategory {
     TRAVEL1("여행1"),
     FOOD1("음식1");
 
-    @JsonValue
-    public String viewName;
+    private String viewName;
 
     @JsonCreator
-    public static TagCategory from(String viewName) {
+    public static TagCategory from(String sub) {
         for (TagCategory tag : TagCategory.values()) {
-            if (tag.getViewName().equals(viewName)) {
+            if (tag.getViewName().equals(sub)) {
                 return tag;
             }
         }
