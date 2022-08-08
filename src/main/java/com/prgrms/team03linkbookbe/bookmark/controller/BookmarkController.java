@@ -3,7 +3,6 @@ package com.prgrms.team03linkbookbe.bookmark.controller;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.service.BookmarkService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
-import com.prgrms.team03linkbookbe.user.entity.User;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

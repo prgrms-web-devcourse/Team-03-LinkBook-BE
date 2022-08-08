@@ -1,14 +1,13 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
+import lombok.Builder;
+import lombok.Getter;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.Builder;
-import lombok.Getter;
-import org.springframework.data.domain.Page;
 
 @Builder
 @Getter
@@ -28,7 +27,7 @@ public class FolderResponse {
 
     private UserSimpleResponseDto user;
 
-    private List<TagCategory> tags;
+    private List<String> tags;
 
     private int likes;
 
@@ -46,7 +45,7 @@ public class FolderResponse {
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
             .likes(folder.getLikes())
-            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName()).collect(Collectors.toList()))
+            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName().getViewName()).collect(Collectors.toList()))
             .isLiked(isLiked)
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .createdAt(folder.getCreatedAt())

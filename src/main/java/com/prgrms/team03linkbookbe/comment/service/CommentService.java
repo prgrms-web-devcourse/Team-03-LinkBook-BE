@@ -37,7 +37,8 @@ public class CommentService {
         Comment comment;
 
         if (requestDto.getParentId() != null) {
-            Comment parent = commentRepository.getReferenceById(requestDto.getParentId());
+            Comment parent = commentRepository.findById(requestDto.getParentId())
+                    .orElseThrow(() -> new IllegalArgumentException("잘못된 부모 아이디 값을 입력했습니다."));
             comment = CreateCommentRequest.toEntity(folder, user, parent, requestDto);
         } else {
             comment = CreateCommentRequest.toEntity(folder, user, requestDto);

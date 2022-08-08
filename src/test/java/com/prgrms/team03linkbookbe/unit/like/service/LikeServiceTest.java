@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @Slf4j
@@ -65,15 +66,23 @@ class LikeServiceTest {
     @DisplayName("좋아요 등록 테스트")
     void INSERT_COMMENT_TEST() {
         // given
-        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
+        User user2 = User.builder()
+                .id(2L)
+                .email("user2@test.com")
+                .password("test1234!")
+                .build();
+        when(userRepository.findByEmail(user2.getEmail())).thenReturn(Optional.of(user2));
+        when(folderRepository.findById(1L)).thenReturn(Optional.of(folder.toBuilder()
+                .user(user)
+                .build()));
 
-        Like like = CreateLikeRequest.toEntity(folder, user);
-        like.toBuilder().id(1L).build();
-        when(likeRepository.save(like)).thenReturn(like.toBuilder().id(1L).build());
+
+        Like like = CreateLikeRequest.toEntity(folder, user2)
+                .toBuilder().id(1L).build();
+        when(likeRepository.save(any(Like.class))).thenReturn(like);
 
         // when, then
-        assertThat(likeService.create(requestDto1, user.getEmail()).getId()).isEqualTo(1L);
+        assertThat(likeService.create(requestDto1, user2.getEmail()).getId()).isEqualTo(1L);
     }
 
     @Test

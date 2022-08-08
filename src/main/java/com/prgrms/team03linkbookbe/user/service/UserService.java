@@ -1,6 +1,8 @@
 package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
+import com.prgrms.team03linkbookbe.email.exception.EmailCertificationFailureException;
+import com.prgrms.team03linkbookbe.email.service.EmailService;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
@@ -13,6 +15,8 @@ import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,13 +32,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final InterestRepository interestRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Transactional
-    public void register(RegisterRequestDto requestDto) {
+    public void register(HttpSession httpSession, RegisterRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new DuplicatedEmailException();
         }
         User user = requestDto.toEntity();
+
+        emailService.IsCertificatedEmail(httpSession, user.getEmail());
         user.encodePassword(passwordEncoder.encode(requestDto.getPassword()));
         User saveUser = userRepository.save(user);
     }
@@ -54,7 +61,7 @@ public class UserService {
     }
 
     public MeResponseDto me(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailFetchJoinInterests(email)
             .map(MeResponseDto::fromEntity)
             .orElseThrow(NoDataException::new);
     }

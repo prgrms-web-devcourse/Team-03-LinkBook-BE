@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -15,9 +17,10 @@ public class TagController {
 
     private final TagService tagService;
 
-    @GetMapping("/api/tags")
-    public ResponseEntity<TagResponse> manageTag(){
-        return ResponseEntity.ok(tagService.manage());
+    @GetMapping("/api/backend/tags")
+    public ResponseEntity<Void> manageTag(){
+        tagService.add();
+        return ResponseEntity.ok().build();
     }
 
 

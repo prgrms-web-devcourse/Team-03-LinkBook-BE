@@ -1,17 +1,17 @@
 package com.prgrms.team03linkbookbe.folder.service;
 
+import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
+import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
+import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
+import com.prgrms.team03linkbookbe.bookmark.service.BookmarkService;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.dto.*;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
-import com.prgrms.team03linkbookbe.folderTag.repository.FolderTagRepository;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
-import com.prgrms.team03linkbookbe.like.entity.Like;
-import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
-import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -32,22 +33,29 @@ import java.util.List;
 public class FolderService {
 
     private final FolderRepository folderRepository;
-    private final FolderTagRepository folderTagRepository;
-    private final LikeRepository likeRepository;
-    private final TagRepository tagRepository;
+    private final FolderTagService folderTagService;
     private final UserRepository userRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkService bookmarkService;
 
 
     // 폴더생성
     @Transactional
-    public FolderIdResponse create(JwtAuthentication auth, CreateFolderRequest createFolderRequest) {
+    public FolderIdResponse create(JwtAuthentication auth,
+        CreateFolderRequest createFolderRequest) {
         User user = userRepository.findByEmail(auth.email).orElseThrow(NoDataException::new);
-        createFolderRequest.setUser(user);
-        Folder folder = createFolderRequest.toEntity();
+
+        Folder folder = createFolderRequest.toEntity(user);
         Folder save = folderRepository.save(folder);
 
-        // 태그관계이어주기
-        addFolderTag(createFolderRequest, save);
+        // 태그 관계이어주기
+        folderTagService.addFolderTag(createFolderRequest, save);
+
+        // 북마크 관계이어주기
+        for (BookmarkRequest bookmarkRequest : createFolderRequest.getBookmarks()) {
+            Bookmark bookmark = bookmarkRequest.toEntity(folder);
+            bookmarkRepository.save(bookmark);
+        }
 
         return FolderIdResponse.fromEntity(folder.getId());
     }
@@ -76,12 +84,13 @@ public class FolderService {
         }
 
         return FolderDetailResponse
-                .fromEntity(folder.get(0));
+            .fromEntity(folder.get(0));
     }
 
 
     // 특정 사용자의 폴더전체조회
-    public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate, Pageable pageable) {
+    public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate,
+        Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(NoDataException::new);
         List<Like> likes = likeRepository.findAllByUser(user);
         Page<Folder> folders = folderRepository.findAllByUser(user, isPrivate, pageable);
@@ -101,11 +110,29 @@ public class FolderService {
         // dirty check로 update
         folder.modifyFolder(createFolderRequest);
 
-        // 태그관계끊어주기
-        folderTagRepository.deleteAllByFolder(folder);
+        // 북마크 관계이어주기
+//        for(BookmarkRequest bookmark : createFolderRequest.getBookmarks()){
+//            if(bookmark.getId() == null){ // 생성
+//                bookmarkService.create(bookmark);
+//            }
+//            else{ // 수정
+//                bookmarkService.update(email,bookmark.getId(),bookmark);
+//            }
+//        }
 
-        // 태그관계이어주기
-        addFolderTag(createFolderRequest, folder);
+        // 북마크 전체
+        bookmarkRepository.deleteAllByFolder(folder);
+
+        // 북마크 관계이어주기
+        for (BookmarkRequest bookmarkRequest : createFolderRequest.getBookmarks()) {
+            Bookmark bookmark = bookmarkRequest.toEntity(folder);
+            bookmarkRepository.save(bookmark);
+        }
+
+
+
+        // 태그 관계이어주기
+        folderTagService.addFolderTag(createFolderRequest, folder);
 
         return FolderIdResponse.fromEntity(folder.getId());
     }
@@ -125,12 +152,12 @@ public class FolderService {
     private void addFolderTag(CreateFolderRequest createFolderRequest, Folder folder) {
         for (TagCategory tagCategory : createFolderRequest.getTags()) {
             Tag tag = tagRepository.findByName(tagCategory)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 태그를 입력했습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 태그를 입력했습니다."));
 
             FolderTag folderTag = FolderTag.builder()
-                    .tag(tag)
-                    .folder(folder)
-                    .build();
+                .tag(tag)
+                .folder(folder)
+                .build();
 
             folderTagRepository.save(folderTag);
         }

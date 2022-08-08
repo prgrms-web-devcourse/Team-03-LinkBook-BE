@@ -1,6 +1,8 @@
 package com.prgrms.team03linkbookbe.user.controller;
 
 import com.prgrms.team03linkbookbe.common.response.ExceptionResponse;
+import com.prgrms.team03linkbookbe.email.exception.EmailCertificationFailureException;
+import com.prgrms.team03linkbookbe.email.exception.EmailIsNotCertificatedException;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,12 @@ public class UserControllerAdvice {
         return new ExceptionResponse(e.getExceptionCode());
     }
 
-
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(EmailIsNotCertificatedException.class)
+    public ExceptionResponse handleEmailIsNotCertificatedException(
+        EmailIsNotCertificatedException e) {
+        log.info("email is not certificated");
+        return new ExceptionResponse(e.getExceptionCode());
+    }
 
 }

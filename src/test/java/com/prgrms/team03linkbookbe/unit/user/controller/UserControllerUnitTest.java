@@ -24,6 +24,7 @@ import com.prgrms.team03linkbookbe.user.service.UserService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -71,8 +73,9 @@ public class UserControllerUnitTest {
             .email(email)
             .password(password)
             .build();
+        MockHttpSession mockHttpSession = new MockHttpSession();
 
-        doNothing().when(service).register(requestDto);
+        doNothing().when(service).register(mockHttpSession, requestDto);
 
         // when & then
         mockMvc.perform(post("/api/users/register")

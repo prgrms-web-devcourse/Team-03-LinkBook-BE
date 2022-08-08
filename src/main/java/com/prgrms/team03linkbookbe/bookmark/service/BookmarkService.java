@@ -25,6 +25,10 @@ public class BookmarkService {
 
     // 북마크 생성
     public void create(BookmarkRequest dto) {
+        // 소속 폴더가 없다면
+        if(dto.getFolderId()==null){
+            throw new IllegalArgumentException("폴더 id값을 입력하세요");
+        }
         Folder folder = folderRepository.findById(dto.getFolderId())
             .orElseThrow(NoDataException::new);
 
@@ -32,6 +36,7 @@ public class BookmarkService {
         bookMarkRepository.save(bookmark);
 
     }
+
 
     // 북마크 수정
     public void update(String email, Long bookmarkId, BookmarkRequest dto) {
@@ -62,4 +67,6 @@ public class BookmarkService {
         bookMarkRepository.delete(bookmark);
 
     }
+
+
 }

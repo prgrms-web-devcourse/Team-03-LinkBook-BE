@@ -203,11 +203,10 @@ gradle-app.setting
 
 src/main/resources/application-database.yaml
 src/main/resources/application-jwt.yaml
-src/main/resources/application-email.yaml
+src/main/resources/application-mail.yaml
 
 src/test/resources/application.yaml
 src/test/resources/application-database.yaml
 src/test/resources/application-jwt.yaml
-src/test/resources/application-email.yaml
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,gradle
