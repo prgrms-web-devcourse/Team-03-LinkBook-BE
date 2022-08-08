@@ -14,6 +14,7 @@ import com.prgrms.team03linkbookbe.email.exception.EmailCertificationFailureExce
 import com.prgrms.team03linkbookbe.email.exception.EmailSendFailureException;
 import com.prgrms.team03linkbookbe.email.service.EmailService;
 import com.prgrms.team03linkbookbe.user.service.UserService;
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -111,7 +112,7 @@ public class EmailControllerUnitTest {
         void SUCCESS_EMAIL_CERTIFICATION_TEST() throws Exception {
             // Given
             httpSession = new MockHttpSession();
-            httpSession.setAttribute(userEmail, userKey);
+            httpSession.setAttribute(userEmail, Map.of("KEY_NAME", "failKey", "IS_CERTIFICATION", false));
             willDoNothing().given(emailService).emailCertification(httpSession, requestDto);
 
             // When

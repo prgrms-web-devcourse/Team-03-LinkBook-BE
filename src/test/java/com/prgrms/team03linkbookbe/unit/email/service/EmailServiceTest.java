@@ -7,6 +7,7 @@ import com.prgrms.team03linkbookbe.email.dto.EmailCertificationRequestDto;
 import com.prgrms.team03linkbookbe.email.dto.EmailRequestDto;
 import com.prgrms.team03linkbookbe.email.exception.EmailCertificationFailureException;
 import com.prgrms.team03linkbookbe.email.service.EmailService;
+import java.util.Map;
 import javax.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +53,10 @@ public class EmailServiceTest {
             emailService.sendEmail(httpSession, requestDto);
 
             // Then
+            Map value = (Map) httpSession.getAttribute(userEmail);
+            Boolean isCertificated = (Boolean) value.get("IS_CERTIFICATION");
             assertThat(httpSession.getAttribute(userEmail)).isNotNull();
+            assertThat(isCertificated).isFalse();
         }
     }
 
@@ -72,13 +76,17 @@ public class EmailServiceTest {
         void SUCCESS_EMAIL_CERTIFICATION_TEST() {
             // Given
             httpSession = new MockHttpSession();
-            httpSession.setAttribute(userEmail, userKey);
+            httpSession.setAttribute(userEmail, Map.of("CERTIFICATION_KEY", userKey, "IS_CERTIFICATION", false));
 
             // When
             emailService.emailCertification(httpSession, requestDto);
 
             // Then
-            assertThat(httpSession.getAttribute(userEmail)).isEqualTo(requestDto.getKey());
+            Map value = (Map) httpSession.getAttribute(userEmail);
+            String key = (String) value.get("CERTIFICATION_KEY");
+            Boolean isCertificated = (Boolean) value.get("IS_CERTIFICATION");
+            assertThat(isCertificated).isTrue();
+            assertThat(key).isEqualTo(requestDto.getKey());
         }
 
         @Test
@@ -86,7 +94,7 @@ public class EmailServiceTest {
         void FAIL_EMAIL_CERTIFICATION_TEST() {
             // Given
             httpSession = new MockHttpSession();
-            httpSession.setAttribute(userEmail, "failKey");
+            httpSession.setAttribute(userEmail, Map.of("CERTIFICATION_KEY", "failKey", "IS_CERTIFICATION", false));
 
             // When Then
             assertThatThrownBy(() -> emailService.emailCertification(httpSession, requestDto))
