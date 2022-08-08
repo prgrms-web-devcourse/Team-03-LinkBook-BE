@@ -36,6 +36,10 @@ public class LikeService {
         Folder folder = folderRepository.findById(requestDto.getFolderId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 폴더는 존재하지 않습니다."));
 
+        if (Objects.equals(user.getId(), folder.getUser().getId())) {
+            throw new IllegalArgumentException("자신의 폴더에 좋아요를 할 수 없습니다.");
+        }
+
         Like like = CreateLikeRequest.toEntity(folder, user);
 
         Long id = likeRepository.save(like).getId();
