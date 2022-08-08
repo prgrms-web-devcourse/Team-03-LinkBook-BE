@@ -17,6 +17,7 @@ import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -27,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -55,9 +57,12 @@ public class UserIntegrationTest {
             .password(password)
             .image("기본이미지URL")
             .build();
+        MockHttpSession mockHttpSession = new MockHttpSession();
+        mockHttpSession.setAttribute(email, Map.of("CERTIFICATION_KEY", "userKey", "IS_CERTIFICATION", true));
 
         // when & then
         mockMvc.perform(post("/api/users/register")
+                .session(mockHttpSession)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
