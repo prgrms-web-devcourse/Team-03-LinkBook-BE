@@ -2,6 +2,7 @@ package com.prgrms.team03linkbookbe.tag.entity;
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
+import com.prgrms.team03linkbookbe.rootTag.entity.RootTag;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "tag")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
@@ -38,11 +40,8 @@ public class Tag {
     @OneToMany(mappedBy = "tag")
     private List<FolderTag> folderTags = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "root_id", referencedColumnName = "id")
+    private RootTag rootTag;
 
-    @Builder
-    public Tag(Long id, TagCategory name,
-        List<Folder> folders) {
-        this.id = id;
-        this.name = name;
-    }
 }
