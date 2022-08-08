@@ -2,7 +2,9 @@ package com.prgrms.team03linkbookbe.folder.repository;
 
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.user.entity.User;
+
 import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,5 +23,7 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
     @Query("SELECT DISTINCT f FROM Folder f LEFT JOIN f.bookmarks LEFT JOIN f.folderTags JOIN  f.user WHERE f.id = :folderId")
     List<Folder> findByIdWithFetchJoin(Long folderId);
 
-
+    @Query(value = "SELECT DISTINCT f FROM Folder f LEFT JOIN FETCH f.folderTags WHERE f.isPrivate = :isPrivate AND f.title LIKE CONCAT('%',:title,'%')",
+            countQuery = "SELECT count(f) FROM Folder f")
+    Page<Folder> findAllByTitle(Boolean isPrivate, Pageable pageable, String title);
 }
