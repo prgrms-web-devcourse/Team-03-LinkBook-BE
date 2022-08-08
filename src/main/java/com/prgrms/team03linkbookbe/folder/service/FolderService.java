@@ -6,6 +6,7 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
@@ -18,7 +19,6 @@ import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,13 +37,14 @@ public class FolderService {
     private final FolderTagRepository folderTagRepository;
     private final LikeRepository likeRepository;
     private final TagRepository tagRepository;
+    private final RootTagRepository rootTagRepository;
     private final UserRepository userRepository;
-
 
 
     // 폴더생성
     @Transactional
-    public FolderIdResponse create(JwtAuthentication auth, CreateFolderRequest createFolderRequest) {
+    public FolderIdResponse create(JwtAuthentication auth,
+        CreateFolderRequest createFolderRequest) {
         User user = userRepository.findByEmail(auth.email).orElseThrow(NoDataException::new);
         createFolderRequest.setUser(user);
         Folder folder = createFolderRequest.toEntity();
@@ -65,7 +66,7 @@ public class FolderService {
     // 특정 폴더조회
     public FolderDetailResponse detail(Long folderId) {
         List<Folder> folder = folderRepository.findByIdWithFetchJoin(folderId);
-        if(folder.size() != 1){
+        if (folder.size() != 1) {
             throw new NoDataException();
         }
 
@@ -75,7 +76,8 @@ public class FolderService {
 
 
     // 특정 사용자의 폴더전체조회
-    public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate, Pageable pageable) {
+    public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate,
+        Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(NoDataException::new);
         Page<Folder> folders = folderRepository.findAllByUser(user, isPrivate, pageable);
         return FolderListByUserResponse.fromEntity(user, folders);
@@ -114,6 +116,20 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
+    public FolderListResponse getByTag(TagRequest tagRequest, Pageable pageable) {
+        String tagName = tagRequest.getTag();
+        Page<Folder> folders;
+        if (rootTagRepository.existsByName(tagName)) {
+            folders = folderRepository.findByRootTag(tagName, pageable);
+        } else if (tagRepository.existsByName(tagName)) {
+            folders = folderRepository.findByTag(tagName, pageable);
+        } else {
+            throw new NoDataException();
+        }
+
+        return FolderListResponse.fromEntity(folders);
+    }
+
     // 태그추가
     private void addFolderTag(CreateFolderRequest createFolderRequest, Folder folder) {
         for (TagCategory tagCategory : createFolderRequest.getTags()) {
@@ -128,6 +144,5 @@ public class FolderService {
             folderTagRepository.save(folderTag);
         }
     }
-
 
 }

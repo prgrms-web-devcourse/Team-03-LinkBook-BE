@@ -7,6 +7,7 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import javax.validation.Valid;
@@ -34,14 +35,16 @@ public class FolderController {
     }
 
     @GetMapping("/api/folders")
-    public ResponseEntity<FolderListResponse> readAll(Pageable pageable){
+    public ResponseEntity<FolderListResponse> readAll(Pageable pageable) {
         FolderListResponse all = folderService.getAll(pageable);
         return ResponseEntity.ok(all);
     }
 
     @GetMapping("/api/folders/users/{userId}")
-    public ResponseEntity<FolderListByUserResponse> readAllByUser(@PathVariable Long userId, @RequestParam String isPrivate, Pageable pageable) {
-        FolderListByUserResponse allByUser = folderService.getAllByUser(userId, parseBoolean(isPrivate), pageable);
+    public ResponseEntity<FolderListByUserResponse> readAllByUser(@PathVariable Long userId,
+        @RequestParam String isPrivate, Pageable pageable) {
+        FolderListByUserResponse allByUser = folderService.getAllByUser(userId,
+            parseBoolean(isPrivate), pageable);
         return ResponseEntity.ok(allByUser);
     }
 
@@ -73,5 +76,10 @@ public class FolderController {
         folderService.delete(auth.email, id);
     }
 
-
+    @GetMapping("/api/folders/tag")
+    public ResponseEntity<FolderListResponse> readByTag(@RequestBody TagRequest tagRequest,
+        Pageable pageable) {
+        FolderListResponse byTag = folderService.getByTag(tagRequest, pageable);
+        return ResponseEntity.ok().body(byTag);
+    }
 }
