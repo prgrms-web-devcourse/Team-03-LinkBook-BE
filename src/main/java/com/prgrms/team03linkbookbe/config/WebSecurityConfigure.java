@@ -45,6 +45,7 @@ public class WebSecurityConfigure {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         configuration.setAllowedOrigins(Arrays.asList("*"));
         configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
@@ -97,7 +98,8 @@ public class WebSecurityConfigure {
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .antMatchers(
-                "/api/users/login", "/api/users/register", "/api/refresh-token"
+                "/h2-console/**",
+                "/api/users/login", "/api/users/register", "/api/refresh-token", "/api/emails/**"
             ).permitAll()
             .antMatchers(HttpMethod.GET,
                 "/api/comments/**", "/api/folders/**", "/api/likes/**", "/api/tags/**"
