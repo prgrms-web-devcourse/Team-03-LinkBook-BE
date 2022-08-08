@@ -16,13 +16,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookmarkRequest {
 
+    private Long id;
+
     @NotBlank(message = "url을 입력하세요")
     private String url;
 
     @NotBlank(message = "북마크이름을 입력하세요")
     private String title;
 
-    @NotNull(message = "폴더를 입력하세요")
     private Long folderId;
 
     public Bookmark toEntity(Folder folder){

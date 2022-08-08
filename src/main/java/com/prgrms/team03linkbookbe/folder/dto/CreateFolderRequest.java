@@ -1,9 +1,13 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.entity.User;
+import java.util.List;
 import java.util.Set;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,7 +25,6 @@ public class CreateFolderRequest {
     @NotBlank(message = "폴더의 이미지를 설정해주세요")
     private String image;
 
-    @NotBlank(message = "폴더의 내용을 입력해주세요")
     private String content;
 
     private Long originId;
@@ -32,15 +35,12 @@ public class CreateFolderRequest {
     @NotNull(message = "폴더 공개여부를 설정해주세요")
     private Boolean isPrivate;
 
-    private Set<TagCategory> tags;
+    private List<TagCategory> tags;
 
-    private User user;
+    private List<BookmarkRequest> bookmarks;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
-    public Folder toEntity() {
+    public Folder toEntity(User user) {
         return Folder.builder()
             .likes(0)
             .title(this.getTitle())
@@ -49,7 +49,7 @@ public class CreateFolderRequest {
             .originId(this.getOriginId())
             .isPinned(this.getIsPinned())
             .isPrivate(this.getIsPrivate())
-            .user(this.user)
+            .user(user)
             .build();
     }
 
