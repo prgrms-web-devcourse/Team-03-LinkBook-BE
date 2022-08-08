@@ -15,8 +15,6 @@ public class FolderListResponse {
 
     private Page<FolderResponse> folders;
 
-    private UserSimpleResponseDto user;
-
 
     public static FolderListResponse fromEntity(Page<Folder> folders) {
         return FolderListResponse.builder()

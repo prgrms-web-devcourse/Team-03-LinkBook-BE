@@ -28,7 +28,7 @@ public class FolderResponse {
 
     private UserSimpleResponseDto user;
 
-    private List<TagCategory> tags;
+    private List<String> tags;
 
     private int likes;
 
@@ -44,7 +44,7 @@ public class FolderResponse {
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
             .likes(folder.getLikes())
-            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName()).collect(Collectors.toList()))
+            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName().getViewName()).collect(Collectors.toList()))
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .createdAt(folder.getCreatedAt())
             .build();
