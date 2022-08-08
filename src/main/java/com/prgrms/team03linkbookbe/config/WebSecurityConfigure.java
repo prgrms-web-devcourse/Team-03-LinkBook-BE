@@ -30,6 +30,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Slf4j
@@ -40,11 +41,13 @@ public class WebSecurityConfigure {
 
     private final JwtConfigure jwtConfigure;
 
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE"));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+//        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -93,9 +96,10 @@ public class WebSecurityConfigure {
     public SecurityFilterChain filterChain(HttpSecurity http, Jwt jwt) throws Exception {
         http
             .authorizeRequests()
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .antMatchers(
                 "/h2-console/**",
-                "/api/users/login", "/api/users/register", "/api/refresh-token"
+                "/api/users/login", "/api/users/register", "/api/refresh-token", "/api/emails/**"
             ).permitAll()
             .antMatchers(HttpMethod.GET,
                 "/api/comments/**", "/api/folders/**", "/api/likes/**", "/api/tags", "/api/backend/tags"
