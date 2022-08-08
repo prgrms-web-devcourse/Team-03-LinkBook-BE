@@ -32,11 +32,13 @@ public class FolderResponse {
 
     private int likes;
 
+    private Boolean isLiked;
+
     private LocalDateTime createdAt;
 
 
 
-    public static FolderResponse fromEntity(Folder folder) {
+    public static FolderResponse fromEntity(Folder folder, Boolean isLiked) {
         return FolderResponse.builder()
             .id(folder.getId())
             .title(folder.getTitle())
@@ -45,6 +47,7 @@ public class FolderResponse {
             .isPrivate(folder.getIsPrivate())
             .likes(folder.getLikes())
             .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName()).collect(Collectors.toList()))
+            .isLiked(isLiked)
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .createdAt(folder.getCreatedAt())
             .build();
