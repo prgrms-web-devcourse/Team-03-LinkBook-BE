@@ -15,7 +15,6 @@ public class FolderListResponse {
 
     private Page<FolderResponse> folders;
 
-
     public static FolderListResponse fromEntity(Page<Folder> folders, List<Like> likes) {
         return FolderListResponse.builder()
                 .folders(folders.map(f -> FolderResponse.fromEntity(f,
