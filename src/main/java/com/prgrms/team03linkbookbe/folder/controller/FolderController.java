@@ -1,19 +1,12 @@
 package com.prgrms.team03linkbookbe.folder.controller;
 
-import static java.lang.Boolean.parseBoolean;
-
-import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
-import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
-import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
-import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
+import com.prgrms.team03linkbookbe.folder.dto.*;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,16 +25,24 @@ public class FolderController {
 
     @GetMapping("/api/folders")
     public ResponseEntity<FolderListResponse> readAll(Pageable pageable,
-                                                      @AuthenticationPrincipal JwtAuthentication auth) {
-        FolderListResponse all = folderService.getAll(pageable, auth);
+                                                      @AuthenticationPrincipal JwtAuthentication auth,
+                                                      @RequestParam @Nullable String title) {
+        FolderListResponse all;
+
+        if (title == null) {
+            all = folderService.getAll(pageable, auth);
+        } else {
+            all = folderService.getAllByTitle(pageable, title, auth);
+        }
+
         return ResponseEntity.ok(all);
     }
 
     @GetMapping("/api/folders/users/{userId}")
     public ResponseEntity<FolderListByUserResponse> readAllByUser(@PathVariable Long userId,
-        @RequestParam String isPrivate, Pageable pageable) {
+                                                                  @RequestParam String isPrivate, Pageable pageable) {
         FolderListByUserResponse allByUser = folderService.getAllByUser(userId,
-            parseBoolean(isPrivate), pageable);
+                parseBoolean(isPrivate), pageable);
         return ResponseEntity.ok(allByUser);
     }
 
@@ -50,13 +51,6 @@ public class FolderController {
                                                            @AuthenticationPrincipal JwtAuthentication auth) {
         FolderDetailResponse detail = folderService.detail(id, auth);
         return ResponseEntity.ok(detail);
-    }
-
-    @GetMapping("/api/folders/{title}")
-    public ResponseEntity<FolderListResponse> readAllByTitle(Pageable pageable,
-        @PathVariable String title, @AuthenticationPrincipal JwtAuthentication auth) {
-        FolderListResponse all = folderService.getAllByTitle(pageable, title, auth);
-        return ResponseEntity.ok(all);
     }
 
     @PostMapping("/api/folders")
@@ -83,15 +77,15 @@ public class FolderController {
 
     @GetMapping("/api/folders/root-tag")
     public ResponseEntity<FolderListResponse> readByRootTag(
-        @RequestBody RootTagRequest rootTagRequest,
-        Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
+            @RequestBody RootTagRequest rootTagRequest,
+            Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
         FolderListResponse byRootTag = folderService.getByRootTag(rootTagRequest, pageable, auth);
         return ResponseEntity.ok().body(byRootTag);
     }
 
     @GetMapping("/api/folders/tag")
     public ResponseEntity<FolderListResponse> readByTag(@RequestBody TagRequest tagRequest,
-        Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
+                                                        Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
         FolderListResponse byTag = folderService.getByTag(tagRequest, pageable, auth);
         return ResponseEntity.ok().body(byTag);
     }
