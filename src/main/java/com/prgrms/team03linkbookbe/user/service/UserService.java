@@ -1,21 +1,18 @@
 package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.email.exception.EmailCertificationFailureException;
 import com.prgrms.team03linkbookbe.email.service.EmailService;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
-import com.prgrms.team03linkbookbe.user.dto.UserDetailResponseDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +74,8 @@ public class UserService {
 
         User updateUser = requestDto.toEntity();
         List<Interest> updateInterests = updateUser.getInterests();
-        user.updateUser(updateUser.getName(), updateUser.getImage(), updateUser.getIntroduce(), updateUser.getInterests());
+        user.updateUser(updateUser.getName(), updateUser.getImage(), updateUser.getIntroduce(),
+            updateUser.getInterests());
         for (Interest interest : updateInterests) {
             interest.changeUser(user);
             interestRepository.save(interest);

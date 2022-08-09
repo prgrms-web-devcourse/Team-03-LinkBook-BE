@@ -55,6 +55,13 @@ public class FolderController {
         return ResponseEntity.ok(detail);
     }
 
+    @GetMapping("/api/folders/{title}")
+    public ResponseEntity<FolderListResponse> readAllByTitle(Pageable pageable,
+        @PathVariable String title) {
+        FolderListResponse all = folderService.getAllByTitle(pageable, title);
+        return ResponseEntity.ok(all);
+    }
+
     @PostMapping("/api/folders")
     public ResponseEntity<FolderIdResponse> create(
         @Valid @RequestBody CreateFolderRequest createFolderRequest,

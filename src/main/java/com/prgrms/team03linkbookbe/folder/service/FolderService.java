@@ -3,7 +3,6 @@ package com.prgrms.team03linkbookbe.folder.service;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
-import com.prgrms.team03linkbookbe.bookmark.service.BookmarkService;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
@@ -18,7 +17,6 @@ import com.prgrms.team03linkbookbe.folderTag.repository.FolderTagRepository;
 import com.prgrms.team03linkbookbe.folderTag.service.FolderTagService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.rootTag.entity.RootTagCategory;
-import com.prgrms.team03linkbookbe.rootTag.repository.RootTagRepository;
 import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
@@ -43,9 +41,7 @@ public class FolderService {
     private final FolderTagService folderTagService;
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final BookmarkService bookmarkService;
     private final TagRepository tagRepository;
-    private final RootTagRepository rootTagRepository;
     private final FolderTagRepository folderTagRepository;
 
 
@@ -88,7 +84,6 @@ public class FolderService {
             .fromEntity(folder.get(0));
     }
 
-
     // 특정 사용자의 폴더전체조회
     public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate,
         Pageable pageable) {
@@ -97,6 +92,11 @@ public class FolderService {
         return FolderListByUserResponse.fromEntity(user, folders);
     }
 
+    // 특정 문자열을 제목에 포함한 폴더전체 조회
+    public FolderListResponse getAllByTitle(Pageable pageable, String title) {
+        Page<Folder> all = folderRepository.findAllByTitle(false, pageable, title);
+        return FolderListResponse.fromEntity(all);
+    }
 
     // 특정 폴더 수정
     @Transactional
