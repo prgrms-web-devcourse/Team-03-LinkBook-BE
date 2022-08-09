@@ -36,8 +36,9 @@ public class FolderController {
     }
 
     @GetMapping("/api/folders/{id}")
-    public ResponseEntity<FolderDetailResponse> readDetail(@PathVariable Long id) {
-        FolderDetailResponse detail = folderService.detail(id);
+    public ResponseEntity<FolderDetailResponse> readDetail(@PathVariable Long id,
+                                                           @AuthenticationPrincipal JwtAuthentication auth) {
+        FolderDetailResponse detail = folderService.detail(id, auth);
         return ResponseEntity.ok(detail);
     }
 

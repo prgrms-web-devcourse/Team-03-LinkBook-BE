@@ -36,20 +36,21 @@ public class FolderResponse {
     private LocalDateTime createdAt;
 
 
-
     public static FolderResponse fromEntity(Folder folder, Boolean isLiked) {
         return FolderResponse.builder()
-            .id(folder.getId())
-            .title(folder.getTitle())
-            .image(folder.getImage())
-            .isPinned(folder.getIsPinned())
-            .isPrivate(folder.getIsPrivate())
-            .likes(folder.getLikes())
-            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName().getViewName()).collect(Collectors.toList()))
-            .isLiked(isLiked)
-            .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
-            .createdAt(folder.getCreatedAt())
-            .build();
+                .id(folder.getId())
+                .title(folder.getTitle())
+                .image(folder.getImage())
+                .isPinned(folder.getIsPinned())
+                .isPrivate(folder.getIsPrivate())
+                .likes(folder.getLikes())
+                .tags(folder.getFolderTags().stream().map(folderTag ->
+                        folderTag.getTag().getName().getViewName()).collect(Collectors.toList())
+                )
+                .isLiked(isLiked)
+                .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
+                .createdAt(folder.getCreatedAt())
+                .build();
     }
 
 }
