@@ -9,6 +9,8 @@ import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.service.UserService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -56,8 +58,9 @@ public class UserController {
     }
 
     @PostMapping("/api/users/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequestDto requestDto) {
-        userService.register(requestDto);
+    public ResponseEntity<Void> register(HttpServletRequest request, @RequestBody RegisterRequestDto requestDto) {
+        HttpSession httpSession = request.getSession();
+        userService.register(httpSession, requestDto);
         return ResponseEntity.ok().build();
     }
 
