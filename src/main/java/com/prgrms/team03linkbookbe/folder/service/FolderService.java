@@ -4,7 +4,13 @@ import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.folder.dto.*;
+import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
+import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
+import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.repository.FolderTagRepository;
@@ -17,6 +23,8 @@ import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,9 +32,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -39,13 +44,11 @@ public class FolderService {
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
     private final LikeRepository likeRepository;
-    private final TagRepository tagRepository;
-    private final FolderTagRepository folderTagRepository;
 
     // 폴더생성
     @Transactional
     public FolderIdResponse create(JwtAuthentication auth,
-                                   CreateFolderRequest createFolderRequest) {
+        CreateFolderRequest createFolderRequest) {
         User user = userRepository.findByEmail(auth.email).orElseThrow(NoDataException::new);
 
         Folder folder = createFolderRequest.toEntity(user);
@@ -69,7 +72,7 @@ public class FolderService {
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
             likes = likeRepository.findAllByUser(user);
         }
 
@@ -90,17 +93,18 @@ public class FolderService {
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
             likes = likeRepository.findAllByUser(user);
         }
 
         return FolderDetailResponse
-                .fromEntity(folder.get(0), likes.stream().anyMatch(l -> l.getFolder().getId().equals(folderId)));
+            .fromEntity(folder.get(0),
+                likes.stream().anyMatch(l -> l.getFolder().getId().equals(folderId)));
     }
 
     // 특정 사용자의 폴더전체조회
     public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate,
-                                                 Pageable pageable) {
+        Pageable pageable) {
         User user = userRepository.findById(userId).orElseThrow(NoDataException::new);
         List<Like> likes = likeRepository.findAllByUser(user);
         Page<Folder> folders = folderRepository.findAllByUser(user, isPrivate, pageable);
@@ -108,12 +112,13 @@ public class FolderService {
     }
 
     // 특정 문자열을 제목에 포함한 폴더전체 조회
-    public FolderListResponse getAllByTitle(Pageable pageable, String title, JwtAuthentication auth) {
+    public FolderListResponse getAllByTitle(Pageable pageable, String title,
+        JwtAuthentication auth) {
         List<Like> likes = new ArrayList<>();
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
             likes = likeRepository.findAllByUser(user);
         }
 
@@ -124,7 +129,7 @@ public class FolderService {
     // 특정 폴더 수정
     @Transactional
     public FolderIdResponse update(String email, Long folderId,
-                                   CreateFolderRequest createFolderRequest) {
+        CreateFolderRequest createFolderRequest) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
         if (!folder.getUser().getEmail().equals(email)) {
             throw new AccessDeniedException("자신의 폴더만 수정가능합니다");
@@ -152,7 +157,6 @@ public class FolderService {
             bookmarkRepository.save(bookmark);
         }
 
-
         // 태그 관계이어주기
         folderTagService.addFolderTag(createFolderRequest, folder);
 
@@ -170,32 +174,31 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
-    public FolderListResponse getByRootTag(RootTagRequest rootTagRequest, Pageable pageable, JwtAuthentication auth) {
+    public FolderListResponse getByRootTag(RootTagRequest rootTagRequest, Pageable pageable,
+        JwtAuthentication auth) {
         RootTagCategory rootTagName = rootTagRequest.getRootTag();
         Page<Folder> folders = folderRepository.findByRootTag(rootTagName, pageable);
-        folders.map(f -> f.updateFolderTags(folderTagRepository.findByFolderId(f.getId())));
 
         List<Like> likes = new ArrayList<>();
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
             likes = likeRepository.findAllByUser(user);
         }
 
         return FolderListResponse.fromEntity(folders, likes);
     }
 
-    public FolderListResponse getByTag(TagRequest tagRequest, Pageable pageable, JwtAuthentication auth) {
+    public FolderListResponse getByTag(TagRequest tagRequest, Pageable pageable,
+        JwtAuthentication auth) {
         TagCategory tagName = tagRequest.getTag();
         Page<Folder> folders = folderRepository.findByTag(tagName, pageable);
-        folders.map(f -> f.updateFolderTags(folderTagRepository.findByFolderId(f.getId())));
 
         List<Like> likes = new ArrayList<>();
-
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
             likes = likeRepository.findAllByUser(user);
         }
 
