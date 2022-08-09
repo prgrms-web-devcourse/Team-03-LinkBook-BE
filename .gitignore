@@ -207,5 +207,6 @@ src/main/resources/application-mail.yaml
 
 src/test/resources/application-database.yaml
 src/test/resources/application-jwt.yaml
+src/test/resources/application-mail.yaml
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,gradle
