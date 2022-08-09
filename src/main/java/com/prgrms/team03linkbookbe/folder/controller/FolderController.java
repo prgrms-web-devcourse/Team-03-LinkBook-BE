@@ -54,8 +54,8 @@ public class FolderController {
 
     @GetMapping("/api/folders/{title}")
     public ResponseEntity<FolderListResponse> readAllByTitle(Pageable pageable,
-        @PathVariable String title) {
-        FolderListResponse all = folderService.getAllByTitle(pageable, title);
+        @PathVariable String title, @AuthenticationPrincipal JwtAuthentication auth) {
+        FolderListResponse all = folderService.getAllByTitle(pageable, title, auth);
         return ResponseEntity.ok(all);
     }
 
@@ -84,15 +84,15 @@ public class FolderController {
     @GetMapping("/api/folders/root-tag")
     public ResponseEntity<FolderListResponse> readByRootTag(
         @RequestBody RootTagRequest rootTagRequest,
-        Pageable pageable) {
-        FolderListResponse byRootTag = folderService.getByRootTag(rootTagRequest, pageable);
+        Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
+        FolderListResponse byRootTag = folderService.getByRootTag(rootTagRequest, pageable, auth);
         return ResponseEntity.ok().body(byRootTag);
     }
 
     @GetMapping("/api/folders/tag")
     public ResponseEntity<FolderListResponse> readByTag(@RequestBody TagRequest tagRequest,
-        Pageable pageable) {
-        FolderListResponse byTag = folderService.getByTag(tagRequest, pageable);
+        Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
+        FolderListResponse byTag = folderService.getByTag(tagRequest, pageable, auth);
         return ResponseEntity.ok().body(byTag);
     }
 }
