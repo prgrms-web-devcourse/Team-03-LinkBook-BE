@@ -60,8 +60,8 @@ public class LikeService {
 
         List<Like> likes = likeRepository.findAllByUser(user);
 
-        return likes.stream().map(o ->
-                        FolderResponse.fromEntity(o.getFolder()))
+        return likes.stream().map(l ->
+                        FolderResponse.fromEntity(l.getFolder(), true))
                 .collect(Collectors.toList());
     }
 

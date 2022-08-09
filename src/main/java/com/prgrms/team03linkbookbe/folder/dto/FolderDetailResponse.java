@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.comment.dto.CommentResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.like.entity.Like;
 import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
@@ -44,12 +45,14 @@ public class FolderDetailResponse {
 
     private int likes;
 
+    private Boolean isLiked;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
 
-    public static FolderDetailResponse fromEntity(Folder folder) {
+    public static FolderDetailResponse fromEntity(Folder folder, Boolean isLiked) {
         return FolderDetailResponse.builder()
             .id(folder.getId())
             .title(folder.getTitle())
@@ -59,6 +62,7 @@ public class FolderDetailResponse {
             .originId(folder.getOriginId())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
+            .isLiked(isLiked)
             .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName().getViewName()).collect(Collectors.toList()))
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
