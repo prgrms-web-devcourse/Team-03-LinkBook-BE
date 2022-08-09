@@ -1,17 +1,30 @@
 package com.prgrms.team03linkbookbe.folder.controller;
 
-import com.prgrms.team03linkbookbe.folder.dto.*;
+import static java.lang.Boolean.parseBoolean;
+
+import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
+import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
+import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
+import javax.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-
-import static java.lang.Boolean.parseBoolean;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class FolderController {
@@ -29,8 +42,10 @@ public class FolderController {
     }
 
     @GetMapping("/api/folders/users/{userId}")
-    public ResponseEntity<FolderListByUserResponse> readAllByUser(@PathVariable Long userId, @RequestParam String isPrivate, Pageable pageable) {
-        FolderListByUserResponse allByUser = folderService.getAllByUser(userId, parseBoolean(isPrivate), pageable);
+    public ResponseEntity<FolderListByUserResponse> readAllByUser(@PathVariable Long userId,
+        @RequestParam String isPrivate, Pageable pageable) {
+        FolderListByUserResponse allByUser = folderService.getAllByUser(userId,
+            parseBoolean(isPrivate), pageable);
         return ResponseEntity.ok(allByUser);
     }
 
@@ -41,23 +56,24 @@ public class FolderController {
     }
 
     @GetMapping("/api/folders/{title}")
-    public ResponseEntity<FolderListResponse> readAllByTitle(Pageable pageable, @PathVariable String title) {
+    public ResponseEntity<FolderListResponse> readAllByTitle(Pageable pageable,
+        @PathVariable String title) {
         FolderListResponse all = folderService.getAllByTitle(pageable, title);
         return ResponseEntity.ok(all);
     }
 
     @PostMapping("/api/folders")
     public ResponseEntity<FolderIdResponse> create(
-            @Valid @RequestBody CreateFolderRequest createFolderRequest,
-            @AuthenticationPrincipal JwtAuthentication auth) {
+        @Valid @RequestBody CreateFolderRequest createFolderRequest,
+        @AuthenticationPrincipal JwtAuthentication auth) {
         FolderIdResponse create = folderService.create(auth, createFolderRequest);
         return ResponseEntity.ok(create);
     }
 
     @PutMapping("/api/folders/{id}")
     public ResponseEntity<FolderIdResponse> update(@PathVariable Long id,
-                                                   @Valid @RequestBody CreateFolderRequest createFolderRequest,
-                                                   @AuthenticationPrincipal JwtAuthentication auth) {
+        @Valid @RequestBody CreateFolderRequest createFolderRequest,
+        @AuthenticationPrincipal JwtAuthentication auth) {
         FolderIdResponse update = folderService.update(auth.email, id, createFolderRequest);
         return ResponseEntity.ok(update);
     }
@@ -68,5 +84,18 @@ public class FolderController {
         folderService.delete(auth.email, id);
     }
 
+    @GetMapping("/api/folders/root-tag")
+    public ResponseEntity<FolderListResponse> readByRootTag(
+        @RequestBody RootTagRequest rootTagRequest,
+        Pageable pageable) {
+        FolderListResponse byRootTag = folderService.getByRootTag(rootTagRequest, pageable);
+        return ResponseEntity.ok().body(byRootTag);
+    }
 
+    @GetMapping("/api/folders/tag")
+    public ResponseEntity<FolderListResponse> readByTag(@RequestBody TagRequest tagRequest,
+        Pageable pageable) {
+        FolderListResponse byTag = folderService.getByTag(tagRequest, pageable);
+        return ResponseEntity.ok().body(byTag);
+    }
 }

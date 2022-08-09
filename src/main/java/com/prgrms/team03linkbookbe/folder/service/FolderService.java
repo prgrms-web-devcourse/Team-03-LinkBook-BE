@@ -3,21 +3,25 @@ package com.prgrms.team03linkbookbe.folder.service;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
-import com.prgrms.team03linkbookbe.bookmark.service.BookmarkService;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.folder.dto.*;
+import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
+import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
+import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
-import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
 import com.prgrms.team03linkbookbe.folderTag.repository.FolderTagRepository;
 import com.prgrms.team03linkbookbe.folderTag.service.FolderTagService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
+import com.prgrms.team03linkbookbe.rootTag.entity.RootTagCategory;
 import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
-import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +30,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -39,7 +41,9 @@ public class FolderService {
     private final FolderTagService folderTagService;
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final BookmarkService bookmarkService;
+    private final TagRepository tagRepository;
+    private final FolderTagRepository folderTagRepository;
+
 
     // 폴더생성
     @Transactional
@@ -77,9 +81,8 @@ public class FolderService {
         }
 
         return FolderDetailResponse
-                .fromEntity(folder.get(0));
+            .fromEntity(folder.get(0));
     }
-
 
     // 특정 사용자의 폴더전체조회
     public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate,
@@ -98,7 +101,7 @@ public class FolderService {
     // 특정 폴더 수정
     @Transactional
     public FolderIdResponse update(String email, Long folderId,
-                                   CreateFolderRequest createFolderRequest) {
+        CreateFolderRequest createFolderRequest) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
         if (!folder.getUser().getEmail().equals(email)) {
             throw new AccessDeniedException("자신의 폴더만 수정가능합니다");
@@ -126,8 +129,6 @@ public class FolderService {
             bookmarkRepository.save(bookmark);
         }
 
-
-
         // 태그 관계이어주기
         folderTagService.addFolderTag(createFolderRequest, folder);
 
@@ -145,6 +146,29 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
+    public FolderListResponse getByRootTag(RootTagRequest rootTagRequest, Pageable pageable) {
+        RootTagCategory rootTagName = rootTagRequest.getRootTag();
+        Page<Folder> folders = folderRepository.findByRootTag(rootTagName, pageable);
+        folders.map(f -> f.updateFolderTags(folderTagRepository.findByFolderId(f.getId())));
+
+        return FolderListResponse.fromEntity(folders);
+    }
+
+    public FolderListResponse getByTag(TagRequest tagRequest, Pageable pageable) {
+        TagCategory tagName = tagRequest.getTag();
+        Page<Folder> folders = folderRepository.findByTag(tagName, pageable);
+        folders.map(f -> f.updateFolderTags(folderTagRepository.findByFolderId(f.getId())));
+
+        return FolderListResponse.fromEntity(folders);
+    }
+
+    // 태그추가
+    private void addFolderTag(CreateFolderRequest createFolderRequest, Folder folder) {
+        for (TagCategory tagCategory : createFolderRequest.getTags()) {
+            Tag tag = tagRepository.findByName(tagCategory)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 태그를 입력했습니다."));
 
 
+        }
+    }
 }
