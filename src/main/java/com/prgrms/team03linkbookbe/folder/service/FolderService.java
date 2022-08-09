@@ -5,11 +5,7 @@ import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.bookmark.service.BookmarkService;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
-import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.*;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
@@ -31,6 +27,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -42,7 +40,6 @@ public class FolderService {
     private final UserRepository userRepository;
     private final BookmarkRepository bookmarkRepository;
     private final BookmarkService bookmarkService;
-
 
     // 폴더생성
     @Transactional
@@ -80,7 +77,7 @@ public class FolderService {
         }
 
         return FolderDetailResponse
-            .fromEntity(folder.get(0));
+                .fromEntity(folder.get(0));
     }
 
 
@@ -92,11 +89,16 @@ public class FolderService {
         return FolderListByUserResponse.fromEntity(user, folders);
     }
 
+    // 특정 문자열을 제목에 포함한 폴더전체 조회
+    public FolderListResponse getAllByTitle(Pageable pageable, String title) {
+        Page<Folder> all = folderRepository.findAllByTitle(false, pageable, title);
+        return FolderListResponse.fromEntity(all);
+    }
 
     // 특정 폴더 수정
     @Transactional
     public FolderIdResponse update(String email, Long folderId,
-        CreateFolderRequest createFolderRequest) {
+                                   CreateFolderRequest createFolderRequest) {
         Folder folder = folderRepository.findById(folderId).orElseThrow(NoDataException::new);
         if (!folder.getUser().getEmail().equals(email)) {
             throw new AccessDeniedException("자신의 폴더만 수정가능합니다");
@@ -142,7 +144,6 @@ public class FolderService {
 
         folderRepository.delete(folder);
     }
-
 
 
 
