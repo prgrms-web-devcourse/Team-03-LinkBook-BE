@@ -11,7 +11,6 @@ public class FolderListResponse {
 
     private Page<FolderResponse> folders;
 
-
     public static FolderListResponse fromEntity(Page<Folder> folders) {
         return FolderListResponse.builder()
             .folders(folders.map(FolderResponse::fromEntity))

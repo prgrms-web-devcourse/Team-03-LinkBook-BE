@@ -14,6 +14,7 @@ import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
 import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
+import com.prgrms.team03linkbookbe.folderTag.repository.FolderTagRepository;
 import com.prgrms.team03linkbookbe.folderTag.service.FolderTagService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.rootTag.entity.RootTagCategory;
@@ -45,6 +46,7 @@ public class FolderService {
     private final BookmarkService bookmarkService;
     private final TagRepository tagRepository;
     private final RootTagRepository rootTagRepository;
+    private final FolderTagRepository folderTagRepository;
 
 
     // 폴더생성
@@ -145,8 +147,9 @@ public class FolderService {
     }
 
     public FolderListResponse getByRootTag(RootTagRequest rootTagRequest, Pageable pageable) {
-        RootTagCategory rootTagName = rootTagRequest.getTag();
+        RootTagCategory rootTagName = rootTagRequest.getRootTag();
         Page<Folder> folders = folderRepository.findByRootTag(rootTagName, pageable);
+        folders.map(f -> f.updateFolderTags(folderTagRepository.findByFolderId(f.getId())));
 
         return FolderListResponse.fromEntity(folders);
     }
@@ -154,6 +157,7 @@ public class FolderService {
     public FolderListResponse getByTag(TagRequest tagRequest, Pageable pageable) {
         TagCategory tagName = tagRequest.getTag();
         Page<Folder> folders = folderRepository.findByTag(tagName, pageable);
+        folders.map(f -> f.updateFolderTags(folderTagRepository.findByFolderId(f.getId())));
 
         return FolderListResponse.fromEntity(folders);
     }

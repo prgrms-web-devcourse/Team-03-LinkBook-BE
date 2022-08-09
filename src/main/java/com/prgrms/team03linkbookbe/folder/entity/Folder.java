@@ -5,7 +5,6 @@ import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
-import com.prgrms.team03linkbookbe.tag.entity.Tag;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,21 +19,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Min;
-import lombok.*;
-
-import javax.persistence.*;
-
-import lombok.*;
-
-import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -84,11 +77,11 @@ public class Folder extends BaseDateEntity {
     @Builder.Default
     @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<Bookmark> bookmarks = new ArrayList<>();
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<FolderTag> folderTags = new ArrayList<>();
@@ -100,5 +93,10 @@ public class Folder extends BaseDateEntity {
         this.isPrivate = dto.getIsPrivate();
         this.content = dto.getContent();
         this.originId = dto.getOriginId();
+    }
+
+    public Folder updateFolderTags(List<FolderTag> folderTags) {
+        this.folderTags = folderTags;
+        return this;
     }
 }
