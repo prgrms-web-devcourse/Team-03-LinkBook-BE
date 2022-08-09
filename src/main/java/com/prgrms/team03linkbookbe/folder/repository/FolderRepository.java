@@ -35,11 +35,11 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
         countQuery = "SELECT count(f) FROM Folder f")
     Page<Folder> findAllByTitle(Boolean isPrivate, Pageable pageable, String title);
 
-    @Query(value = "SELECT f FROM Folder f JOIN FETCH f.user JOIN FETCH f.folderTags ft JOIN ft.tag t JOIN t.rootTag rt ON rt.name = :rootTag WHERE f.isPrivate = false",
+    @Query(value = "SELECT DISTINCT f FROM Folder f JOIN FETCH f.user JOIN FETCH f.folderTags ft JOIN ft.tag t JOIN t.rootTag rt ON rt.name = :rootTag WHERE f.isPrivate = false",
         countQuery = "SELECT count(f) FROM Folder f")
     Page<Folder> findByRootTag(RootTagCategory rootTag, Pageable pageable);
 
-    @Query(value = "SELECT f FROM Folder f JOIN FETCH f.user JOIN FETCH f.folderTags ft JOIN ft.tag t ON t.name = :tag WHERE f.isPrivate = false",
+    @Query(value = "SELECT DISTINCT f FROM Folder f JOIN FETCH f.user JOIN FETCH f.folderTags ft JOIN ft.tag t ON t.name = :tag WHERE f.isPrivate = false",
         countQuery = "SELECT count(f) FROM Folder f")
     Page<Folder> findByTag(TagCategory tag, Pageable pageable);
 }
