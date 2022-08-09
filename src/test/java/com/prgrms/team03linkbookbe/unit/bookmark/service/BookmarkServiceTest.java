@@ -15,7 +15,6 @@ import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.error.OptionalShouldContainInstanceOf;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

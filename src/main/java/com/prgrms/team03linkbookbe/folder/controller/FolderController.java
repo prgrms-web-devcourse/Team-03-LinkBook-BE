@@ -7,6 +7,7 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
 import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
@@ -74,6 +75,14 @@ public class FolderController {
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable Long id, @AuthenticationPrincipal JwtAuthentication auth) {
         folderService.delete(auth.email, id);
+    }
+
+    @GetMapping("/api/folders/root-tag")
+    public ResponseEntity<FolderListResponse> readByRootTag(
+        @RequestBody RootTagRequest rootTagRequest,
+        Pageable pageable) {
+        FolderListResponse byRootTag = folderService.getByRootTag(rootTagRequest, pageable);
+        return ResponseEntity.ok().body(byRootTag);
     }
 
     @GetMapping("/api/folders/tag")

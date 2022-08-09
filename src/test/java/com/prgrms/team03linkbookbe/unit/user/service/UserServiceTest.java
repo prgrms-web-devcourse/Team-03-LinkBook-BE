@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
+import com.prgrms.team03linkbookbe.email.service.EmailService;
 import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
 import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
@@ -19,6 +21,7 @@ import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import com.prgrms.team03linkbookbe.user.service.UserService;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Slf4j
@@ -36,6 +40,9 @@ public class UserServiceTest {
 
     @InjectMocks
     UserService userService;
+
+    @Mock
+    EmailService emailService;
 
     @Mock
     UserRepository userRepository;
@@ -71,18 +78,20 @@ public class UserServiceTest {
             given(passwordEncoder.encode(password)).willReturn(
                 "$2a$10$VgKG4LYAucDmh0PoSxjD6OaW8ADf7VUMf5ysPsQr5vh1QoVI7yXu6");
             given(userRepository.save(any(User.class))).willReturn(user);
+            MockHttpSession mockHttpSession = new MockHttpSession();
+            willDoNothing().given(emailService).IsCertificatedEmail(mockHttpSession, requestDto.getEmail());
 
             // When & Then
-            userService.register(requestDto);
+            userService.register(mockHttpSession, requestDto);
         }
 
         @Test
         @DisplayName("중복된 이메일로 회원가입을 할 수 없다. 400 예외")
         void DUPLICATED_EMAIL_EXCEPTION_TEST() {
             given(userRepository.existsByEmail(email)).willReturn(true);
-
+            MockHttpSession mockHttpSession = new MockHttpSession();
             // When Then
-            assertThatThrownBy(() -> userService.register(requestDto))
+            assertThatThrownBy(() -> userService.register(mockHttpSession, requestDto))
                 .isInstanceOf(DuplicatedEmailException.class);
         }
     }

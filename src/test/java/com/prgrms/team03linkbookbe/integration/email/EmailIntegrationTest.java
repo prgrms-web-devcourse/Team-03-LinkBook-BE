@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.email.dto.EmailCertificationRequestDto;
 import com.prgrms.team03linkbookbe.email.dto.EmailRequestDto;
+import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +99,7 @@ public class EmailIntegrationTest {
             .key(userKey)
             .build();
         MockHttpSession mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute(userEmail, userKey);
+        mockHttpSession.setAttribute(userEmail, Map.of("CERTIFICATION_KEY", userKey, "IS_CERTIFICATION", false));
 
         // When
         ResultActions perform = mockMvc.perform(post("/api/emails/certification")
@@ -126,7 +127,7 @@ public class EmailIntegrationTest {
             .key(userKey)
             .build();
         MockHttpSession mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute(userEmail, "emailKeyFailure");
+        mockHttpSession.setAttribute(userEmail, Map.of("CERTIFICATION_KEY", "emailKeyFailure", "IS_CERTIFICATION", false));
 
         // When
         ResultActions perform = mockMvc.perform(post("/api/emails/certification")

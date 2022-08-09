@@ -19,7 +19,8 @@ public enum ExceptionCode {
     DUPLICATED_EMAIL(-111, "중복된 이메일 입니다."),
 
     EMAIL_SEND_FAILURE(-120, "이메일 전송에 실패하였습니다."),
-    EMAIL_CERTIFICATION_FAILURE(-121, "이메일 인증에 실패하였습니다.");
+    EMAIL_CERTIFICATION_FAILURE(-121, "이메일 인증에 실패하였습니다."),
+    EMAIL_IS_NOT_CERTIFICATED(-122, "아직 인증되지 않은 이메일 입니다.");
 
     private final int code;
     private final String msg;
