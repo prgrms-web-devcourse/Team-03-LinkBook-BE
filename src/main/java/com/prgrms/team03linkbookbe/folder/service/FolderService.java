@@ -12,6 +12,7 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
 import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
 import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.folder.exception.IllegalAccessToPrivateFolderException;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.repository.FolderTagRepository;
 import com.prgrms.team03linkbookbe.folderTag.service.FolderTagService;
@@ -103,11 +104,27 @@ public class FolderService {
     }
 
     // 특정 사용자의 폴더전체조회
-    public FolderListByUserResponse getAllByUser(Long userId, Boolean isPrivate,
+    public FolderListByUserResponse getAllByUser(Long userId, JwtAuthentication auth, String isPrivate,
         Pageable pageable) {
+
+        Page<Folder> folders;
         User user = userRepository.findById(userId).orElseThrow(NoDataException::new);
         List<Like> likes = likeRepository.findAllByUser(user);
-        Page<Folder> folders = folderRepository.findAllByUser(user, isPrivate, pageable);
+
+        if("true".equals(isPrivate)){
+            if(auth==null){ // 토큰이 없는 경우
+                throw new IllegalAccessToPrivateFolderException();
+            }
+            else if(!auth.email.equals(user.getEmail())){ // 본인이 아닌경우
+                throw new IllegalAccessToPrivateFolderException();
+            }
+            else{
+                folders = folderRepository.findAllByUser(user, true, pageable);
+            }
+        }
+        else {
+            folders = folderRepository.findAllByUser(user, false, pageable);
+        }
         return FolderListByUserResponse.fromEntity(user, folders, likes);
     }
 
