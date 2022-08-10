@@ -10,9 +10,11 @@ import javax.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
+@Getter
 @Entity(name = "root_tag")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
