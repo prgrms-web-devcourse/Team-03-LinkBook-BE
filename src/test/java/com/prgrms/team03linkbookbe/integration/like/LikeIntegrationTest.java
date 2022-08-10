@@ -25,8 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -246,18 +245,12 @@ class LikeIntegrationTest {
     @DisplayName("좋아요 삭제 테스트")
     @WithJwtAuth(email = "test@test.com")
     void DELETE_LIKE_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(put("/api/likes/{id}", like.getId())
+        this.mockMvc.perform(delete("/api/likes/{id}", like.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
-                        document("remove-by-id-like",
-                                requestFields(
-                                        fieldWithPath("id").type(JsonFieldType.NUMBER)
-                                                .description("likeId")
-                                )
-                        )
+                        document("remove-by-id-like")
                 );
     }
 }

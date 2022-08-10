@@ -42,8 +42,7 @@ public class LikeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> delete(@PathVariable Long id, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+    public void delete(@PathVariable Long id, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
         likeservice.delete(id, jwtAuthentication.email);
-        return ResponseEntity.ok(id);
     }
 }

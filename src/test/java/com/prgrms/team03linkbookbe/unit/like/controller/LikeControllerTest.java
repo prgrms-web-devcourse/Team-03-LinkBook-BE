@@ -75,6 +75,6 @@ class LikeControllerTest {
         when(likeService.delete(1L, user.getEmail())).thenReturn(null);
 
         // when, then
-        assertThat(likeController.delete(1L, jwtAuthentication).getBody()).isEqualTo(1L);
+        likeController.delete(1L, jwtAuthentication);
     }
 }
