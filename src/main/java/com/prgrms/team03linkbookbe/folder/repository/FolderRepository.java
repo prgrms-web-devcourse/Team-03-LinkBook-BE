@@ -20,6 +20,8 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
         countQuery = "SELECT count(f) FROM Folder f")
     Page<Folder> findAll(Boolean isPrivate, Pageable pageable);
 
+
+
     //TODO : 필터링부분구현
 //    @Query(value = "SELECT DISTINCT f FROM Folder f JOIN FETCH f.folderTags ft WHERE ft.tag.name = :tag")
 //    Page<Folder> findAllByTag(TagCategory tag);

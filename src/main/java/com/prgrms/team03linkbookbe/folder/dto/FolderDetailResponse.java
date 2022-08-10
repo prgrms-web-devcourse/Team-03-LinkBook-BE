@@ -49,7 +49,6 @@ public class FolderDetailResponse {
 
     private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
 
 
     public static FolderDetailResponse fromEntity(Folder folder, Boolean isLiked) {
