@@ -56,7 +56,7 @@ public class FolderService {
             bookmarkRepository.save(bookmark);
         }
 
-        return FolderIdResponse.fromEntity(folder.getId());
+        return FolderIdResponse.fromEntity(save.getId());
     }
 
     // 전체폴더조회
