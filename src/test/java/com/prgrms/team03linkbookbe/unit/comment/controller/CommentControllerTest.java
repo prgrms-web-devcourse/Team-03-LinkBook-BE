@@ -97,6 +97,6 @@ class CommentControllerTest {
         when(commentService.delete(1L, user.getEmail())).thenReturn(null);
 
         // when, then
-        assertThat(commentController.delete(1L, jwtAuthentication).getBody()).isEqualTo(1L);
+        commentController.delete(1L, jwtAuthentication);
     }
 }

@@ -16,7 +16,7 @@ import javax.validation.Valid;
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<CreateCommentResponse> create(
             @Valid @RequestBody CreateCommentRequest requestDto,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication
@@ -49,10 +49,9 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Long> delete(
+    public void delete(
             @PathVariable Long id,
             @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
         commentService.delete(id, jwtAuthentication.email);
-        return ResponseEntity.ok(id);
     }
 }
