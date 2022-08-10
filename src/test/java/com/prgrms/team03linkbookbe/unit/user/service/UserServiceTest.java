@@ -2,17 +2,14 @@ package com.prgrms.team03linkbookbe.unit.user.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.in;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.email.service.EmailService;
-import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.interest.entity.SubTag;
-import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
 import com.prgrms.team03linkbookbe.interest.service.InterestService;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
@@ -23,7 +20,6 @@ import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import com.prgrms.team03linkbookbe.user.service.UserService;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;

@@ -1,6 +1,5 @@
 package com.prgrms.team03linkbookbe.user.dto;
 
-import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
