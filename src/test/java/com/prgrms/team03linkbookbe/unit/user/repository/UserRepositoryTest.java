@@ -2,8 +2,8 @@ package com.prgrms.team03linkbookbe.unit.user.repository;
 
 import static org.assertj.core.api.Assertions.*;
 
-import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
+import com.prgrms.team03linkbookbe.interest.entity.SubTag;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.util.Optional;
@@ -96,10 +96,10 @@ public class UserRepositoryTest {
             .build();
 
         Interest interest1 = Interest.builder()
-            .field(Field.backEndDeveloper)
+            .tag(SubTag.ANIMAL1)
             .build();
         Interest interest2 = Interest.builder()
-            .field(Field.frontEndDeveloper)
+            .tag(SubTag.ANIMAL1)
             .build();
 
         user.addInterest(interest1);

@@ -28,7 +28,7 @@ public class UserDetailResponseDto {
 
     private final LocalDateTime updatedAt;
 
-    private List<InterestDto> interests;
+    private List<String> interests;
 
     public static UserDetailResponseDto fromEntity(User user) {
         return UserDetailResponseDto.builder()
@@ -41,9 +41,7 @@ public class UserDetailResponseDto {
             .createdAt(user.getCreatedAt())
             .updatedAt(user.getUpdatedAt())
             .interests(user.getInterests().stream()
-                .map((interest) -> InterestDto.builder()
-                    .field(interest.getField().getField())
-                    .build())
+                .map(interest -> interest.getTag().getViewName())
                 .collect(Collectors.toList()))
             .build();
     }

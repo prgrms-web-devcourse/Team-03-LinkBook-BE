@@ -102,11 +102,10 @@ public class User extends BaseDateEntity {
         this.lastLoginAt = lastLoginAt;
     }
 
-    public void updateUser(String name, String image, String introduce, List<Interest> interests) {
+    public void updateUser(String name, String image, String introduce) {
         this.name = name;
         this.image = image;
         this.introduce = introduce;
-        this.interests = interests;
     }
 
     public void encodePassword(String password) {
