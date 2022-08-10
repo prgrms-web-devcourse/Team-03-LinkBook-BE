@@ -104,7 +104,7 @@ public class FolderService {
     }
 
     // 특정 사용자의 폴더전체조회
-    public FolderListByUserResponse getAllByUser(Long userId, JwtAuthentication auth, String isPrivate,
+    public FolderListByUserResponse getAllByUser(Long userId, String email, String isPrivate,
         Pageable pageable) {
 
         Page<Folder> folders;
@@ -112,10 +112,10 @@ public class FolderService {
         List<Like> likes = likeRepository.findAllByUser(user);
 
         if("true".equals(isPrivate)){
-            if(auth==null){ // 토큰이 없는 경우
+            if(email==null){ // 토큰이 없는 경우
                 throw new IllegalAccessToPrivateFolderException();
             }
-            else if(!auth.email.equals(user.getEmail())){ // 본인이 아닌경우
+            else if(!email.equals(user.getEmail())){ // 본인이 아닌경우
                 throw new IllegalAccessToPrivateFolderException();
             }
             else{

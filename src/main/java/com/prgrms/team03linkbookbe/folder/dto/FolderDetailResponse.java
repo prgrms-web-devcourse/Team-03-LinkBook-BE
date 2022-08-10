@@ -31,7 +31,7 @@ public class FolderDetailResponse {
 
     private String content;
 
-    private Long originId;
+    private OriginFolderResponse originFolder;
 
     private Boolean isPinned;
 
@@ -49,7 +49,6 @@ public class FolderDetailResponse {
 
     private LocalDateTime createdAt;
 
-    private LocalDateTime updatedAt;
 
 
     public static FolderDetailResponse fromEntity(Folder folder, Boolean isLiked) {
@@ -59,7 +58,6 @@ public class FolderDetailResponse {
             .likes(folder.getLikes())
             .image(folder.getImage())
             .content(folder.getContent())
-            .originId(folder.getOriginId())
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
             .isLiked(isLiked)
@@ -69,6 +67,25 @@ public class FolderDetailResponse {
                 Collectors.toList()))
             .createdAt(folder.getCreatedAt())
             .build();
+    }
+
+    public static FolderDetailResponse fromEntity(Folder folder, Boolean isLiked, OriginFolderResponse originFolder) {
+        return FolderDetailResponse.builder()
+                .id(folder.getId())
+                .title(folder.getTitle())
+                .likes(folder.getLikes())
+                .image(folder.getImage())
+                .content(folder.getContent())
+                .originFolder(originFolder)
+                .isPinned(folder.getIsPinned())
+                .isPrivate(folder.getIsPrivate())
+                .isLiked(isLiked)
+                .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName().getViewName()).collect(Collectors.toList()))
+                .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
+                .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
+                        Collectors.toList()))
+                .createdAt(folder.getCreatedAt())
+                .build();
     }
 
 }
