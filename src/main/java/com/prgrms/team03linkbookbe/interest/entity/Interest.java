@@ -1,7 +1,6 @@
 package com.prgrms.team03linkbookbe.interest.entity;
 
 import com.prgrms.team03linkbookbe.user.entity.User;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -28,7 +27,7 @@ public class Interest {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private Field field;
+    private SubTag tag;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "users_id", referencedColumnName = "id")
@@ -39,9 +38,9 @@ public class Interest {
     }
 
     @Builder
-    public Interest(Long id, Field field, User user) {
+    public Interest(Long id, SubTag tag, User user) {
         this.id = id;
-        this.field = field;
+        this.tag = tag;
         this.user = user;
     }
 

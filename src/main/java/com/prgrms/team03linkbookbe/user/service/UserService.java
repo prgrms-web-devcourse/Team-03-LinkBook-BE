@@ -4,6 +4,8 @@ import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.email.service.EmailService;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
+import com.prgrms.team03linkbookbe.interest.service.InterestService;
+import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
@@ -27,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final InterestRepository interestRepository;
+    private final InterestService interestService;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
@@ -67,19 +69,10 @@ public class UserService {
     public void updateUser(UserUpdateRequestDto requestDto, String email) {
         User user = userRepository.findByEmailFetchJoinInterests(email)
             .orElseThrow(() -> new NoDataException());
-        List<Interest> interests = user.getInterests();
-        for (Interest interest : interests) {
-            interestRepository.delete(interest);
-        }
 
         User updateUser = requestDto.toEntity();
-        List<Interest> updateInterests = updateUser.getInterests();
-        user.updateUser(updateUser.getName(), updateUser.getImage(), updateUser.getIntroduce(),
-            updateUser.getInterests());
-        for (Interest interest : updateInterests) {
-            interest.changeUser(user);
-            interestRepository.save(interest);
-        }
+        user.updateUser(updateUser.getName(), updateUser.getImage(), updateUser.getIntroduce());
+        interestService.updateInterests(requestDto.getInterests(), user);
     }
 
 }

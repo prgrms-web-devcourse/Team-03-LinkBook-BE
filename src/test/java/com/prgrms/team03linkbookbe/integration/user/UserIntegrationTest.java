@@ -11,11 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
-import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
 import com.prgrms.team03linkbookbe.user.dto.LoginRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -151,9 +149,10 @@ public class UserIntegrationTest {
     @WithJwtAuth(email = "login1234@gmail.com")
     void USER_UPDATE_TEST() throws Exception {
         // given
-        List<InterestDto> interests = new ArrayList<>();
-        interests.add(InterestDto.builder().field("흥미1").build());
-        interests.add(InterestDto.builder().field("흥미2").build());
+        List<String> interests = List.of("동물1", "게임1");
+//        List<InterestDto> interests = new ArrayList<>();
+//        interests.add(InterestDto.builder().field("흥미1").build());
+//        interests.add(InterestDto.builder().field("흥미2").build());
 
         UserUpdateRequestDto requestDto = UserUpdateRequestDto.builder()
             .name("변경할이름")

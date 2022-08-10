@@ -1,11 +1,7 @@
 package com.prgrms.team03linkbookbe.user.dto;
 
-import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
-import com.prgrms.team03linkbookbe.interest.entity.Field;
-import com.prgrms.team03linkbookbe.interest.entity.Interest;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +20,7 @@ public class UserUpdateRequestDto {
 
     private String introduce;
 
-    private List<InterestDto> interests;
+    private List<String> interests;
 
     public User toEntity() {
         User user = User.builder()
@@ -32,14 +28,14 @@ public class UserUpdateRequestDto {
             .image(image)
             .introduce(introduce)
             .build();
-        List<Interest> interestList = interests.stream().map(
-            (interest) -> Interest.builder()
-                .field(Field.getEnum(interest.getField()))
-                .user(user)
-                .build()).collect(Collectors.toList());
-        for (Interest interest : interestList) {
-            user.addInterest(interest);
-        }
+//        List<Interest> interestList = interests.stream().map(
+//            (interest) -> Interest.builder()
+//                .tag(Field.getEnum(interest.getField()))
+//                .user(user)
+//                .build()).collect(Collectors.toList());
+//        for (Interest interest : interestList) {
+//            user.addInterest(interest);
+//        }
         return user;
     }
 

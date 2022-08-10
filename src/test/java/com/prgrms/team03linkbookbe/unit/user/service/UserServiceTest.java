@@ -8,10 +8,9 @@ import static org.mockito.BDDMockito.willDoNothing;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.email.service.EmailService;
-import com.prgrms.team03linkbookbe.interest.dto.InterestDto;
-import com.prgrms.team03linkbookbe.interest.entity.Field;
 import com.prgrms.team03linkbookbe.interest.entity.Interest;
-import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
+import com.prgrms.team03linkbookbe.interest.entity.SubTag;
+import com.prgrms.team03linkbookbe.interest.service.InterestService;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
@@ -21,7 +20,6 @@ import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import com.prgrms.team03linkbookbe.user.service.UserService;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -51,7 +49,7 @@ public class UserServiceTest {
     PasswordEncoder passwordEncoder;
 
     @Mock
-    InterestRepository interestRepository;
+    InterestService interestService;
 
     @DisplayName("register 메서드 : ")
     @Nested
@@ -189,12 +187,6 @@ public class UserServiceTest {
     @DisplayName("updateUser 메서드 : ")
     @Nested
     class UpdateUser {
-
-        InterestDto interestRequestDto = InterestDto.builder()
-            .field(Field.backEndDeveloper.getField())
-            .build();
-        List<InterestDto> interestRequestDtos = List.of(interestRequestDto);
-
         String name = "updateName";
         String url = "updateUrl";
         String introduce = "updateIntroduce";
@@ -202,13 +194,13 @@ public class UserServiceTest {
             .name(name)
             .image(url)
             .introduce(introduce)
-            .interests(interestRequestDtos)
+            .interests(List.of("일상1", "동물1"))
             .build();
 
         String email = "user@gmail.com";
 
         Interest interest = Interest.builder()
-            .field(Field.frontEndDeveloper)
+            .tag(SubTag.ANIMAL1)
             .build();
 
         User user = User.builder()
@@ -225,12 +217,13 @@ public class UserServiceTest {
             user.addInterest(interest);
             given(userRepository.findByEmailFetchJoinInterests(email))
                 .willReturn(Optional.of(user));
+            willDoNothing().given(interestService).updateInterests(any(), any());
 
             // When
             userService.updateUser(updateRequestDto, email);
 
             // Then
-            assertThat(user.getInterests().get(0).getField()).isEqualTo(Field.backEndDeveloper);
+            assertThat(user.getInterests().get(0).getTag()).isEqualTo(SubTag.ANIMAL1);
             assertThat(user.getName()).isEqualTo(name);
             assertThat(user.getImage()).isEqualTo(url);
             assertThat(user.getIntroduce()).isEqualTo(introduce);
