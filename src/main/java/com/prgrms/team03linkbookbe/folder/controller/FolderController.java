@@ -1,18 +1,17 @@
 package com.prgrms.team03linkbookbe.folder.controller;
 
-import static java.lang.Boolean.parseBoolean;
-
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.PinnedListResponse;
 import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
 import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
+import com.prgrms.team03linkbookbe.jwt.exception.IllegalTokenException;
 import javax.validation.Valid;
-import javax.validation.constraints.Null;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +65,16 @@ public class FolderController {
                 isPrivate, pageable);
         }
         return ResponseEntity.ok(allByUser);
+    }
+
+    @GetMapping("/api/folders/pinned")
+    public ResponseEntity<PinnedListResponse> readAllPinned(
+        @AuthenticationPrincipal JwtAuthentication auth) {
+        if(auth == null) {
+            throw new IllegalTokenException();
+        }
+        PinnedListResponse response = folderService.getAllPinned(auth.email);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/api/folders/{id}")
