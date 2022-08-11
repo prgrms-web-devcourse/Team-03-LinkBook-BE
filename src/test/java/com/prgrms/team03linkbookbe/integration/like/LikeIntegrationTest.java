@@ -58,7 +58,8 @@ class LikeIntegrationTest {
     private FolderRepository folderRepository;
 
     User user;
-    Folder folder;
+    Folder folderModify;
+    Folder folderCreate;
     Like like;
 
     @BeforeAll
@@ -81,7 +82,7 @@ class LikeIntegrationTest {
                 .build();
         userRepository.save(temp);
 
-        folder = Folder.builder()
+        folderModify = Folder.builder()
                 .title("my-folder")
                 .image("url")
                 .content("halo")
@@ -90,9 +91,9 @@ class LikeIntegrationTest {
                 .isPrivate(false)
                 .user(temp)
                 .build();
-        folderRepository.save(folder);
+        folderRepository.save(folderModify);
 
-        Folder tempFolder = Folder.builder()
+        folderCreate = Folder.builder()
                 .title("my-folder")
                 .image("url")
                 .content("halo")
@@ -101,10 +102,10 @@ class LikeIntegrationTest {
                 .isPrivate(false)
                 .user(temp)
                 .build();
-        folderRepository.save(tempFolder);
+        folderRepository.save(folderCreate);
 
         like = Like.builder()
-                .folder(folder)
+                .folder(folderModify)
                 .user(user)
                 .build();
         likeRepository.save(like);
@@ -125,7 +126,7 @@ class LikeIntegrationTest {
         CreateLikeRequest likeRequestDto =
                 CreateLikeRequest.builder()
                         .userId(user.getId())
-                        .folderId(folder.getId())
+                        .folderId(folderCreate.getId())
                         .build();
         this.mockMvc.perform(post("/api/likes")
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -250,7 +251,7 @@ class LikeIntegrationTest {
     @DisplayName("좋아요 삭제 테스트")
     @WithJwtAuth(email = "test@test.com")
     void DELETE_LIKE_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(delete("/api/likes/{folderId}", folder.getId())
+        this.mockMvc.perform(delete("/api/likes/{folderId}", folderModify.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
