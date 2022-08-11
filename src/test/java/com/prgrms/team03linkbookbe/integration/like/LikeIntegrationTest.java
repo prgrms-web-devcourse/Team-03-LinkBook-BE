@@ -1,15 +1,5 @@
 package com.prgrms.team03linkbookbe.integration.like;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
@@ -19,8 +9,6 @@ import com.prgrms.team03linkbookbe.like.entity.Like;
 import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
-import java.nio.charset.StandardCharsets;
-
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -29,6 +17,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.nio.charset.StandardCharsets;
+
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -118,6 +118,10 @@ class LikeIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
                         document("register-like",
+                                requestHeaders(
+                                        headerWithName("Access-Token")
+                                                .description("access token")
+                                ),
                                 requestFields(
                                         fieldWithPath("userId").type(JsonFieldType.NUMBER)
                                                 .description("userId"),
@@ -146,6 +150,10 @@ class LikeIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
                         document("find-liked-folder-list",
+                                requestHeaders(
+                                        headerWithName("Access-Token")
+                                                .description("access token")
+                                ),
                                 responseFields(
                                         fieldWithPath("folders.content[]").type(JsonFieldType.ARRAY)
                                                 .description("folders.content[]"),
@@ -238,7 +246,12 @@ class LikeIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                        document("remove-by-id-like")
+                        document("remove-by-id-like",
+                                requestHeaders(
+                                        headerWithName("Access-Token")
+                                                .description("access token")
+                                )
+                        )
                 );
     }
 }
