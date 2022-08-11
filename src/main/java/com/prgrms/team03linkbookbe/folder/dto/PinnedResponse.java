@@ -19,6 +19,8 @@ public class PinnedResponse {
 
     private String image;
 
+    private UserSimpleResponseDto user;
+
     private List<BookmarkResponse> bookmarks;
 
     private List<String> tags;
@@ -30,6 +32,7 @@ public class PinnedResponse {
             .id(folder.getId())
             .title(folder.getTitle())
             .image(folder.getImage())
+            .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(
                 folder.getBookmarks().stream().map(BookmarkResponse::fromEntity)
                     .collect(Collectors.toList())
