@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
+import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
@@ -33,6 +34,7 @@ import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
@@ -122,7 +124,7 @@ public class FolderIntegrationTest {
             .image("url")
             .content("halo")
             .likes(0)
-            .isPinned(false)
+            .isPinned(true)
             .isPrivate(false)
             .user(user)
             .build();
@@ -609,6 +611,49 @@ public class FolderIntegrationTest {
                 )
             );
 
+    }
+
+    @Test
+    @WithJwtAuth(email = "test@gmail.com")
+    @DisplayName("자신의 pinned 북마크 포함 폴더리스트를 조회할 수 있다.")
+    void GET_ALL_PINNED_TEST() throws Exception {
+        mockMvc.perform(get("/api/folders/pinned")
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Access-Token", accessToken))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andDo(
+                document("folder-get-all-pinned",
+                    requestHeaders(
+                        headerWithName("Access-Token")
+                            .description("access token, 필수")
+                    ),
+                    responseFields(
+                        fieldWithPath("folders").type(JsonFieldType.ARRAY)
+                            .description("folders"),
+                        fieldWithPath("folders[].id").type(JsonFieldType.NUMBER)
+                            .description("folders[].id"),
+                        fieldWithPath("folders[].title").type(JsonFieldType.STRING)
+                            .description("folders[].title"),
+                        fieldWithPath("folders[].image").type(JsonFieldType.STRING)
+                            .description("folders[].image"),
+                        fieldWithPath("folders[].bookmarks[]").type(JsonFieldType.ARRAY)
+                            .description("folders[].bookmarks[]"),
+                        fieldWithPath("folders[].bookmarks[].id").type(JsonFieldType.NUMBER)
+                            .description("folders[].bookmarks[].id"),
+                        fieldWithPath("folders[].bookmarks[].url").type(JsonFieldType.STRING)
+                            .description("folders[].bookmarks[].url"),
+                        fieldWithPath("folders[].bookmarks[].title").type(JsonFieldType.STRING)
+                            .description("folders[].bookmarks[].title"),
+                        fieldWithPath("folders[].tags[]").type(JsonFieldType.ARRAY)
+                            .description("folders[].tags[] (STRING ARRAY)"),
+                        fieldWithPath("folders[].createdAt").type(JsonFieldType.STRING)
+                            .description("folders[].createdAt")
+                    )
+                )
+            );
     }
 
     @Test

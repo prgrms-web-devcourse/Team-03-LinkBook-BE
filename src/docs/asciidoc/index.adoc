@@ -105,6 +105,16 @@ include::{snippets}/find-all-folder-list-by-title/http-response.adoc[]
 
 include::{snippets}/find-all-folder-list-by-title/response-fields.adoc[]
 
+=== 사용자의 Pinned 폴더리스트 조회
+
+.Request
+include::{snippets}/folder-get-all-pinned/http-request.adoc[]
+
+.Response
+include::{snippets}/folder-get-all-pinned/http-response.adoc[]
+
+include::{snippets}/folder-get-all-pinned/response-fields.adoc[]
+
 === 사용자의 Private 폴더리스트 조회
 
 .Request

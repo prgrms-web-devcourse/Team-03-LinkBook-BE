@@ -130,6 +130,11 @@ public class FolderService {
         return FolderListByUserResponse.fromEntity(user, folders, likes);
     }
 
+    public PinnedListResponse getAllPinned(String email) {
+        List<Folder> folders = folderRepository.findAllPinned(email, true);
+        return PinnedListResponse.fromEntity(folders);
+    }
+
     // 특정 문자열을 제목에 포함한 폴더전체 조회
     public FolderListResponse getAllByTitle(Pageable pageable, String title,
         JwtAuthentication auth) {
