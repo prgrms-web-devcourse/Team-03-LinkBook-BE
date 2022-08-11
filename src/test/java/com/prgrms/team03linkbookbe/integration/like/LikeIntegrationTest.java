@@ -250,7 +250,7 @@ class LikeIntegrationTest {
     @DisplayName("좋아요 삭제 테스트")
     @WithJwtAuth(email = "test@test.com")
     void DELETE_LIKE_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(delete("/api/likes/{id}", like.getId())
+        this.mockMvc.perform(delete("/api/likes/{folderId}", folder.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
