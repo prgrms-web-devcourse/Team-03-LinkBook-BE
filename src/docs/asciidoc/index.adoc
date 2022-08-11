@@ -1,6 +1,6 @@
 :hardbreaks:
 ifndef::snippets[]
-:snippets: ../../../build/generated-snippets
+:snippets: ./build/generated-snippets
 endif::[]
 
 == 계정 관리
