@@ -21,7 +21,6 @@ import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
-import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
@@ -35,9 +34,12 @@ import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -53,7 +55,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class FolderIntegrationTest {
 
     @Autowired
@@ -95,7 +96,7 @@ public class FolderIntegrationTest {
     private String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGluay1ib29rIiwiZXhwIjoxNjU5MDc4MzE2LCJpYXQiOjE2NTkwNzQ3MTYsImVtYWlsIjoidXNlcjFAZ21haWwuY29tIn0.ksk7dW4Z4grAkWKeryEfJbwA4HvqApCk3I7afAO4Ir0CR2NeL3Oe0YbgZCtwRXM3EtB0RPqtJCMfAP_L6pDVKQ";
 
 
-    @BeforeAll
+    @BeforeEach
     void init() {
         user = User.builder()
             .image("img")
@@ -152,6 +153,8 @@ public class FolderIntegrationTest {
 
         folderTagRepository.save(folderTag);
 
+        folderForDelete.updateFolderTags(List.of(folderTag));
+
         bookmark = Bookmark.builder()
             .url("url")
             .title("test")
@@ -162,7 +165,7 @@ public class FolderIntegrationTest {
     }
 
 
-    @AfterAll
+    @AfterEach
     void tear_down() {
         folderTagRepository.deleteAll();
         tagRepository.deleteAll();
@@ -178,11 +181,11 @@ public class FolderIntegrationTest {
     @DisplayName("폴더 전체를 조회할 수 있다.")
     void GET_ALL_FOLDER_TEST() throws Exception {
         mockMvc.perform(get("/api/folders")
-            .characterEncoding(StandardCharsets.UTF_8)
-            .header("Access-Token",accessToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .param("page", String.valueOf(0))
-            .param("size", String.valueOf(12)))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .header("Access-Token", accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(12)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -283,12 +286,12 @@ public class FolderIntegrationTest {
     @DisplayName("폴더를 제목으로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_TITLE_TEST() throws Exception {
         mockMvc.perform(get("/api/folders")
-            .characterEncoding(StandardCharsets.UTF_8)
-            .header("Access-Token", accessToken)
-            .contentType(MediaType.APPLICATION_JSON)
-            .param("page", String.valueOf(0))
-            .param("size", String.valueOf(12))
-            .param("title", "my"))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .header("Access-Token", accessToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(12))
+                .param("title", "my"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -388,10 +391,10 @@ public class FolderIntegrationTest {
     @DisplayName("특정사용자의 폴더리스트를 조회할 수 있다.")
     void GET_ALL_FOLDER_BY_USER_TEST() throws Exception {
         mockMvc.perform(get("/api/folders/users/{userId}", user.getId())
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .param("page", String.valueOf(0))
-            .param("size", String.valueOf(12)))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(12)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -500,12 +503,12 @@ public class FolderIntegrationTest {
     @DisplayName("자신의 PRIVATE 폴더리스트 조회할 수 있다.")
     void GET_ALL_FOLDER_BY_USER_TEST_PRIVATE() throws Exception {
         mockMvc.perform(get("/api/folders/users/{userId}", user.getId())
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Access-Token", accessToken)
-            .param("page", String.valueOf(0))
-            .param("size", String.valueOf(12))
-            .param("isPrivate", ("true")))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Access-Token", accessToken)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(12))
+                .param("isPrivate", ("true")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -618,11 +621,11 @@ public class FolderIntegrationTest {
     @DisplayName("특정폴더의 상세페이지를 조회할 수 있다.")
     void GET_DETAIL_OF_FOLDER_TEST() throws Exception {
         mockMvc.perform(get("/api/folders/{folderId}", folderForModify.getId())
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Access-Token",accessToken)
-            .param("page", String.valueOf(0))
-            .param("size", String.valueOf(12)))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Access-Token", accessToken)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(12)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -707,10 +710,10 @@ public class FolderIntegrationTest {
                     .collect(Collectors.toList()))
                 .build();
         this.mockMvc.perform(post("/api/folders")
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Access-Token", accessToken)
-            .content(objectMapper.writeValueAsString(createFolderRequest)))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Access-Token", accessToken)
+                .content(objectMapper.writeValueAsString(createFolderRequest)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andDo(
@@ -769,10 +772,10 @@ public class FolderIntegrationTest {
                     .collect(Collectors.toList()))
                 .build();
         this.mockMvc.perform(put("/api/folders/{id}", folderForModify.getId())
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Access-Token", accessToken)
-            .content(objectMapper.writeValueAsString(createFolderRequest)))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Access-Token", accessToken)
+                .content(objectMapper.writeValueAsString(createFolderRequest)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andDo(
@@ -813,35 +816,32 @@ public class FolderIntegrationTest {
     @DisplayName("폴더를 삭제할 수 있다.")
     void DELETE_FOLDER_TEST() throws Exception {
         this.mockMvc.perform(delete("/api/folders/{id}", folderForDelete.getId())
-            .characterEncoding(StandardCharsets.UTF_8)
-            .header("Access-Token",accessToken)
-            .contentType(MediaType.APPLICATION_JSON))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .header("Access-Token", accessToken)
+                .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(
                 document("delete-folder",
-                requestHeaders(
-                    headerWithName("Access-Token")
-                        .description("access token, 필수")
-                ))
+                    requestHeaders(
+                        headerWithName("Access-Token")
+                            .description("access token, 필수")
+                    ))
             );
     }
 
     @Test
-    @Disabled
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 루트태그로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_ROOT_TAG() throws Exception {
-        RootTagRequest dto = RootTagRequest.builder()
-            .rootTag(rootTag.getName())
-            .build();
+        String request = "{\"rootTag\" : \"게임\"}";
 
         mockMvc.perform(get("/api/folders/root-tag")
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Access-Token",accessToken)
-            .content(objectMapper.writeValueAsString(dto))
-            .param("page", String.valueOf(0))
-            .param("size", String.valueOf(12)))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Access-Token", accessToken)
+                .content(request)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(12)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -856,18 +856,8 @@ public class FolderIntegrationTest {
                             .description("rootTag")
                     ),
                     responseFields(
-                        fieldWithPath("user").type(JsonFieldType.OBJECT)
-                            .description("user"),
-                        fieldWithPath("user.id").type(JsonFieldType.NUMBER)
-                            .description("user.id"),
-                        fieldWithPath("user.email").type(JsonFieldType.STRING)
-                            .description("user.email"),
-                        fieldWithPath("user.name").type(JsonFieldType.STRING)
-                            .description("user.name"),
-                        fieldWithPath("user.image").type(JsonFieldType.STRING)
-                            .description("user.image"),
-                        fieldWithPath("user.introduce").type(JsonFieldType.STRING)
-                            .description("user.introduce,(STRING, can be NULL)"),
+                        fieldWithPath("folders").type(JsonFieldType.OBJECT)
+                            .description("folders"),
                         fieldWithPath("folders.content[]").type(JsonFieldType.ARRAY)
                             .description("folders.content[]"),
                         fieldWithPath("folders.content[].id").type(JsonFieldType.NUMBER)
@@ -955,21 +945,19 @@ public class FolderIntegrationTest {
 
 
     @Test
-    @Disabled
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 서브태그로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_SUB_TAG() throws Exception {
-        TagRequest dto = TagRequest.builder()
-            .tag(tag.getName())
-            .build();
+        String request = "{\"tag\" : \"게임1\"}";
 
         mockMvc.perform(get("/api/folders/tag")
-            .characterEncoding(StandardCharsets.UTF_8)
-            .contentType(MediaType.APPLICATION_JSON)
-            .header("Access-Token",accessToken)
-            .content(objectMapper.writeValueAsString(dto))
-            .param("page", String.valueOf(0))
-            .param("size", String.valueOf(12)))
+                .characterEncoding(StandardCharsets.UTF_8)
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Access-Token", accessToken)
+                .content(request)
+                .param("page", String.valueOf(0))
+                .param("size", String.valueOf(12))
+                .param("sort", "likes"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
@@ -984,18 +972,8 @@ public class FolderIntegrationTest {
                             .description("tag")
                     ),
                     responseFields(
-                        fieldWithPath("user").type(JsonFieldType.OBJECT)
-                            .description("user"),
-                        fieldWithPath("user.id").type(JsonFieldType.NUMBER)
-                            .description("user.id"),
-                        fieldWithPath("user.email").type(JsonFieldType.STRING)
-                            .description("user.email"),
-                        fieldWithPath("user.name").type(JsonFieldType.STRING)
-                            .description("user.name"),
-                        fieldWithPath("user.image").type(JsonFieldType.STRING)
-                            .description("user.image"),
-                        fieldWithPath("user.introduce").type(JsonFieldType.STRING)
-                            .description("user.introduce,(STRING, can be NULL)"),
+                        fieldWithPath("folders").type(JsonFieldType.OBJECT)
+                            .description("folders"),
                         fieldWithPath("folders.content[]").type(JsonFieldType.ARRAY)
                             .description("folders.content[]"),
                         fieldWithPath("folders.content[].id").type(JsonFieldType.NUMBER)
@@ -1075,11 +1053,7 @@ public class FolderIntegrationTest {
                         fieldWithPath("folders.empty").type(JsonFieldType.BOOLEAN)
                             .description("folders.empty")
                     )
-
                 )
             );
-
     }
-
-
 }
