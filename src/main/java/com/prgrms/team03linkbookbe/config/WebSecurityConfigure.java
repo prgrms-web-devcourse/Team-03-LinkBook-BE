@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -93,12 +94,17 @@ public class WebSecurityConfigure {
     }
 
     @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers("/css/", "/js/", "/img/**", "/docs/index.html");
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, Jwt jwt) throws Exception {
         http
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .antMatchers(
-                "/h2-console/**",
+                "/h2-console/**", "/docs/**",
                 "/api/users/login", "/api/users/register", "/api/refresh-token", "/api/emails/**"
             ).permitAll()
             .antMatchers(HttpMethod.GET,

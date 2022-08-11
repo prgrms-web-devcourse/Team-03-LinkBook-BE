@@ -1,0 +1,282 @@
+:hardbreaks:
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+
+== 계정 관리
+
+=== 회원가입
+
+.Request
+include::{snippets}/user-register/http-request.adoc[]
+
+include::{snippets}/user-register/request-fields.adoc[]
+
+=== 로그인
+
+.Request
+include::{snippets}/user-login/http-request.adoc[]
+
+include::{snippets}/user-login/request-fields.adoc[]
+
+.Response
+include::{snippets}/user-login/http-response.adoc[]
+
+include::{snippets}/user-login/response-fields.adoc[]
+
+=== 내정보조회
+
+.Request
+include::{snippets}/user-me/http-request.adoc[]
+
+.Response
+include::{snippets}/user-me/http-response.adoc[]
+
+include::{snippets}/user-me/response-fields.adoc[]
+
+=== 개인정보 수정
+
+.Request
+include::{snippets}/user-update/http-request.adoc[]
+
+include::{snippets}/user-update/request-fields.adoc[]
+
+.Response
+include::{snippets}/user-update/http-response.adoc[]
+
+=== 액세스 토큰 재발급
+
+.Request
+include::{snippets}/reissue-access-token/http-request.adoc[]
+
+.Response
+include::{snippets}/reissue-access-token/http-response.adoc[]
+
+include::{snippets}/reissue-access-token/response-fields.adoc[]
+
+=== 인증키 이메일 보내기
+
+.Request
+include::{snippets}/email-send/http-request.adoc[]
+
+.Response
+include::{snippets}/email-send/http-response.adoc[]
+
+=== 이메일 인증
+
+.Request
+include::{snippets}/email-certification/http-request.adoc[]
+
+.Response
+include::{snippets}/email-certification/http-response.adoc[]
+
+
+== 폴더
+
+=== 폴더 전체 조회
+
+.Request
+include::{snippets}/find-all-folder-list/http-request.adoc[]
+
+.Response
+include::{snippets}/find-all-folder-list/http-response.adoc[]
+
+include::{snippets}/find-all-folder-list/response-fields.adoc[]
+
+=== 특정 사용자의 폴더 조회
+
+.Request
+include::{snippets}/find-all-folder-list-by-user/http-request.adoc[]
+
+
+.Response
+include::{snippets}/find-all-folder-list-by-user/http-response.adoc[]
+
+include::{snippets}/find-all-folder-list-by-user/response-fields.adoc[]
+
+
+=== 폴더 제목 검색
+
+.Request
+include::{snippets}/find-all-folder-list-by-title/http-request.adoc[]
+
+.Response
+include::{snippets}/find-all-folder-list-by-title/http-response.adoc[]
+
+include::{snippets}/find-all-folder-list-by-title/response-fields.adoc[]
+
+=== 사용자의 Private 폴더리스트 조회
+
+.Request
+include::{snippets}/find-all-private-folder-list-by-user/http-request.adoc[]
+
+.Response
+include::{snippets}/find-all-private-folder-list-by-user/http-response.adoc[]
+
+include::{snippets}/find-all-private-folder-list-by-user/response-fields.adoc[]
+
+
+=== 특정폴더 상세페이지 조회
+
+.Request
+include::{snippets}/find-folder-detail/http-request.adoc[]
+
+.Response
+include::{snippets}/find-folder-detail/http-response.adoc[]
+
+include::{snippets}/find-folder-detail/response-fields.adoc[]
+
+
+=== 폴더 생성
+
+.Request
+include::{snippets}/create-folder/http-request.adoc[]
+
+include::{snippets}/create-folder/request-fields.adoc[]
+
+.Response
+include::{snippets}/create-folder/http-response.adoc[]
+
+include::{snippets}/create-folder/response-fields.adoc[]
+
+
+=== 폴더 수정
+
+.Request
+include::{snippets}/update-folder/http-request.adoc[]
+
+include::{snippets}/update-folder/request-fields.adoc[]
+
+.Response
+include::{snippets}/update-folder/http-response.adoc[]
+
+include::{snippets}/update-folder/response-fields.adoc[]
+
+
+=== 폴더 삭제
+
+.Request
+include::{snippets}/delete-folder/http-request.adoc[]
+
+.Response
+include::{snippets}/delete-folder/http-response.adoc[]
+
+
+=== 루트태그 폴더 검색
+
+.Request
+include::{snippets}/find-all-folder-list-by-root-tag/http-request.adoc[]
+
+include::{snippets}/find-all-folder-list-by-root-tag/request-fields.adoc[]
+
+.Response
+include::{snippets}/find-all-folder-list-by-root-tag/http-response.adoc[]
+
+include::{snippets}/find-all-folder-list-by-root-tag/response-fields.adoc[]
+
+=== 서브 태그 폴더 검색
+
+.Request
+include::{snippets}/find-all-folder-list-by-sub-tag/http-request.adoc[]
+
+include::{snippets}/find-all-folder-list-by-sub-tag/request-fields.adoc[]
+
+.Response
+include::{snippets}/find-all-folder-list-by-sub-tag/http-response.adoc[]
+
+include::{snippets}/find-all-folder-list-by-sub-tag/response-fields.adoc[]
+
+
+== 북마크
+
+=== 북마크 생성
+
+.Request
+include::{snippets}/create-bookmark/http-request.adoc[]
+
+.Response
+include::{snippets}/create-bookmark/http-response.adoc[]
+
+=== 북마크 수정
+
+.Request
+include::{snippets}/update-bookmark/http-request.adoc[]
+
+include::{snippets}/update-bookmark/request-fields.adoc[]
+
+.Response
+include::{snippets}/update-bookmark/http-response.adoc[]
+
+=== 북마크 삭제
+
+.Request
+include::{snippets}/delete-bookmark/http-request.adoc[]
+
+.Response
+include::{snippets}/delete-bookmark/http-response.adoc[]
+
+== 코멘트
+
+=== 댓글 등록
+
+.Request
+include::{snippets}/register-comment/http-request.adoc[]
+
+include::{snippets}/register-comment/request-fields.adoc[]
+
+.Response
+include::{snippets}/register-comment/http-response.adoc[]
+
+include::{snippets}/register-comment/response-fields.adoc[]
+
+=== 댓글 수정
+
+.Request
+include::{snippets}/modify-comment/http-request.adoc[]
+
+include::{snippets}/modify-comment/request-fields.adoc[]
+
+.Response
+include::{snippets}/modify-comment/http-response.adoc[]
+
+include::{snippets}/modify-comment/response-fields.adoc[]
+
+=== 댓글 삭제
+
+.Request
+include::{snippets}/remove-by-id-comment/http-request.adoc[]
+
+.Response
+include::{snippets}/remove-by-id-comment/http-response.adoc[]
+
+== 좋아요
+
+=== 좋아요 등록
+
+.Request
+include::{snippets}/register-like/http-request.adoc[]
+
+include::{snippets}/register-like/request-fields.adoc[]
+
+.Response
+include::{snippets}/register-like/http-response.adoc[]
+
+include::{snippets}/register-like/response-fields.adoc[]
+
+=== 좋아요한 폴더 조회
+
+.Request
+include::{snippets}/find-liked-folder-list/http-request.adoc[]
+
+.Response
+include::{snippets}/find-liked-folder-list/http-response.adoc[]
+
+include::{snippets}/find-liked-folder-list/response-fields.adoc[]
+
+=== 좋아요 삭제
+
+.Request
+include::{snippets}/remove-by-id-like/http-request.adoc[]
+
+.Response
+include::{snippets}/remove-by-id-like/http-response.adoc[]

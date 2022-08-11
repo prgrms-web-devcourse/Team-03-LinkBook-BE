@@ -203,7 +203,7 @@ public class BookmarkIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("create-bookmark",
+            .andDo(document("delete-bookmark",
                 requestHeaders(
                     headerWithName("Access-Token")
                         .description("access token, 필수")
