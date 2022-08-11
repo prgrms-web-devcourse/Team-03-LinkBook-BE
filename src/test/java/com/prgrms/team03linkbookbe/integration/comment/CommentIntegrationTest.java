@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.nio.charset.StandardCharsets;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -54,6 +56,8 @@ class CommentIntegrationTest {
     User user;
     Folder folder;
     Comment comment;
+
+    private String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGluay1ib29rIiwiZXhwIjoxNjU5MDc4MzE2LCJpYXQiOjE2NTkwNzQ3MTYsImVtYWlsIjoidXNlcjFAZ21haWwuY29tIn0.ksk7dW4Z4grAkWKeryEfJbwA4HvqApCk3I7afAO4Ir0CR2NeL3Oe0YbgZCtwRXM3EtB0RPqtJCMfAP_L6pDVKQ";
 
     @BeforeAll
     void setup() {
@@ -106,12 +110,17 @@ class CommentIntegrationTest {
                         .build();
         this.mockMvc.perform(post("/api/comments")
                         .characterEncoding(StandardCharsets.UTF_8)
+                        .header("Access-Token", accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
                         document("register-comment",
+                                requestHeaders(
+                                        headerWithName("Access-Token")
+                                                .description("access token")
+                                ),
                                 requestFields(
                                         fieldWithPath("parentId").type(JsonFieldType.NUMBER)
                                                 .description("parentId"),
@@ -144,12 +153,17 @@ class CommentIntegrationTest {
                         .build();
         this.mockMvc.perform(put("/api/comments/{id}", comment.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
+                        .header("Access-Token", accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequestDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
                         document("modify-comment",
+                                requestHeaders(
+                                        headerWithName("Access-Token")
+                                                .description("access token")
+                                ),
                                 requestFields(
                                         fieldWithPath("id").type(JsonFieldType.NUMBER)
                                                 .description("id"),
@@ -175,10 +189,16 @@ class CommentIntegrationTest {
     void DELETE_COMMENT_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(delete("/api/comments/{id}", comment.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
+                        .header("Access-Token", accessToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
-                        document("remove-by-id-comment")
+                        document("remove-by-id-comment",
+                                requestHeaders(
+                                        headerWithName("Access-Token")
+                                                .description("access token")
+                                )
+                        )
                 );
     }
 }
