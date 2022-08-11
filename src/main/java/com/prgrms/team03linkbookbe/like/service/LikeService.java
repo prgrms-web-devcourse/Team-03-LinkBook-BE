@@ -72,11 +72,14 @@ public class LikeService {
     }
 
     @Transactional
-    public Long delete(Long id, String email) {
+    public Long delete(Long folderId, String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
 
-        Like like = likeRepository.findByIdAndUser(id, user)
+        Folder folder = folderRepository.findById(folderId).orElseThrow(
+                () -> new IllegalArgumentException("해당 폴더는 존재하지 않습니다."));
+
+        Like like = likeRepository.findByFolderAndUser(folder, user)
                 .orElseThrow(() -> new IllegalArgumentException("해당 좋아요는 존재하지 않습니다."));
 
         if (!Objects.equals(user.getId(), like.getUser().getId())) {

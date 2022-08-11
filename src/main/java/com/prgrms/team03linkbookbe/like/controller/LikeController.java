@@ -41,8 +41,8 @@ public class LikeController {
         return ResponseEntity.ok(folders);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
-        likeservice.delete(id, jwtAuthentication.email);
+    @DeleteMapping("/{folderId}")
+    public void delete(@PathVariable Long folderId, @AuthenticationPrincipal JwtAuthentication jwtAuthentication) {
+        likeservice.delete(folderId, jwtAuthentication.email);
     }
 }

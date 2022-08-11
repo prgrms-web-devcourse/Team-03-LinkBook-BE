@@ -50,7 +50,7 @@ class LikeServiceTest {
                 .userId(1L)
                 .build();
 
-        folder = Folder.builder().build();
+        folder = Folder.builder().id(1L).build();
 
         String email = "test@test.com";
         String password = "test1234!";
@@ -90,7 +90,8 @@ class LikeServiceTest {
     void DELETE_COMMENT_TEST() {
         // given
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(likeRepository.findByIdAndUser(1L, user))
+        when(folderRepository.findById(folder.getId())).thenReturn(Optional.of(folder));
+        when(likeRepository.findByFolderAndUser(folder, user))
                 .thenReturn(Optional.of(Like.builder()
                         .id(1L)
                         .user(user)
@@ -98,7 +99,7 @@ class LikeServiceTest {
                         .build()));
 
         // when
-        Long deleteLike = likeService.delete(1L, user.getEmail());
+        Long deleteLike = likeService.delete(folder.getId(), user.getEmail());
 
         // then
         assertThat(deleteLike).isEqualTo(1L);
