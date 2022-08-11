@@ -1,10 +1,13 @@
 package com.prgrms.team03linkbookbe.integration.user;
 
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.patch;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -56,7 +59,8 @@ public class UserIntegrationTest {
             .image("기본이미지URL")
             .build();
         MockHttpSession mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute(email, Map.of("CERTIFICATION_KEY", "userKey", "IS_CERTIFICATION", true));
+        mockHttpSession.setAttribute(email,
+            Map.of("CERTIFICATION_KEY", "userKey", "IS_CERTIFICATION", true));
 
         // when & then
         mockMvc.perform(post("/api/users/register")
@@ -65,7 +69,13 @@ public class UserIntegrationTest {
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("user-register"));
+            .andDo(document("user-register",
+                requestFields(
+                    fieldWithPath("email").type(JsonFieldType.STRING).description("email"),
+                    fieldWithPath("password").type(JsonFieldType.STRING).description("password"),
+                    fieldWithPath("image").type(JsonFieldType.STRING).description("image")
+                )
+            ));
     }
 
     @Test
@@ -85,6 +95,10 @@ public class UserIntegrationTest {
             .andExpect(status().isOk())
             .andDo(print())
             .andDo(document("user-login",
+                requestFields(
+                    fieldWithPath("email").type(JsonFieldType.STRING).description("email"),
+                    fieldWithPath("password").type(JsonFieldType.STRING).description("password")
+                ),
                 responseFields(
                     fieldWithPath("accessToken").type(JsonFieldType.STRING)
                         .description("accessToken"),
@@ -114,10 +128,15 @@ public class UserIntegrationTest {
     @WithJwtAuth(email = "login1234@gmail.com")
     void ME_TEST() throws Exception {
         // given & when & then
-        mockMvc.perform(get("/api/users/me"))
+        mockMvc.perform(get("/api/users/me")
+                .header("Access-Token", "access token"))
             .andExpect(status().isOk())
             .andDo(print())
             .andDo(document("user-me",
+                requestHeaders(
+                    headerWithName("Access-Token")
+                        .description("access token, 필수")
+                ),
                 responseFields(
                     fieldWithPath("user").type(JsonFieldType.OBJECT)
                         .description("user"),
@@ -163,10 +182,23 @@ public class UserIntegrationTest {
 
         // when & then
         mockMvc.perform(patch("/api/users")
+                .header("Access-Token", "access token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(requestDto)))
             .andExpect(status().isOk())
             .andDo(print())
-            .andDo(document("user-update"));
+            .andDo(document("user-update",
+                requestHeaders(
+                    headerWithName("Access-Token")
+                        .description("access token, 필수")
+                ),
+                requestFields(
+                    fieldWithPath("name").type(JsonFieldType.STRING).description("name"),
+                    fieldWithPath("image").type(JsonFieldType.STRING).description("image"),
+                    fieldWithPath("introduce").type(JsonFieldType.STRING).description("introduce"),
+                    fieldWithPath("interests").type(JsonFieldType.ARRAY)
+                        .description("interests (String Array)")
+                )
+            ));
     }
 }
