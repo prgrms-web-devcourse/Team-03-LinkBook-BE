@@ -61,8 +61,8 @@ public class RefreshTokenIntegrationTest {
         // 액세스 토큰 재발급을 위해 유효기간 지난 것으로 생성
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2022);
-        cal.set(Calendar.MONTH, Calendar.AUGUST);
-        cal.set(Calendar.DAY_OF_MONTH, 3);
+        cal.set(Calendar.MONTH, Calendar.JULY);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
         Date date = cal.getTime();
         JWTCreator.Builder builder = com.auth0.jwt.JWT.create();
         builder.withIssuer(jwtConfigure.getClientSecret());
