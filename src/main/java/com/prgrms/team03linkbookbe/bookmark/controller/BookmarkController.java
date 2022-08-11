@@ -4,6 +4,7 @@ import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.service.BookmarkService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,14 +16,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 public class BookmarkController {
 
-    BookmarkService bookmarkService;
-
-    public BookmarkController(
-        BookmarkService bookmarkService) {
-        this.bookmarkService = bookmarkService;
-    }
+    private final BookmarkService bookmarkService;
 
     @PostMapping("/api/bookmarks")
     @ResponseStatus(HttpStatus.OK)

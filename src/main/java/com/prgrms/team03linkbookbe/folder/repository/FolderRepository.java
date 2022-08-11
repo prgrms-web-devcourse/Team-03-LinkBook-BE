@@ -20,7 +20,7 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
         countQuery = "SELECT count(f) FROM Folder f")
     Page<Folder> findAll(Boolean isPrivate, Pageable pageable);
 
-    @Query("SELECT DISTINCT f FROM Folder f LEFT JOIN FETCH f.folderTags JOIN f.user u ON u.email = :email WHERE f.isPinned = :isPinned")
+    @Query("SELECT DISTINCT f FROM Folder f LEFT JOIN f.folderTags LEFT JOIN f.bookmarks JOIN f.user u ON u.email = :email WHERE f.isPinned = :isPinned")
     List<Folder> findAllPinned(String email, Boolean isPinned);
 
     //TODO : 필터링부분구현

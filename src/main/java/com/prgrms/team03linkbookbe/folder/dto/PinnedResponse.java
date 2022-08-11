@@ -1,5 +1,6 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
+import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
 import java.time.LocalDateTime;
@@ -18,7 +19,7 @@ public class PinnedResponse {
 
     private String image;
 
-    private UserSimpleResponseDto user;
+    private List<BookmarkResponse> bookmarks;
 
     private List<String> tags;
 
@@ -29,9 +30,13 @@ public class PinnedResponse {
             .id(folder.getId())
             .title(folder.getTitle())
             .image(folder.getImage())
-            .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
-            .tags(folder.getFolderTags().stream().map(folderTag ->
-                folderTag.getTag().getName().getViewName()).collect(Collectors.toList())
+            .bookmarks(
+                folder.getBookmarks().stream().map(BookmarkResponse::fromEntity)
+                    .collect(Collectors.toList())
+            )
+            .tags(
+                folder.getFolderTags().stream().map(folderTag ->
+                    folderTag.getTag().getName().getViewName()).collect(Collectors.toList())
             )
             .createdAt(folder.getCreatedAt())
             .build();

@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public class PinnedListResponse {
 
-    List<PinnedResponse> pinnedFolders;
+    List<PinnedResponse> folders;
 
     public static PinnedListResponse fromEntity(List<Folder> folders) {
         return PinnedListResponse.builder()
-            .pinnedFolders(
+            .folders(
                 folders.stream().map(PinnedResponse::fromEntity).collect(Collectors.toList())
             )
             .build();
