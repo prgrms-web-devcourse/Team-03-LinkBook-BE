@@ -4,28 +4,18 @@ import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
-import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
-import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
-import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
-import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
+import com.prgrms.team03linkbookbe.folder.dto.*;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.exception.IllegalAccessToPrivateFolderException;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
-import com.prgrms.team03linkbookbe.folderTag.repository.FolderTagRepository;
 import com.prgrms.team03linkbookbe.folderTag.service.FolderTagService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.like.entity.Like;
 import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.rootTag.entity.RootTagCategory;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
-import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,6 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -96,6 +89,15 @@ public class FolderService {
             User user = userRepository.findByEmail(auth.email)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
             likes = likeRepository.findAllByUser(user);
+        }
+
+        if (folder.get(0).getOriginId() != null) {
+            OriginFolderResponse originFolder = OriginFolderResponse.fromEntity(folderRepository.findById(folder.get(0).getOriginId())
+                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 원본 폴더 정보입니다.")));
+
+            return FolderDetailResponse
+                    .fromEntity(folder.get(0),
+                            likes.stream().anyMatch(l -> l.getFolder().getId().equals(folderId)), originFolder);
         }
 
         return FolderDetailResponse
