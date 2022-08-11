@@ -17,7 +17,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
-import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
@@ -34,7 +33,6 @@ import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
@@ -639,6 +637,18 @@ public class FolderIntegrationTest {
                             .description("folders[].title"),
                         fieldWithPath("folders[].image").type(JsonFieldType.STRING)
                             .description("folders[].image"),
+                        fieldWithPath("folders[].user").type(JsonFieldType.OBJECT)
+                            .description("folders[].user"),
+                        fieldWithPath("folders[].user.id").type(JsonFieldType.NUMBER)
+                            .description("folders[].user.id"),
+                        fieldWithPath("folders[].user.email").type(JsonFieldType.STRING)
+                            .description("folders[].user.email"),
+                        fieldWithPath("folders[].user.name").type(JsonFieldType.STRING)
+                            .description("folders[].user.name"),
+                        fieldWithPath("folders[].user.image").type(JsonFieldType.STRING)
+                            .description("folders[].user.image"),
+                        fieldWithPath("folders[].user.introduce").type(JsonFieldType.STRING)
+                            .description("folders[].user.introduce (STRING, can be NULL)"),
                         fieldWithPath("folders[].bookmarks[]").type(JsonFieldType.ARRAY)
                             .description("folders[].bookmarks[]"),
                         fieldWithPath("folders[].bookmarks[].id").type(JsonFieldType.NUMBER)
