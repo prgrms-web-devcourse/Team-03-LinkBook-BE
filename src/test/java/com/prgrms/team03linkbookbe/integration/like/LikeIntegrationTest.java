@@ -55,6 +55,8 @@ class LikeIntegrationTest {
     Folder folder;
     Like like;
 
+    private String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGluay1ib29rIiwiZXhwIjoxNjU5MDc4MzE2LCJpYXQiOjE2NTkwNzQ3MTYsImVtYWlsIjoidXNlcjFAZ21haWwuY29tIn0.ksk7dW4Z4grAkWKeryEfJbwA4HvqApCk3I7afAO4Ir0CR2NeL3Oe0YbgZCtwRXM3EtB0RPqtJCMfAP_L6pDVKQ";
+
     @BeforeEach
     void setup() {
         user = User.builder()
@@ -112,6 +114,7 @@ class LikeIntegrationTest {
                         .build();
         this.mockMvc.perform(post("/api/likes")
                         .characterEncoding(StandardCharsets.UTF_8)
+                        .header("Access-Token", accessToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(likeRequestDto)))
                 .andExpect(status().isOk())
@@ -150,10 +153,6 @@ class LikeIntegrationTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andDo(
                         document("find-liked-folder-list",
-                                requestHeaders(
-                                        headerWithName("Access-Token")
-                                                .description("access token")
-                                ),
                                 responseFields(
                                         fieldWithPath("folders.content[]").type(JsonFieldType.ARRAY)
                                                 .description("folders.content[]"),
@@ -243,6 +242,7 @@ class LikeIntegrationTest {
     void DELETE_LIKE_BY_ID_TEST() throws Exception {
         this.mockMvc.perform(delete("/api/likes/{folderId}", folder.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
+                        .header("Access-Token", accessToken)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(
