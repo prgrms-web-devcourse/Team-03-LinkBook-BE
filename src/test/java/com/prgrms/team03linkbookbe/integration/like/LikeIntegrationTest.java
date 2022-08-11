@@ -20,14 +20,8 @@ import com.prgrms.team03linkbookbe.like.repository.LikeRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestMethodOrder;
+
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -58,11 +52,10 @@ class LikeIntegrationTest {
     private FolderRepository folderRepository;
 
     User user;
-    Folder folderModify;
-    Folder folderCreate;
+    Folder folder;
     Like like;
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
         user = User.builder()
                 .email("test@test.com")
@@ -82,7 +75,7 @@ class LikeIntegrationTest {
                 .build();
         userRepository.save(temp);
 
-        folderModify = Folder.builder()
+        folder = Folder.builder()
                 .title("my-folder")
                 .image("url")
                 .content("halo")
@@ -91,27 +84,16 @@ class LikeIntegrationTest {
                 .isPrivate(false)
                 .user(temp)
                 .build();
-        folderRepository.save(folderModify);
-
-        folderCreate = Folder.builder()
-                .title("my-folder")
-                .image("url")
-                .content("halo")
-                .likes(0)
-                .isPinned(false)
-                .isPrivate(false)
-                .user(temp)
-                .build();
-        folderRepository.save(folderCreate);
+        folderRepository.save(folder);
 
         like = Like.builder()
-                .folder(folderModify)
+                .folder(folder)
                 .user(user)
                 .build();
         likeRepository.save(like);
     }
 
-    @AfterAll
+    @AfterEach
     void teardown() {
         likeRepository.deleteAll();
         folderRepository.deleteAll();
@@ -126,7 +108,7 @@ class LikeIntegrationTest {
         CreateLikeRequest likeRequestDto =
                 CreateLikeRequest.builder()
                         .userId(user.getId())
-                        .folderId(folderCreate.getId())
+                        .folderId(folder.getId())
                         .build();
         this.mockMvc.perform(post("/api/likes")
                         .characterEncoding(StandardCharsets.UTF_8)
@@ -251,7 +233,7 @@ class LikeIntegrationTest {
     @DisplayName("좋아요 삭제 테스트")
     @WithJwtAuth(email = "test@test.com")
     void DELETE_LIKE_BY_ID_TEST() throws Exception {
-        this.mockMvc.perform(delete("/api/likes/{folderId}", folderModify.getId())
+        this.mockMvc.perform(delete("/api/likes/{folderId}", folder.getId())
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
