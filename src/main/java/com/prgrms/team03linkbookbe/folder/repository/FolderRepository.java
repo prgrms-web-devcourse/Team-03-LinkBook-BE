@@ -21,11 +21,11 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
     Page<Folder> findAllByUser(User user, Pageable pageable);
 
     @Query(value = "SELECT DISTINCT f FROM Folder f JOIN FETCH f.user LEFT JOIN FETCH f.folderTags WHERE f.isPrivate = :isPrivate OR ( f.isPrivate = true AND f.user = :user ) ",
-        countQuery = "SELECT count(f) FROM Folder f")
+        countQuery = "SELECT count(f) FROM Folder f WHERE f.isPrivate = :isPrivate OR ( f.isPrivate = true AND f.user = :user ) ")
     Page<Folder> findAll(Boolean isPrivate, Pageable pageable, User user);
 
     @Query(value = "SELECT DISTINCT f FROM Folder f JOIN FETCH f.user LEFT JOIN FETCH f.folderTags WHERE f.isPrivate = :isPrivate",
-        countQuery = "SELECT count(f) FROM Folder f")
+        countQuery = "SELECT count(f) FROM Folder f WHERE f.isPrivate = :isPrivate")
     Page<Folder> findAll(Boolean isPrivate, Pageable pageable);
 
     @Query("SELECT DISTINCT f FROM Folder f JOIN FETCH f.user LEFT JOIN FETCH f.bookmarks LEFT JOIN f.folderTags JOIN f.user u ON u.email = :email WHERE f.isPinned = :isPinned")
@@ -43,11 +43,11 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
     List<Folder> findByIdWithFetchJoin(Long folderId);
 
     @Query(value = "SELECT DISTINCT f FROM Folder f LEFT JOIN FETCH f.folderTags WHERE ( f.isPrivate = :isPrivate OR ( f.isPrivate = true AND f.user = :user ) ) AND f.title LIKE CONCAT('%',:title,'%')",
-        countQuery = "SELECT count(f) FROM Folder f")
+        countQuery = "SELECT count(f) FROM Folder f WHERE ( f.isPrivate = :isPrivate OR ( f.isPrivate = true AND f.user = :user ) ) AND f.title LIKE CONCAT('%',:title,'%')")
     Page<Folder> findAllByTitle(Boolean isPrivate, Pageable pageable, String title, User user);
 
     @Query(value = "SELECT DISTINCT f FROM Folder f LEFT JOIN FETCH f.folderTags WHERE f.isPrivate = :isPrivate AND f.title LIKE CONCAT('%',:title,'%')",
-        countQuery = "SELECT count(f) FROM Folder f")
+        countQuery = "SELECT count(f) FROM Folder f WHERE f.isPrivate = :isPrivate AND f.title LIKE CONCAT('%',:title,'%')")
     Page<Folder> findAllByTitle(Boolean isPrivate, Pageable pageable, String title);
 
     @Query(value = "SELECT DISTINCT f FROM Folder f " +
