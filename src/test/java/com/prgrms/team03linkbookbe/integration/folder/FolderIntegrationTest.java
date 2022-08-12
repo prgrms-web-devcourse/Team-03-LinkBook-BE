@@ -708,6 +708,8 @@ public class FolderIntegrationTest {
                             .description("bookmarks[].url"),
                         fieldWithPath("bookmarks[].title").type(JsonFieldType.STRING)
                             .description("bookmarks[].title"),
+                        fieldWithPath("comments[]").type(JsonFieldType.ARRAY)
+                            .description("comments[]"),
                         fieldWithPath("user").type(JsonFieldType.OBJECT)
                             .description("user"),
                         fieldWithPath("user.id").type(JsonFieldType.NUMBER)
