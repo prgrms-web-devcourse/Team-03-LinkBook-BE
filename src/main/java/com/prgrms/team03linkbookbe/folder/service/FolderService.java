@@ -69,15 +69,18 @@ public class FolderService {
 
     // 전체폴더조회
     public FolderListResponse getAll(Pageable pageable, JwtAuthentication auth) {
-        List<Like> likes = new ArrayList<>();
+        List<Like> likes;
+        Page<Folder> all;
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(NoDataException::new);
             likes = likeRepository.findAllByUser(user);
+            all = folderRepository.findAll(false, pageable, user);
+        } else {
+            likes = new ArrayList<>();
+            all = folderRepository.findAll(false, pageable);
         }
-
-        Page<Folder> all = folderRepository.findAll(false, pageable);
 
         return FolderListResponse.fromEntity(all, likes);
     }
@@ -94,14 +97,14 @@ public class FolderService {
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(NoDataException::new);
             likes = likeRepository.findAllByUser(user);
         }
 
         if (folder.get(0).getOriginId() != null) {
             OriginFolderResponse originFolder = OriginFolderResponse.fromEntity(
                 folderRepository.findById(folder.get(0).getOriginId())
-                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 원본 폴더 정보입니다.")));
+                    .orElseThrow(NoDataException::new));
 
             return FolderDetailResponse
                 .fromEntity(folder.get(0),
@@ -130,9 +133,12 @@ public class FolderService {
             } else {
                 folders = folderRepository.findAllByUser(user, true, pageable);
             }
-        } else {
+        } else if ("false".equals(isPrivate)) {
             folders = folderRepository.findAllByUser(user, false, pageable);
+        } else {
+            folders = folderRepository.findAllByUser(user, pageable);
         }
+
         return FolderListByUserResponse.fromEntity(user, folders, likes);
     }
 
@@ -144,15 +150,19 @@ public class FolderService {
     // 특정 문자열을 제목에 포함한 폴더전체 조회
     public FolderListResponse getAllByTitle(Pageable pageable, String title,
         JwtAuthentication auth) {
-        List<Like> likes = new ArrayList<>();
+        List<Like> likes;
+        Page<Folder> all;
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(NoDataException::new);
             likes = likeRepository.findAllByUser(user);
+            all = folderRepository.findAllByTitle(false, pageable, title, user);
+        } else {
+            likes = new ArrayList<>();
+            all = folderRepository.findAllByTitle(false, pageable, title);
         }
 
-        Page<Folder> all = folderRepository.findAllByTitle(false, pageable, title);
         return FolderListResponse.fromEntity(all, likes);
     }
 
@@ -208,6 +218,7 @@ public class FolderService {
         JwtAuthentication auth) {
         RootTagCategory rootTagName = rootTagRequest.getRootTag();
         Page<Folder> folders;
+
         if (rootTagName == RootTagCategory.ALL) {
             folders = folderRepository.findAll(false, pageable);
         } else {
@@ -218,7 +229,7 @@ public class FolderService {
 
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(NoDataException::new);
             likes = likeRepository.findAllByUser(user);
         }
 
@@ -229,12 +240,14 @@ public class FolderService {
         JwtAuthentication auth) {
         TagCategory tagName = tagRequest.getTag();
         Page<Folder> folders = folderRepository.findByTag(tagName, pageable);
+        List<Like> likes;
 
-        List<Like> likes = new ArrayList<>();
         if (auth != null) {
             User user = userRepository.findByEmail(auth.email)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저 정보입니다."));
+                .orElseThrow(NoDataException::new);
             likes = likeRepository.findAllByUser(user);
+        } else {
+            likes = new ArrayList<>();
         }
 
         return FolderListResponse.fromEntity(folders, likes);
