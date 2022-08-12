@@ -50,7 +50,7 @@ public class Folder extends BaseDateEntity {
     @Column(name = "image", nullable = false, columnDefinition = "varchar(1000)")
     private String image;
 
-    @NotBlank(message = "폴더의 내용을 입력해주세요")
+    @NotNull(message = "폴더의 내용을 입력해주세요")
     @Column(name = "content", nullable = false, columnDefinition = "varchar(10000)")
     private String content;
 
