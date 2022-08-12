@@ -3,6 +3,7 @@ package com.prgrms.team03linkbookbe.comment.service;
 import com.prgrms.team03linkbookbe.comment.dto.*;
 import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.comment.repository.CommentRepository;
+import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
@@ -29,16 +30,16 @@ public class CommentService {
     @Transactional
     public CreateCommentResponse create(CreateCommentRequest requestDto, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+                .orElseThrow(NoDataException::new);
 
         Folder folder = folderRepository.findById(requestDto.getFolderId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 폴더는 존재하지 않습니다."));
+                .orElseThrow(NoDataException::new);
 
         Comment comment;
 
         if (requestDto.getParentId() != null) {
             Comment parent = commentRepository.findById(requestDto.getParentId())
-                    .orElseThrow(() -> new IllegalArgumentException("잘못된 부모 아이디 값을 입력했습니다."));
+                    .orElseThrow(NoDataException::new);
             comment = CreateCommentRequest.toEntity(folder, user, parent, requestDto);
         } else {
             comment = CreateCommentRequest.toEntity(folder, user, requestDto);
@@ -52,7 +53,7 @@ public class CommentService {
     @Transactional
     public CommentListResponse getAllByFolder(Long folderId) {
         Folder folder = folderRepository.findById(folderId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 폴더는 존재하지 않습니다."));
+                .orElseThrow(NoDataException::new);
 
         List<CommentResponse> list = commentRepository.findAllByFolder(folder).stream()
                 .filter(o -> o.getParent() == null)
@@ -69,13 +70,10 @@ public class CommentService {
     @Transactional
     public UpdateCommentResponse update(Long id, UpdateCommentRequest requestDto, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
-
-        Folder folder = folderRepository.findById(requestDto.getFolderId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 폴더는 존재하지 않습니다."));
+                .orElseThrow(NoDataException::new);
 
         Comment comment = commentRepository.findByIdAndUser(requestDto.getId(), user)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
+                .orElseThrow(NoDataException::new);
 
         if (!Objects.equals(user.getId(), comment.getUser().getId())) {
             throw new AccessDeniedException("자신의 코멘트만 수정 가능합니다.");
@@ -93,10 +91,10 @@ public class CommentService {
     @Transactional
     public Long delete(Long id, String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
+                .orElseThrow(NoDataException::new);
 
         Comment comment = commentRepository.findByIdAndUser(id, user)
-                .orElseThrow(() -> new IllegalArgumentException("해당 댓글은 존재하지 않습니다."));
+                .orElseThrow(NoDataException::new);
 
         if (!Objects.equals(user.getId(), comment.getUser().getId())) {
             throw new AccessDeniedException("자신의 코멘트만 삭제 가능합니다.");

@@ -1,12 +1,8 @@
 package com.prgrms.team03linkbookbe.folder.dto;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.comment.dto.CommentResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
-import com.prgrms.team03linkbookbe.like.entity.Like;
-import com.prgrms.team03linkbookbe.tag.entity.Tag;
-import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +37,8 @@ public class FolderDetailResponse {
 
     private List<BookmarkResponse> bookmarks;
 
+    private List<CommentResponse> comments;
+
     private List<String> tags;
 
     private int likes;
@@ -48,7 +46,6 @@ public class FolderDetailResponse {
     private Boolean isLiked;
 
     private LocalDateTime createdAt;
-
 
 
     public static FolderDetailResponse fromEntity(Folder folder, Boolean isLiked) {
@@ -61,31 +58,40 @@ public class FolderDetailResponse {
             .isPinned(folder.getIsPinned())
             .isPrivate(folder.getIsPrivate())
             .isLiked(isLiked)
-            .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName().getViewName()).collect(Collectors.toList()))
+            .tags(folder.getFolderTags().stream()
+                .map(folderTag -> folderTag.getTag().getName().getViewName())
+                .collect(Collectors.toList()))
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
+                Collectors.toList()))
+            .comments(folder.getComments().stream().map(CommentResponse::fromEntity).collect(
                 Collectors.toList()))
             .createdAt(folder.getCreatedAt())
             .build();
     }
 
-    public static FolderDetailResponse fromEntity(Folder folder, Boolean isLiked, OriginFolderResponse originFolder) {
+    public static FolderDetailResponse fromEntity(Folder folder, Boolean isLiked,
+        OriginFolderResponse originFolder) {
         return FolderDetailResponse.builder()
-                .id(folder.getId())
-                .title(folder.getTitle())
-                .likes(folder.getLikes())
-                .image(folder.getImage())
-                .content(folder.getContent())
-                .originFolder(originFolder)
-                .isPinned(folder.getIsPinned())
-                .isPrivate(folder.getIsPrivate())
-                .isLiked(isLiked)
-                .tags(folder.getFolderTags().stream().map(folderTag -> folderTag.getTag().getName().getViewName()).collect(Collectors.toList()))
-                .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
-                .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
-                        Collectors.toList()))
-                .createdAt(folder.getCreatedAt())
-                .build();
+            .id(folder.getId())
+            .title(folder.getTitle())
+            .likes(folder.getLikes())
+            .image(folder.getImage())
+            .content(folder.getContent())
+            .originFolder(originFolder)
+            .isPinned(folder.getIsPinned())
+            .isPrivate(folder.getIsPrivate())
+            .isLiked(isLiked)
+            .tags(folder.getFolderTags().stream()
+                .map(folderTag -> folderTag.getTag().getName().getViewName())
+                .collect(Collectors.toList()))
+            .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
+            .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
+                Collectors.toList()))
+            .comments(folder.getComments().stream().map(CommentResponse::fromEntity).collect(
+                Collectors.toList()))
+            .createdAt(folder.getCreatedAt())
+            .build();
     }
 
 }
