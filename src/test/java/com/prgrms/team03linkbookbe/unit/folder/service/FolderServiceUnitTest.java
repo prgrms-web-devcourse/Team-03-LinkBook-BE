@@ -119,7 +119,7 @@ public class FolderServiceUnitTest {
 
         Page<Folder> folders = new PageImpl<>(List.of(Folder.builder().id(1L).user(user).build()));
 
-        when(folderRepository.findAll(false, pageable)).thenReturn(folders);
+        when(folderRepository.findAll(false, pageable, user)).thenReturn(folders);
 
         // when
         FolderListResponse response = folderService.getAll(pageable, authentication);
@@ -203,7 +203,7 @@ public class FolderServiceUnitTest {
             )
         );
 
-        when(folderRepository.findAllByTitle(false, pageable, "제목"))
+        when(folderRepository.findAllByTitle(false, pageable, "제목", user))
             .thenReturn(folders);
 
         // when

@@ -16,6 +16,14 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
         countQuery = "SELECT count(f) FROM Folder f")
     Page<Folder> findAllByUser(User user, Boolean isPrivate, Pageable pageable);
 
+    @Query(value = "SELECT DISTINCT f FROM Folder f LEFT JOIN FETCH f.folderTags WHERE f.user = :user",
+        countQuery = "SELECT count(f) FROM Folder f")
+    Page<Folder> findAllByUser(User user, Pageable pageable);
+
+    @Query(value = "SELECT DISTINCT f FROM Folder f JOIN FETCH f.user LEFT JOIN FETCH f.folderTags WHERE f.isPrivate = :isPrivate OR ( f.isPrivate = true AND f.user = :user ) ",
+        countQuery = "SELECT count(f) FROM Folder f")
+    Page<Folder> findAll(Boolean isPrivate, Pageable pageable, User user);
+
     @Query(value = "SELECT DISTINCT f FROM Folder f JOIN FETCH f.user LEFT JOIN FETCH f.folderTags WHERE f.isPrivate = :isPrivate",
         countQuery = "SELECT count(f) FROM Folder f")
     Page<Folder> findAll(Boolean isPrivate, Pageable pageable);
@@ -33,6 +41,10 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
 
     @Query("SELECT DISTINCT f FROM Folder f LEFT JOIN f.bookmarks LEFT JOIN f.folderTags JOIN f.user WHERE f.id = :folderId")
     List<Folder> findByIdWithFetchJoin(Long folderId);
+
+    @Query(value = "SELECT DISTINCT f FROM Folder f LEFT JOIN FETCH f.folderTags WHERE ( f.isPrivate = :isPrivate OR ( f.isPrivate = true AND f.user = :user ) ) AND f.title LIKE CONCAT('%',:title,'%')",
+        countQuery = "SELECT count(f) FROM Folder f")
+    Page<Folder> findAllByTitle(Boolean isPrivate, Pageable pageable, String title, User user);
 
     @Query(value = "SELECT DISTINCT f FROM Folder f LEFT JOIN FETCH f.folderTags WHERE f.isPrivate = :isPrivate AND f.title LIKE CONCAT('%',:title,'%')",
         countQuery = "SELECT count(f) FROM Folder f")
