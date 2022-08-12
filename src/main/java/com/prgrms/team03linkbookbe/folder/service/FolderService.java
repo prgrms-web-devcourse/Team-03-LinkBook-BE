@@ -4,7 +4,15 @@ import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
-import com.prgrms.team03linkbookbe.folder.dto.*;
+import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
+import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
+import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.OriginFolderResponse;
+import com.prgrms.team03linkbookbe.folder.dto.PinnedListResponse;
+import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
+import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.exception.IllegalAccessToPrivateFolderException;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
@@ -16,6 +24,8 @@ import com.prgrms.team03linkbookbe.rootTag.entity.RootTagCategory;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,9 +33,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -92,12 +99,14 @@ public class FolderService {
         }
 
         if (folder.get(0).getOriginId() != null) {
-            OriginFolderResponse originFolder = OriginFolderResponse.fromEntity(folderRepository.findById(folder.get(0).getOriginId())
+            OriginFolderResponse originFolder = OriginFolderResponse.fromEntity(
+                folderRepository.findById(folder.get(0).getOriginId())
                     .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 원본 폴더 정보입니다.")));
 
             return FolderDetailResponse
-                    .fromEntity(folder.get(0),
-                            likes.stream().anyMatch(l -> l.getFolder().getId().equals(folderId)), originFolder);
+                .fromEntity(folder.get(0),
+                    likes.stream().anyMatch(l -> l.getFolder().getId().equals(folderId)),
+                    originFolder);
         }
 
         return FolderDetailResponse
@@ -113,18 +122,15 @@ public class FolderService {
         User user = userRepository.findById(userId).orElseThrow(NoDataException::new);
         List<Like> likes = likeRepository.findAllByUser(user);
 
-        if("true".equals(isPrivate)){
-            if(email==null){ // 토큰이 없는 경우
+        if ("true".equals(isPrivate)) {
+            if (email == null) { // 토큰이 없는 경우
                 throw new IllegalAccessToPrivateFolderException();
-            }
-            else if(!email.equals(user.getEmail())){ // 본인이 아닌경우
+            } else if (!email.equals(user.getEmail())) { // 본인이 아닌경우
                 throw new IllegalAccessToPrivateFolderException();
-            }
-            else{
+            } else {
                 folders = folderRepository.findAllByUser(user, true, pageable);
             }
-        }
-        else {
+        } else {
             folders = folderRepository.findAllByUser(user, false, pageable);
         }
         return FolderListByUserResponse.fromEntity(user, folders, likes);
@@ -201,7 +207,12 @@ public class FolderService {
     public FolderListResponse getByRootTag(RootTagRequest rootTagRequest, Pageable pageable,
         JwtAuthentication auth) {
         RootTagCategory rootTagName = rootTagRequest.getRootTag();
-        Page<Folder> folders = folderRepository.findByRootTag(rootTagName, pageable);
+        Page<Folder> folders;
+        if (rootTagName == RootTagCategory.ALL) {
+            folders = folderRepository.findAll(false, pageable);
+        } else {
+            folders = folderRepository.findByRootTag(rootTagName, pageable);
+        }
 
         List<Like> likes = new ArrayList<>();
 

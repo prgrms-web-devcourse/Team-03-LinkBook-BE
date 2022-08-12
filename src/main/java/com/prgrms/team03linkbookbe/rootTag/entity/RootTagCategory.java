@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum RootTagCategory {
+    ALL("전체 카테고리", new TagCategory[0]),
     DAILY("일상", new TagCategory[]{
         TagCategory.DAILY1
     }),
@@ -19,30 +20,30 @@ public enum RootTagCategory {
         TagCategory.GAME1
     }),
     MOVIE("영화", new TagCategory[]{
-       TagCategory.MOVIE1
+        TagCategory.MOVIE1
     }),
-    MUSIC("음악",  new TagCategory[]{
+    MUSIC("음악", new TagCategory[]{
         TagCategory.MUSIC1
     }),
-    HUMOR("유머",  new TagCategory[]{
+    HUMOR("유머", new TagCategory[]{
         TagCategory.HUMOR1
     }),
-    HEALTH("헬스",  new TagCategory[]{
+    HEALTH("헬스", new TagCategory[]{
         TagCategory.HEALTH1
     }),
-    BEAUTY("뷰티",  new TagCategory[]{
+    BEAUTY("뷰티", new TagCategory[]{
         TagCategory.BEAUTY1
     }),
-    SPORTS("스포츠",  new TagCategory[]{
+    SPORTS("스포츠", new TagCategory[]{
         TagCategory.SPORTS1
     }),
-    DEVELOP("개발",  new TagCategory[]{
+    DEVELOP("개발", new TagCategory[]{
         TagCategory.DEVELOP1
     }),
-    TRAVEL("여행",  new TagCategory[]{
+    TRAVEL("여행", new TagCategory[]{
         TagCategory.TRAVEL1
     }),
-    FOOD("음식",  new TagCategory[]{
+    FOOD("음식", new TagCategory[]{
         TagCategory.FOOD1
     });
 
@@ -50,13 +51,13 @@ public enum RootTagCategory {
 
     private TagCategory[] tags;
 
-    public static boolean hasRootTag(RootTagCategory root, TagCategory target){
+    public static boolean hasRootTag(RootTagCategory root, TagCategory target) {
         return Arrays.stream(root.getTags())
-                        .anyMatch(tag -> tag == target);
+            .anyMatch(tag -> tag == target);
     }
 
     @JsonCreator
-    public static RootTagCategory from(String root){
+    public static RootTagCategory from(String root) {
         for (RootTagCategory tag : RootTagCategory.values()) {
             if (tag.getViewName().equals(root)) {
                 return tag;
