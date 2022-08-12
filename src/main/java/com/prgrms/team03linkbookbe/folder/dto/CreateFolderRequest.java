@@ -29,6 +29,7 @@ public class CreateFolderRequest {
     @NotBlank(message = "폴더의 이미지를 설정해주세요")
     private String image;
 
+    @NotNull(message = "폴더의 내용을 입력해주세요")
     private String content;
 
     private Long originId;
