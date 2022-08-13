@@ -6,8 +6,6 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
 import com.prgrms.team03linkbookbe.folder.dto.PinnedListResponse;
-import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
-import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
 import com.prgrms.team03linkbookbe.jwt.JwtAuthentication;
 import com.prgrms.team03linkbookbe.jwt.exception.IllegalTokenException;
@@ -56,11 +54,10 @@ public class FolderController {
         @AuthenticationPrincipal JwtAuthentication auth,
         @RequestParam @Nullable String isPrivate, Pageable pageable) {
         FolderListByUserResponse allByUser;
-        if(auth != null){
+        if (auth != null) {
             allByUser = folderService.getAllByUser(userId, auth.email,
                 isPrivate, pageable);
-        }
-        else {
+        } else {
             allByUser = folderService.getAllByUser(userId, null,
                 isPrivate, pageable);
         }
@@ -70,7 +67,7 @@ public class FolderController {
     @GetMapping("/api/folders/pinned")
     public ResponseEntity<PinnedListResponse> readAllPinned(
         @AuthenticationPrincipal JwtAuthentication auth) {
-        if(auth == null) {
+        if (auth == null) {
             throw new IllegalTokenException();
         }
         PinnedListResponse response = folderService.getAllPinned(auth.email);
@@ -106,18 +103,18 @@ public class FolderController {
         folderService.delete(auth.email, id);
     }
 
-    @GetMapping("/api/folders/root-tag")
+    @GetMapping("/api/folders/root-tag/{rootTag}")
     public ResponseEntity<FolderListResponse> readByRootTag(
-        @RequestBody RootTagRequest rootTagRequest,
+        @PathVariable String rootTag,
         Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
-        FolderListResponse byRootTag = folderService.getByRootTag(rootTagRequest, pageable, auth);
+        FolderListResponse byRootTag = folderService.getByRootTag(rootTag, pageable, auth);
         return ResponseEntity.ok().body(byRootTag);
     }
 
-    @GetMapping("/api/folders/tag")
-    public ResponseEntity<FolderListResponse> readByTag(@RequestBody TagRequest tagRequest,
+    @GetMapping("/api/folders/tag/{tag}")
+    public ResponseEntity<FolderListResponse> readByTag(@PathVariable String tag,
         Pageable pageable, @AuthenticationPrincipal JwtAuthentication auth) {
-        FolderListResponse byTag = folderService.getByTag(tagRequest, pageable, auth);
+        FolderListResponse byTag = folderService.getByTag(tag, pageable, auth);
         return ResponseEntity.ok().body(byTag);
     }
 }

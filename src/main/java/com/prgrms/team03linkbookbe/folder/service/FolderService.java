@@ -11,8 +11,6 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
 import com.prgrms.team03linkbookbe.folder.dto.OriginFolderResponse;
 import com.prgrms.team03linkbookbe.folder.dto.PinnedListResponse;
-import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
-import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.exception.IllegalAccessToPrivateFolderException;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
@@ -214,15 +212,16 @@ public class FolderService {
         folderRepository.delete(folder);
     }
 
-    public FolderListResponse getByRootTag(RootTagRequest rootTagRequest, Pageable pageable,
+    public FolderListResponse getByRootTag(String rootTag, Pageable pageable,
         JwtAuthentication auth) {
-        RootTagCategory rootTagName = rootTagRequest.getRootTag();
         Page<Folder> folders;
 
-        if (rootTagName == RootTagCategory.ALL) {
+        RootTagCategory rootTagCategory = RootTagCategory.from(rootTag);
+
+        if (rootTagCategory == RootTagCategory.ALL) {
             folders = folderRepository.findAll(false, pageable);
         } else {
-            folders = folderRepository.findByRootTag(rootTagName, pageable);
+            folders = folderRepository.findByRootTag(rootTagCategory, pageable);
         }
 
         List<Like> likes = new ArrayList<>();
@@ -236,9 +235,9 @@ public class FolderService {
         return FolderListResponse.fromEntity(folders, likes);
     }
 
-    public FolderListResponse getByTag(TagRequest tagRequest, Pageable pageable,
+    public FolderListResponse getByTag(String tag, Pageable pageable,
         JwtAuthentication auth) {
-        TagCategory tagName = tagRequest.getTag();
+        TagCategory tagName = TagCategory.from(tag);
         Page<Folder> folders = folderRepository.findByTag(tagName, pageable);
         List<Like> likes;
 

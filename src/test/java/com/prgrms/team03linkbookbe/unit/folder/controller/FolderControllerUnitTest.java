@@ -21,8 +21,6 @@ import com.prgrms.team03linkbookbe.folder.dto.FolderIdResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListByUserResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderListResponse;
 import com.prgrms.team03linkbookbe.folder.dto.FolderResponse;
-import com.prgrms.team03linkbookbe.folder.dto.RootTagRequest;
-import com.prgrms.team03linkbookbe.folder.dto.TagRequest;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
 import com.prgrms.team03linkbookbe.folder.repository.FolderRepository;
 import com.prgrms.team03linkbookbe.folder.service.FolderService;
@@ -271,17 +269,16 @@ public class FolderControllerUnitTest {
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 루트태그로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_ROOT_TAG() throws Exception {
-        String request = "{\"rootTag\" : \"게임\"}";
+        String rootTag = "게임";
 
-        when(service.getByRootTag(any(RootTagRequest.class), any(Pageable.class),
+        when(service.getByRootTag(any(String.class), any(Pageable.class),
             any(JwtAuthentication.class)))
             .thenReturn(FolderListResponse.builder().folders(folders).build());
 
-        mockMvc.perform(get("/api/folders/root-tag")
+        mockMvc.perform(get("/api/folders/root-tag/{rootTag}", rootTag)
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Access-Token", accessToken)
-                .content(request)
                 .param("page", String.valueOf(0))
                 .param("size", String.valueOf(12)))
             .andExpect(status().isOk());
@@ -291,17 +288,16 @@ public class FolderControllerUnitTest {
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 서브태그로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_SUB_TAG() throws Exception {
-        String request = "{\"tag\" : \"게임1\"}";
+        String tag = "게임1";
 
-        when(service.getByTag(any(TagRequest.class), any(Pageable.class),
+        when(service.getByTag(any(String.class), any(Pageable.class),
             any(JwtAuthentication.class)))
             .thenReturn(FolderListResponse.builder().folders(folders).build());
 
-        mockMvc.perform(get("/api/folders/tag")
+        mockMvc.perform(get("/api/folders/tag/{tag}", tag)
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Access-Token", accessToken)
-                .content(request)
                 .param("page", String.valueOf(0))
                 .param("size", String.valueOf(12))
                 .param("sort", "likes"))
