@@ -261,9 +261,7 @@ public class FolderServiceUnitTest {
     @DisplayName("루트태그로 검색 테스트")
     void FIND_BY_ROOT_TAG_TEST() {
         // given
-        RootTagRequest rootTagRequest = RootTagRequest.builder()
-            .rootTag(RootTagCategory.DEVELOP)
-            .build();
+        String rootTag = "개발";
 
         JwtAuthentication authentication =
             new JwtAuthentication("at", "rt", email);
@@ -286,7 +284,7 @@ public class FolderServiceUnitTest {
 
         // when
         FolderListResponse response
-            = folderService.getByRootTag(rootTagRequest, pageable, authentication);
+            = folderService.getByRootTag(rootTag, pageable, authentication);
 
         // then
         assertThat(response.getFolders().getTotalElements()).isEqualTo(1L);
@@ -296,9 +294,7 @@ public class FolderServiceUnitTest {
     @DisplayName("태그로 검색 테스트")
     void FIND_BY_TAG_TEST() {
         // given
-        TagRequest tagRequest = TagRequest.builder()
-            .tag(TagCategory.DEVELOP1)
-            .build();
+        String  tag = "개발1";
 
         JwtAuthentication authentication =
             new JwtAuthentication("at", "rt", email);
@@ -321,7 +317,7 @@ public class FolderServiceUnitTest {
 
         // when
         FolderListResponse response
-            = folderService.getByTag(tagRequest, pageable, authentication);
+            = folderService.getByTag(tag, pageable, authentication);
 
         // then
         assertThat(response.getFolders().getTotalElements()).isEqualTo(1L);

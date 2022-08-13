@@ -889,13 +889,12 @@ public class FolderIntegrationTest {
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 루트태그로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_ROOT_TAG() throws Exception {
-        String request = "{\"rootTag\" : \"게임\"}";
+        String rootTag = "게임";
 
-        mockMvc.perform(get("/api/folders/root-tag")
+        mockMvc.perform(get("/api/folders/root-tag/{rootTag}", rootTag)
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Access-Token", accessToken)
-                .content(request)
                 .param("page", String.valueOf(0))
                 .param("size", String.valueOf(12)))
             .andExpect(status().isOk())
@@ -906,10 +905,6 @@ public class FolderIntegrationTest {
                     requestHeaders(
                         headerWithName("Access-Token")
                             .description("access token, 없으면 좋아요 여부 없음")
-                    ),
-                    requestFields(
-                        fieldWithPath("rootTag").type(JsonFieldType.STRING)
-                            .description("rootTag")
                     ),
                     responseFields(
                         fieldWithPath("folders").type(JsonFieldType.OBJECT)
@@ -1004,13 +999,12 @@ public class FolderIntegrationTest {
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 서브태그로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_SUB_TAG() throws Exception {
-        String request = "{\"tag\" : \"게임1\"}";
+        String tag = "게임1";
 
-        mockMvc.perform(get("/api/folders/tag")
+        mockMvc.perform(get("/api/folders/tag/{tag}", tag)
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Access-Token", accessToken)
-                .content(request)
                 .param("page", String.valueOf(0))
                 .param("size", String.valueOf(12))
                 .param("sort", "likes"))
@@ -1022,10 +1016,6 @@ public class FolderIntegrationTest {
                     requestHeaders(
                         headerWithName("Access-Token")
                             .description("access token, 없으면 좋아요 여부 없음")
-                    ),
-                    requestFields(
-                        fieldWithPath("tag").type(JsonFieldType.STRING)
-                            .description("tag")
                     ),
                     responseFields(
                         fieldWithPath("folders").type(JsonFieldType.OBJECT)
