@@ -637,6 +637,10 @@ public class FolderIntegrationTest {
                             .description("folders[].title"),
                         fieldWithPath("folders[].image").type(JsonFieldType.STRING)
                             .description("folders[].image"),
+                        fieldWithPath("folders[].isPinned").type(JsonFieldType.BOOLEAN)
+                            .description("folders[].isPinned"),
+                        fieldWithPath("folders[].isPrivate").type(JsonFieldType.BOOLEAN)
+                            .description("folders[].isPrivate"),
                         fieldWithPath("folders[].user").type(JsonFieldType.OBJECT)
                             .description("folders[].user"),
                         fieldWithPath("folders[].user.id").type(JsonFieldType.NUMBER)

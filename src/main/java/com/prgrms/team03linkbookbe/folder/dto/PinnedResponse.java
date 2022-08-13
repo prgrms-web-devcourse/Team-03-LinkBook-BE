@@ -19,6 +19,10 @@ public class PinnedResponse {
 
     private String image;
 
+    private Boolean isPinned;
+
+    private Boolean isPrivate;
+
     private UserSimpleResponseDto user;
 
     private List<BookmarkResponse> bookmarks;
@@ -32,6 +36,8 @@ public class PinnedResponse {
             .id(folder.getId())
             .title(folder.getTitle())
             .image(folder.getImage())
+            .isPinned(folder.getIsPinned())
+            .isPrivate(folder.getIsPinned())
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(
                 folder.getBookmarks().stream().map(BookmarkResponse::fromEntity)
