@@ -37,7 +37,7 @@ public class PinnedResponse {
             .title(folder.getTitle())
             .image(folder.getImage())
             .isPinned(folder.getIsPinned())
-            .isPrivate(folder.getIsPinned())
+            .isPrivate(folder.getIsPrivate())
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(
                 folder.getBookmarks().stream().map(BookmarkResponse::fromEntity)
