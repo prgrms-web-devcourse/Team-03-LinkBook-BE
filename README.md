@@ -90,13 +90,17 @@
         <img src="https://user-images.githubusercontent.com/76257508/184303436-1f388f6f-897f-4305-9435-61edd9b67fea.png" width="100px" />
     </td>
     <td>
-        <img src="https://user-images.githubusercontent.com/76257508/184302496-44109fa5-b95b-4044-8562-27608d4ea8d5.png" width="100px" />
+        <img src="https://user-images.githubusercontent.com/76257508/184528071-e11ac200-3b48-4bd8-aa1b-d3eb07dc812d.png" width="100px" />
     </td>
-    <td>  
+    <td>
+       <div align="center">
         <img src="https://user-images.githubusercontent.com/76257508/184309540-f9438159-5936-4c14-af39-84913c9d751f.png" width="100px" />
+        </div>
     </td>
-    <td>  
-        <img src="https://user-images.githubusercontent.com/76257508/184309618-4677c412-cd2e-470a-931e-28ba10a3f63b.png" width="100px" />
+    <td>
+       <div align="center">
+        <img src="https://user-images.githubusercontent.com/76257508/184528041-b62bdb3c-481d-4751-9e57-f16a8e9f6434.png" width="100px" />
+        </div>
     </td>
     <td>
         <img src="https://user-images.githubusercontent.com/76257508/184302416-34ad1a13-b691-4617-adff-8dcf917354e0.png" width="100px" />
@@ -148,7 +152,7 @@
        <img src="https://user-images.githubusercontent.com/76257508/184307814-684c586a-1aef-49ce-95aa-4db34096c803.png" width="100px" />
     </td>
     <td>
-       <img src="https://user-images.githubusercontent.com/76257508/184315661-ac8c0b6a-82d3-44cd-ae5f-c80eea7d093a.png" width="100px" />
+       <img src="https://user-images.githubusercontent.com/76257508/184528264-cae6aac9-b533-41cb-b93a-8542370124ca.png" width="100px" />
     </td>
     <td>
        <img src="https://user-images.githubusercontent.com/76257508/184325541-2fee69ec-55da-4c76-92c3-77dbf555d976.png" width="100px" />
