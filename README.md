@@ -14,9 +14,9 @@
 
 ## 🤲🏻 프로젝트 소개
 :sparkles: 북마크를 손쉽게 관리하고, 사람들과 공유하며, 내가 관심있을만한 북마크를 추천받을 수 있는 서비스
-<br>
+<br><br>
 
-### 구현 기능
+> 구현 기능
 
 - access-token, refresh-token 을 통한 로그인, 자동로그인
 - 북마크 폴더 생성, 수정, 삭제
@@ -140,7 +140,7 @@
   </tr>
 </table>
 
-### DevOps
+### Infra
 
 <table>
   <tr>
@@ -210,6 +210,7 @@
 
 ## ☀️ ARCHITECTURE
 <img width="1049" alt="infra_structure" src="https://user-images.githubusercontent.com/76257508/184414951-03fc5f7c-b7ee-4611-a875-935a477af654.png">
+<br><br>
 
 ## 🖼 ERD
 ![erd](https://user-images.githubusercontent.com/76257508/184299245-d5d81642-1526-456d-a5c5-59034bf02f92.png)
@@ -218,17 +219,19 @@
 
 ## 💬 Branch 전략, 프로젝트 형상 관리, CI/CD 파이프라인
 
-### Branch 전략
+> Branch 전략
 - GitHub flow 사용
     - 트렁크 기반 개발(Trunk-Based Development)
 - `이슈 발행` → `브랜치 생성` → `commit` → `PR 발행` → `main 브랜치 merge` → `자동 배포`
+<br>
 
-### 프로젝트 형상 관리
+> 프로젝트 형상 관리
 - Github Issue + Milestone + Project 사용
   <br>
   <a href="https://github.com/orgs/prgrms-web-devcourse/projects/13">GitHub Project</a>
+<br>
 
-### CI/CD 파이프라인
+> CI/CD 파이프라인
 - Github Action 사용
 - **PR 이 발행되는 경우**
     - **AWS RDS DB** 연결 기반
@@ -238,16 +241,16 @@
     - **EC2** 서버에 **main** 브랜치 코드 자동 배포
     - **gradle build** 및 **Docker image build** + **compose up(deploy 과정)** 성공하는 경우
     **Github Action** 통과
-
 <br>
 
 ## 📄 커밋 메시지, PR 규칙
 
-### 커밋 메시지
-> Type
+> 커밋 메시지
 - 깃모지 사용
 - 인텔리제이에서 다음 플러그인으로 커밋에 쉽게 사용할 수 있음
-> ![gitmoji](https://user-images.githubusercontent.com/76257508/184311305-c6b51374-3e8a-4c14-a8fb-d5addb1ae447.png)
+
+- ![gitmoji](https://user-images.githubusercontent.com/76257508/184311305-c6b51374-3e8a-4c14-a8fb-d5addb1ae447.png)
+
 - 아이콘은 [여기](https://gitmoji.dev)를 참고하여 작성
 - 깃모지와 제목 사이에 띄어쓰기 하지 않음
 ```
@@ -257,23 +260,23 @@
 • (생략 가능) 해결: #123 / 참고: #456, #789
 ```
 
-> Subject
+- Subject
 ```
-• 길어지지 않도록 작성
-• "~ 추가", "~ 수정", "~ 리팩토링", ...
-```
-
-> Body
-```
-• 부연설명이 필요한 경우 선택하여 작성
+길어지지 않도록 작성 ("~ 추가", "~ 수정", "~ 리팩토링", ...)
 ```
 
-> Footer
+- Body
 ```
-• 부가적으로 issue tracker id를 작성할 때 작성
+부연설명이 필요한 경우 선택하여 작성
 ```
 
-### PR 규칙
+- Footer
+```
+부가적으로 issue tracker id를 작성할 때 작성
+```
+<br>
+
+> PR 규칙
 
 - `feat/i{issue number}`에서 기능 개발 후 `main`에 PR
 - PR 제목은 브랜치에서 작업한 단위
