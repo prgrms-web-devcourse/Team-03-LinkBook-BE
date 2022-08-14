@@ -9,6 +9,6 @@ public class AccessTokenExpiredException extends RuntimeException {
     private final ExceptionCode exceptionCode;
 
     public AccessTokenExpiredException() {
-        this.exceptionCode = ExceptionCode.ACCESS_DENIED;
+        this.exceptionCode = ExceptionCode.EXPIRED_ACCESS_TOKEN;
     }
 }
