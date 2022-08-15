@@ -15,5 +15,5 @@ public class ExceptionResponse {
         this.code = exceptionCode.getCode();
         this.message = exceptionCode.getMsg();
     }
-
+    
 }
