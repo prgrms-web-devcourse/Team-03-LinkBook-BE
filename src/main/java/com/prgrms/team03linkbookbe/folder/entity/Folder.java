@@ -5,6 +5,7 @@ import com.prgrms.team03linkbookbe.comment.entity.Comment;
 import com.prgrms.team03linkbookbe.common.entity.BaseDateEntity;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folderTag.entity.FolderTag;
+import com.prgrms.team03linkbookbe.like.entity.Like;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -85,6 +86,10 @@ public class Folder extends BaseDateEntity {
     @Builder.Default
     @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
     private List<FolderTag> folderTags = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "folder", cascade = CascadeType.REMOVE)
+    private List<Like> likeList = new ArrayList<>();
 
     public void modifyFolder(CreateFolderRequest dto) {
         this.title = dto.getTitle();
