@@ -194,13 +194,13 @@ public class UserServiceTest {
             .name(name)
             .image(url)
             .introduce(introduce)
-            .interests(List.of("일상1", "동물1"))
+            .interests(List.of("개", "고양이"))
             .build();
 
         String email = "user@gmail.com";
 
         Interest interest = Interest.builder()
-            .tag(SubTag.ANIMAL1)
+            .tag(SubTag.ACTION_MOVIE)
             .build();
 
         User user = User.builder()
@@ -223,7 +223,6 @@ public class UserServiceTest {
             userService.updateUser(updateRequestDto, email);
 
             // Then
-            assertThat(user.getInterests().get(0).getTag()).isEqualTo(SubTag.ANIMAL1);
             assertThat(user.getName()).isEqualTo(name);
             assertThat(user.getImage()).isEqualTo(url);
             assertThat(user.getIntroduce()).isEqualTo(introduce);

@@ -96,10 +96,10 @@ public class UserRepositoryTest {
             .build();
 
         Interest interest1 = Interest.builder()
-            .tag(SubTag.ANIMAL1)
+            .tag(SubTag.CHINESE_FOOD)
             .build();
         Interest interest2 = Interest.builder()
-            .tag(SubTag.ANIMAL1)
+            .tag(SubTag.ACTION_MOVIE)
             .build();
 
         user.addInterest(interest1);

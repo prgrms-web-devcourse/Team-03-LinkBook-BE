@@ -13,18 +13,88 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum TagGroup {
 
-    DAILY("일상", Arrays.asList(SubTag.DAILY1)),
-    ANIMAL("동물", Arrays.asList(SubTag.ANIMAL1)),
-    GAME("게임", Arrays.asList(SubTag.GAME1)),
-    MOVIE("영화", Arrays.asList(SubTag.MOVIE1)),
-    MUSIC("음악",  Arrays.asList(SubTag.MUSIC1)),
-    HUMOR("유머",  Arrays.asList(SubTag.HUMOR1)),
-    HEALTH("헬스",  Arrays.asList(SubTag.HEALTH1)),
-    BEAUTY("뷰티",  Arrays.asList(SubTag.BEAUTY1)),
-    SPORTS("스포츠",  Arrays.asList(SubTag.SPORTS1)),
-    DEVELOP("개발",  Arrays.asList(SubTag.DEVELOP1)),
-    TRAVEL("여행",  Arrays.asList(SubTag.TRAVEL1)),
-    FOOD("음식",  Arrays.asList(SubTag.FOOD1));
+    DAILY("일상", Arrays.asList(
+        SubTag.HOBBY,
+        SubTag.LIFEHACK
+    )),
+    ANIMAL("동물", Arrays.asList(
+        SubTag.DOG,
+        SubTag.CAT,
+        SubTag.REPTILE,
+        SubTag.INSECT
+    )),
+    GAME("게임", Arrays.asList(
+        SubTag.FPS,
+        SubTag.RPG,
+        SubTag.TPS,
+        SubTag.SPORTS_GAME,
+        SubTag.RACING_GAME,
+        SubTag.SIMULATION_GAME,
+        SubTag.RHYTHM_GAME)),
+    MOVIE("영화", Arrays.asList(
+        SubTag.ROMANCE_MOVIE,
+        SubTag.ACTION_MOVIE,
+        SubTag.CRIME_MOVIE,
+        SubTag.SF_MOVIE,
+        SubTag.COMEDY_MOVIE,
+        SubTag.THRILLER_MOVIE,
+        SubTag.HORROR_MOVIE,
+        SubTag.SPORTS_MOVIE,
+        SubTag.FANTASY_MOVIE
+    )),
+    MUSIC("음악",  Arrays.asList(
+        SubTag.POP,
+        SubTag.JPOP,
+        SubTag.BALLADE,
+        SubTag.RAP,
+        SubTag.BAND,
+        SubTag.ACOUSTIC,
+        SubTag.JAZZ
+    )),
+    HUMOR("유머",  Arrays.asList(
+        SubTag.BLACK_COMEDY,
+        SubTag.DAD_JOKE,
+        SubTag.SATIRE
+    )),
+    HEALTH("헬스",  Arrays.asList(
+        SubTag.WORKOUT,
+        SubTag.PILATES,
+        SubTag.POWER_LIFTING,
+        SubTag.CROSSFIT
+    )),
+    BEAUTY("뷰티",  Arrays.asList(
+        SubTag.MAKEUP,
+        SubTag.CLOTHES
+    )),
+    SPORTS("스포츠",  Arrays.asList(
+        SubTag.SOCCER,
+        SubTag.BASKETBALL,
+        SubTag.BASEBALL,
+        SubTag.BILLIARDS,
+        SubTag.BOWLING,
+        SubTag.VOLLEYBALL
+    )),
+    DEVELOP("개발",  Arrays.asList(
+        SubTag.FRONTEND,
+        SubTag.BACKEND,
+        SubTag.INFRA,
+        SubTag.DEVOPS,
+        SubTag.DATA_VISUALIZATION,
+        SubTag.AI
+    )),
+    TRAVEL("여행",  Arrays.asList(
+        SubTag.DOMESTIC_TRAVEL,
+        SubTag.OVERSEAS_TRAVEL,
+        SubTag.BACKPACKING
+    )),
+    FOOD("음식",  Arrays.asList(
+        SubTag.KOREAN_FOOD,
+        SubTag.CHINESE_FOOD,
+        SubTag.JAPANESE_FOOD,
+        SubTag.VIETNAMESE_FOOD,
+        SubTag.WESTERN_FOOD,
+        SubTag.DESSERT
+    ));
 
     private String viewName;
 
@@ -42,13 +112,4 @@ public enum TagGroup {
             .anyMatch(tag -> tag.equals(subTag));
     }
 
-//    @JsonCreator
-//    public static RootTagCategory from(String root){
-//        for (RootTagCategory tag : RootTagCategory.values()) {
-//            if (tag.getViewName().equals(root)) {
-//                return tag;
-//            }
-//        }
-//        return null;
-//    }
 }
