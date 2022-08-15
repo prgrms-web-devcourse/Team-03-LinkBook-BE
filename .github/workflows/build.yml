@@ -53,7 +53,6 @@ jobs:
           
           # GitHub-Actions 에서 설정한 값을 application-mail.yaml 파일에 쓰기
           echo "${{ secrets.MAIL }}" >> ./application-mail.yaml
-
         shell: bash
         
       # test 설정 파일 생성 및 write
