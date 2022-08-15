@@ -209,7 +209,7 @@
 <br>
 
 ## ☀️ ARCHITECTURE
-<img width="1049" alt="infra_structure" src="https://user-images.githubusercontent.com/76257508/184414951-03fc5f7c-b7ee-4611-a875-935a477af654.png">
+<img width="1049" alt="infra_structure" src="https://user-images.githubusercontent.com/76257508/184580163-29a3d116-8742-4ed9-beb9-38ba20626d98.png">
 <br><br>
 
 ## 🖼 ERD
