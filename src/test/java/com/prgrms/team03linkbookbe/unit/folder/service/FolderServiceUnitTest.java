@@ -26,6 +26,7 @@ import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -39,6 +40,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+@Slf4j
 @ExtendWith(MockitoExtension.class)
 public class FolderServiceUnitTest {
 
@@ -72,8 +74,8 @@ public class FolderServiceUnitTest {
         .introduce("소갯말")
         .build();
 
+
     @Test
-    @Disabled
     @DisplayName("폴더 생성 테스트")
     void CREATE_FOLDER_TEST() {
         // given
@@ -87,7 +89,6 @@ public class FolderServiceUnitTest {
             .image("이미지URL")
             .isPinned(false)
             .bookmarks(Lists.emptyList())
-            .tags(Lists.emptyList())
             .build();
 
         when(userRepository.findByEmail(email)).thenReturn(
@@ -98,6 +99,7 @@ public class FolderServiceUnitTest {
                 .id(1L)
                 .build()
         );
+
 
         // when
         FolderIdResponse responseDto = folderService.create(authentication, request);
@@ -294,7 +296,7 @@ public class FolderServiceUnitTest {
     @DisplayName("태그로 검색 테스트")
     void FIND_BY_TAG_TEST() {
         // given
-        String  tag = "개발1";
+        String  tag = "프론트엔드";
 
         JwtAuthentication authentication =
             new JwtAuthentication("at", "rt", email);
@@ -312,7 +314,7 @@ public class FolderServiceUnitTest {
             )
         );
 
-        when(folderRepository.findByTag(TagCategory.DEVELOP1, pageable))
+        when(folderRepository.findByTag(TagCategory.FRONTEND, pageable))
             .thenReturn(folders);
 
         // when

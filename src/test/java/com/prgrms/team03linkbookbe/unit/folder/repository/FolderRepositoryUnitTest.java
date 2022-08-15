@@ -166,7 +166,7 @@ public class FolderRepositoryUnitTest {
 
         tag = Tag.builder()
             .rootTag(rootTag)
-            .name(TagCategory.DEVELOP1)
+            .name(TagCategory.FRONTEND)
             .build();
 
         em.persist(tag);
@@ -201,7 +201,7 @@ public class FolderRepositoryUnitTest {
 
         tag = Tag.builder()
             .rootTag(rootTag)
-            .name(TagCategory.DEVELOP1)
+            .name(TagCategory.FRONTEND)
             .build();
 
         em.persist(tag);
@@ -218,7 +218,7 @@ public class FolderRepositoryUnitTest {
         em.flush();
 
         // when
-        Page<Folder> folders = folderRepository.findByTag(TagCategory.DEVELOP1, pageable);
+        Page<Folder> folders = folderRepository.findByTag(TagCategory.FRONTEND, pageable);
 
         // then
         assertThat(folders.getTotalElements()).isEqualTo(1L);
