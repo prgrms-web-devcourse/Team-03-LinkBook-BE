@@ -209,7 +209,7 @@
 <br>
 
 ## ☀️ ARCHITECTURE
-<img width="1049" alt="infra_structure" src="https://user-images.githubusercontent.com/76257508/184580163-29a3d116-8742-4ed9-beb9-38ba20626d98.png">
+<img width="1049" alt="infra_structure" src="https://user-images.githubusercontent.com/76257508/184587828-884459f6-d0d1-4b37-b642-82320744afd0.png">
 <br><br>
 
 ## 🖼 ERD
@@ -303,7 +303,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://linkbook-1.czvbgr7hie3i.ap-northeast-2.rds.amazonaws.com:3306/linkbook
+    url:
     username:
     password: 
     hikari:
@@ -320,6 +320,7 @@ jwt:
   access-token-expiry-seconds: 3600
   refresh-token-expiry-seconds: 1209600
 ```
+
 ### application-mail.yaml
 ``` YAML
 spring:
