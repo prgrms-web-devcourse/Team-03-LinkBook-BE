@@ -14,11 +14,14 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -34,21 +37,28 @@ public class User extends BaseDateEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "이메일을 입력해주세요.")
+    @Email(message = "올바른 이메일을 입력해주세요.")
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "비밀번호를 입력해주세요.")
     @Column(name = "password", nullable = false)
     private String password;
 
+    @NotBlank(message = "닉네임을 입력해주세요.")
+    @Length(min = 1, max = 8, message = "닉네임을 1자 이상 8자 이하로 입력해주세요.")
     @Column(name = "name", nullable = false, columnDefinition = "varchar(20)")
     private String name;
 
+    @NotBlank(message = "이미지 URL을 입력해주세요.")
     @Column(name = "image", nullable = false)
     private String image;
 
     @Column(name = "introduce", columnDefinition = "varchar(50)")
     private String introduce;
 
+    @NotBlank(message = "권한을 입력해주세요.")
     @Column(name = "role", nullable = false, columnDefinition = "varchar(20)")
     private String role;
 

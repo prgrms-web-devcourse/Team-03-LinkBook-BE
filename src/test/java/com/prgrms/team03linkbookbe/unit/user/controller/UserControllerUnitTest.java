@@ -62,7 +62,7 @@ public class UserControllerUnitTest {
     private AuthenticationManager authenticationManager;
 
     String email = "example1@gmail.com";
-    String password = "qwer1234!!";
+    String password = "qwer1234";
 
     @Test
     @DisplayName("회원가입 테스트")
@@ -72,6 +72,7 @@ public class UserControllerUnitTest {
         RegisterRequestDto requestDto = RegisterRequestDto.builder()
             .email(email)
             .password(password)
+            .image("이미지 URL")
             .build();
         MockHttpSession mockHttpSession = new MockHttpSession();
 

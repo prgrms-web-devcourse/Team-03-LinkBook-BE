@@ -2,19 +2,17 @@ package com.prgrms.team03linkbookbe.user.service;
 
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.email.service.EmailService;
-import com.prgrms.team03linkbookbe.interest.entity.Interest;
-import com.prgrms.team03linkbookbe.interest.repository.InterestRepository;
 import com.prgrms.team03linkbookbe.interest.service.InterestService;
-import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.dto.MeResponseDto;
 import com.prgrms.team03linkbookbe.user.dto.RegisterRequestDto;
 import com.prgrms.team03linkbookbe.user.dto.UserUpdateRequestDto;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
+import com.prgrms.team03linkbookbe.user.exception.IllegalPasswordException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,9 +38,14 @@ public class UserService {
         }
         User user = requestDto.toEntity();
 
+        String password = requestDto.getPassword();
+        if (!Pattern.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", password)) {
+            throw new IllegalPasswordException();
+        }
+
         emailService.IsCertificatedEmail(httpSession, user.getEmail());
         user.encodePassword(passwordEncoder.encode(requestDto.getPassword()));
-        User saveUser = userRepository.save(user);
+        userRepository.save(user);
     }
 
     public User login(String email, String credentials) {

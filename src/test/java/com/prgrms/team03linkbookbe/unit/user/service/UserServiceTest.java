@@ -56,7 +56,7 @@ public class UserServiceTest {
     class Resister {
 
         String email = "user@gmail.com";
-        String password = "user123!";
+        String password = "qwer1234";
         User user = User.builder()
             .id(1L)
             .email(email)

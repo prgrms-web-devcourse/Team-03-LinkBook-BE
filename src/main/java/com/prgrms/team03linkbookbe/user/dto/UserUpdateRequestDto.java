@@ -2,6 +2,7 @@ package com.prgrms.team03linkbookbe.user.dto;
 
 import com.prgrms.team03linkbookbe.user.entity.User;
 import java.util.List;
+import javax.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
