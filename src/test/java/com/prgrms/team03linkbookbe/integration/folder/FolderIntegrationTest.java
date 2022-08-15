@@ -112,7 +112,7 @@ public class FolderIntegrationTest {
 
         tag = Tag.builder()
             .rootTag(rootTag)
-            .name(TagCategory.GAME1)
+            .name(TagCategory.FPS)
             .build();
 
         tagRepository.save(tag);
@@ -999,7 +999,7 @@ public class FolderIntegrationTest {
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 서브태그로 검색할 수 있다.")
     void GET_ALL_FOLDER_BY_SUB_TAG() throws Exception {
-        String tag = "게임1";
+        String tag = "FPS";
 
         mockMvc.perform(get("/api/folders/tag/{tag}", tag)
                 .characterEncoding(StandardCharsets.UTF_8)

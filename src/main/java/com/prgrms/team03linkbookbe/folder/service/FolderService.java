@@ -51,7 +51,9 @@ public class FolderService {
         User user = userRepository.findByEmail(auth.email).orElseThrow(NoDataException::new);
 
         Folder folder = createFolderRequest.toEntity(user);
+
         Folder save = folderRepository.save(folder);
+
 
         // 태그 관계이어주기
         folderTagService.addFolderTag(createFolderRequest, save);
@@ -62,7 +64,7 @@ public class FolderService {
             bookmarkRepository.save(bookmark);
         }
 
-        return FolderIdResponse.fromEntity(folder.getId());
+        return FolderIdResponse.fromEntity(save.getId());
     }
 
     // 전체폴더조회
