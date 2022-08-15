@@ -168,7 +168,7 @@ public class UserIntegrationTest {
     @WithJwtAuth(email = "login1234@gmail.com")
     void USER_UPDATE_TEST() throws Exception {
         // given
-        List<String> interests = List.of("동물1", "게임1");
+        List<String> interests = List.of("개", "고양이");
 //        List<InterestDto> interests = new ArrayList<>();
 //        interests.add(InterestDto.builder().field("흥미1").build());
 //        interests.add(InterestDto.builder().field("흥미2").build());

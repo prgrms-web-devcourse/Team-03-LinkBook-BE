@@ -44,23 +44,23 @@ public class InterestServiceTest {
 
         Interest interest1 = Interest.builder()
             .id(1L)
-            .tag(SubTag.ANIMAL1)
+            .tag(SubTag.DOG)
             .user(user)
             .build();
 
         Interest interest2 = Interest.builder()
             .id(2L)
-            .tag(SubTag.BEAUTY1)
+            .tag(SubTag.CAT)
             .user(user)
             .build();
 
         user.addInterest(interest1);
         user.addInterest(interest2);
 
-        List<String> subTag = List.of("일상1", "영화1");
+        List<String> subTag = List.of("개", "고양이");
 
-        given(interestRepository.save(any())).willReturn(Interest.builder().build());
-        willDoNothing().given(interestRepository).delete(any());
+//        given(interestRepository.save(any())).willReturn(Interest.builder().build());
+//        willDoNothing().given(interestRepository).delete(any());
 
         // When
         interestService.updateInterests(subTag, user);
@@ -68,6 +68,6 @@ public class InterestServiceTest {
         // Then
         List<String> subTags = user.getInterests().stream()
             .map(interest -> interest.getTag().getViewName()).collect(Collectors.toList());
-        Assertions.assertThat(subTags).containsOnly("일상1", "영화1");
+        Assertions.assertThat(subTags).containsOnly("개", "고양이");
     }
 }

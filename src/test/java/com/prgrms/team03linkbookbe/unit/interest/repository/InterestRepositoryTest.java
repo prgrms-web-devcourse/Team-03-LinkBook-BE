@@ -38,7 +38,7 @@ public class InterestRepositoryTest {
             .build();
 
         Interest interest = Interest.builder()
-            .tag(SubTag.ANIMAL1)
+            .tag(SubTag.CHINESE_FOOD)
             .user(user)
             .build();
 
