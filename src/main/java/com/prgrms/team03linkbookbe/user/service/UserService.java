@@ -43,7 +43,7 @@ public class UserService {
             throw new IllegalPasswordException();
         }
 
-//        emailService.IsCertificatedEmail(httpSession, user.getEmail());
+        emailService.IsCertificatedEmail(httpSession, user.getEmail());
         user.encodePassword(passwordEncoder.encode(requestDto.getPassword()));
         userRepository.save(user);
     }

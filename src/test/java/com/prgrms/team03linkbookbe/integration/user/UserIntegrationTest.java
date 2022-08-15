@@ -46,7 +46,7 @@ public class UserIntegrationTest {
     ObjectMapper objectMapper;
 
     String email = "login1234@gmail.com";
-    String password = "qwer1234!!";
+    String password = "qwer1234";
 
     @Test
     @Order(1)
