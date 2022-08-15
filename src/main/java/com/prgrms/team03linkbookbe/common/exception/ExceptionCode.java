@@ -7,6 +7,7 @@ public enum ExceptionCode {
 
     // entity 이름
     NO_DATA_IN_DB(0, "데이터베이스에 값이 존재하지 않습니다."),
+    BEAN_VALIDATION_TYPE_MISMATCH(1,"입력타입이 일치하지 않습니다."),
 
     // User
     ILLEGAL_TOKEN(-100, "비정상적인 접근입니다."),

@@ -1,5 +1,6 @@
 package com.prgrms.team03linkbookbe.common.controller;
 
+import com.prgrms.team03linkbookbe.common.exception.ExceptionCode;
 import com.prgrms.team03linkbookbe.common.exception.NoDataException;
 import com.prgrms.team03linkbookbe.common.response.ExceptionResponse;
 import com.prgrms.team03linkbookbe.jwt.exception.AccessTokenExpiredException;
@@ -10,15 +11,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ExceptionResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        log.info("Bean Validation exception : {}", ex.getMessage());
+        return new ExceptionResponse(ExceptionCode.BEAN_VALIDATION_TYPE_MISMATCH);
+    }
+
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoDataException.class)
     public ExceptionResponse handleNotFoundException(NoDataException ex) {
-        log.info("not found data exception", ex);
+        log.info("not found data exception : ", ex);
         return new ExceptionResponse(ex.getExceptionCode());
     }
 
@@ -26,7 +35,7 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessTokenExpiredException.class)
     public ExceptionResponse handleAccessTokenExpiredException(AccessTokenExpiredException ex) {
-        log.info("accessToken expired exception ", ex);
+        log.info("accessToken expired exception : ", ex);
         return new ExceptionResponse(ex.getExceptionCode());
     }
 
@@ -34,14 +43,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ExceptionHandler(IllegalTokenException.class)
     public ExceptionResponse handleIllegalTokenException(IllegalTokenException ex) {
-        log.info("illegalToken exception", ex);
+        log.info("illegalToken exception : ", ex);
         return new ExceptionResponse(ex.getExceptionCode());
     }
 
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
     @ExceptionHandler(RefreshTokenExpiredException.class)
     public ExceptionResponse handleRefreshTokenExpiredException(RefreshTokenExpiredException ex) {
-        log.info("refreshToken expired exception", ex);
+        log.info("refreshToken expired exception : ", ex);
         return new ExceptionResponse(ex.getExceptionCode());
     }
 }
