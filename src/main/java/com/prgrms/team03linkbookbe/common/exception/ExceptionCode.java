@@ -23,6 +23,8 @@ public enum ExceptionCode {
     EMAIL_CERTIFICATION_FAILURE(-121, "이메일 인증에 실패하였습니다."),
     EMAIL_IS_NOT_CERTIFICATED(-122, "아직 인증되지 않은 이메일 입니다."),
 
+    ILLEGAL_PASSWORD_REQUEST(-130, "비밀번호는 영문자, 숫자를 모두 포함해서 입력해주세요."),
+
     // Folder
     ILLEGAL_ACCESS_TO_PRIVATE_FOLDER(-300, "Private 폴더에 접근할 권한이 없습니다.");
 

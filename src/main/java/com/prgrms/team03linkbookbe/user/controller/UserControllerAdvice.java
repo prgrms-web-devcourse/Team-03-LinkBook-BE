@@ -4,6 +4,7 @@ import com.prgrms.team03linkbookbe.common.response.ExceptionResponse;
 import com.prgrms.team03linkbookbe.email.exception.EmailCertificationFailureException;
 import com.prgrms.team03linkbookbe.email.exception.EmailIsNotCertificatedException;
 import com.prgrms.team03linkbookbe.user.exception.DuplicatedEmailException;
+import com.prgrms.team03linkbookbe.user.exception.IllegalPasswordException;
 import com.prgrms.team03linkbookbe.user.exception.LoginFailureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,4 +38,11 @@ public class UserControllerAdvice {
         return new ExceptionResponse(e.getExceptionCode());
     }
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalPasswordException.class)
+    public ExceptionResponse handleIllegalPasswordException(
+        IllegalPasswordException e) {
+        log.info("illegal password");
+        return new ExceptionResponse(e.getExceptionCode());
+    }
 }
