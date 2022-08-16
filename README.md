@@ -7,7 +7,7 @@
   <br>
   <br>
   <a href="https://backend-devcourse.notion.site/LINKBOOK-61a1bf987acc47a6872e21eb59794e3a" target="_blank"><img src="https://img.shields.io/badge/Project Introduction-1877F2?style=for-the-badge&logo=notion&logoColor=white"/></a>
-  <a href="" target="_blank"><img src="https://img.shields.io/badge/Presentation-B7472A?style=for-the-badge&logo=microsoftpowerpoint&logoColor=white"/></a>
+  <a href="https://drive.google.com/file/d/1k0GaTK7j6lj9we2atqXB8AAEQPKkre9u/view?usp=sharing" target="_blank"><img src="https://img.shields.io/badge/Presentation-B7472A?style=for-the-badge&logo=microsoftpowerpoint&logoColor=white"/></a>
 </div>
 
 <br>
