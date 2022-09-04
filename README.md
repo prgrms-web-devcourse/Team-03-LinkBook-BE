@@ -303,9 +303,9 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://linkbook-1.czvbgr7hie3i.ap-northeast-2.rds.amazonaws.com:3306/linkbook
-    username:
-    password: 
+    url: {url}
+    username: {username}
+    password: {password}
     hikari:
       maximum-pool-size: 10
 ```
