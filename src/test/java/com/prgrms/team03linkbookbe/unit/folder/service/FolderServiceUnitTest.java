@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
 import com.prgrms.team03linkbookbe.folder.dto.FolderDetailResponse;
@@ -24,6 +25,8 @@ import com.prgrms.team03linkbookbe.rootTag.entity.RootTagCategory;
 import com.prgrms.team03linkbookbe.tag.entity.TagCategory;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
@@ -225,9 +228,20 @@ public class FolderServiceUnitTest {
             .user(user)
             .build();
 
+        Bookmark bookmark = Bookmark.builder()
+            .id(1L)
+            .url("test")
+            .title("test")
+            .folder(folder)
+            .build();
+
+
         when(folderRepository.findById(1L)).thenReturn(Optional.of(folder));
 
-        doNothing().when(bookmarkRepository).deleteAllByFolder(folder);
+        when(bookmarkRepository.findAllByFolder(folder)).thenReturn(
+            Collections.singletonList(bookmark));
+
+        doNothing().when(bookmarkRepository).delete(bookmark);
 
         doNothing().when(folderTagService).addFolderTag(any(CreateFolderRequest.class), eq(folder));
 
