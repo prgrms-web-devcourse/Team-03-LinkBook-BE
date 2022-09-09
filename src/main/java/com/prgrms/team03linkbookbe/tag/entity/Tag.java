@@ -44,6 +44,9 @@ public class Tag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "root_id", referencedColumnName = "id")
-    private RootTag rootTag;
+    private Tag rootTag;
+
+    @OneToMany(mappedBy = "rootTag")
+    private List<Tag> tags = new ArrayList<>();
 
 }
