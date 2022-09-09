@@ -24,6 +24,7 @@ import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -185,8 +186,8 @@ public class FolderService {
             log.info("{}",old.getId());
             boolean remove = true;
             for(BookmarkRequest bookmarkRequest : createFolderRequest.getBookmarks()){
-                if(old.getId() == bookmarkRequest.getId()) { // 존재하는 경우 내용 수정
-                    log.info("{} {}",old.getId(), bookmarkRequest.getId());
+                log.info("{} {}",old.getId(), bookmarkRequest.getId());
+                if(Objects.equals(old.getId(), bookmarkRequest.getId())) { // 존재하는 경우 내용 수정
                     remove = false;
                     old.modifyBookmark(bookmarkRequest,folder);
                     break;
