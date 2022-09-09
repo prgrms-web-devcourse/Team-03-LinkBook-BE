@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.team03linkbookbe.annotation.WithJwtAuth;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkRequest;
+import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.bookmark.entity.Bookmark;
 import com.prgrms.team03linkbookbe.bookmark.repository.BookmarkRepository;
 import com.prgrms.team03linkbookbe.folder.dto.CreateFolderRequest;
@@ -33,8 +34,10 @@ import com.prgrms.team03linkbookbe.tag.repository.TagRepository;
 import com.prgrms.team03linkbookbe.user.entity.User;
 import com.prgrms.team03linkbookbe.user.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -47,6 +50,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
+@Slf4j
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -82,11 +86,11 @@ public class FolderIntegrationTest {
 
     private Folder folderForDelete;
 
+    private Bookmark bookmark;
+
     private RootTag rootTag;
 
     private Tag tag;
-
-    private Bookmark bookmark;
 
     private String accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaXNzIjoibGluay1ib29rIiwiZXhwIjoxNjU5MDc4MzE2LCJpYXQiOjE2NTkwNzQ3MTYsImVtYWlsIjoidXNlcjFAZ21haWwuY29tIn0.ksk7dW4Z4grAkWKeryEfJbwA4HvqApCk3I7afAO4Ir0CR2NeL3Oe0YbgZCtwRXM3EtB0RPqtJCMfAP_L6pDVKQ";
 
@@ -146,17 +150,29 @@ public class FolderIntegrationTest {
             .tag(tag)
             .build();
 
+        folderForModify.getFolderTags().add(folderTag);
         folderTagRepository.save(folderTag);
 
         folderForDelete.updateFolderTags(List.of(folderTag));
 
         bookmark = Bookmark.builder()
-            .url("url")
-            .title("test")
+            .url("url1")
+            .title("기존1")
             .folder(folderForModify)
             .build();
 
+        Bookmark bookmark2 = Bookmark.builder()
+            .url("url2")
+            .title("기존2")
+            .folder(folderForModify)
+            .build();
+
+        folderForModify.getBookmarks().add(bookmark);
+        folderForModify.getBookmarks().add(bookmark2);
         bookmarkRepository.save(bookmark);
+        bookmarkRepository.save(bookmark2);
+
+
     }
 
 
@@ -793,6 +809,14 @@ public class FolderIntegrationTest {
                             .description("tags"),
                         fieldWithPath("bookmarks").type(JsonFieldType.ARRAY)
                             .description("bookmarks"),
+                        fieldWithPath("bookmarks[].id").type(JsonFieldType.NUMBER)
+                            .description("bookmarks[].id").optional(),
+                        fieldWithPath("bookmarks[].title").type(JsonFieldType.STRING)
+                            .description("bookmarks[].title"),
+                        fieldWithPath("bookmarks[].url").type(JsonFieldType.STRING)
+                            .description("bookmarks[].url"),
+                        fieldWithPath("bookmarks[].folderId").type(JsonFieldType.NUMBER)
+                            .description("bookmarks[].folderId").optional(),
                         fieldWithPath("originId").type(JsonFieldType.NULL)
                             .description("originId, can be NULL")
                     ),
@@ -808,6 +832,7 @@ public class FolderIntegrationTest {
     @WithJwtAuth(email = "test@gmail.com")
     @DisplayName("폴더를 수정할 수 있다.")
     void UPDATE_FOLDER_TEST() throws Exception {
+        log.info("수정시작");
         CreateFolderRequest createFolderRequest =
             CreateFolderRequest.builder()
                 .title("수정title")
@@ -817,16 +842,19 @@ public class FolderIntegrationTest {
                 .isPrivate(false)
                 .tags(folderForModify.getFolderTags().stream().map(o -> o.getTag().getName())
                     .collect(Collectors.toList()))
-                .bookmarks(folderForModify.getBookmarks().stream()
-                    .map(o -> BookmarkRequest
-                        .builder()
-                        .id(o.getId())
-                        .folderId(o.getFolder().getId())
-                        .url(o.getUrl())
-                        .title(o.getTitle())
-                        .build())
-                    .collect(Collectors.toList()))
+                .bookmarks(Arrays.asList(BookmarkRequest.builder()
+                        .id(bookmark.getId())
+                        .folderId(bookmark.getFolder().getId())
+                        .url(bookmark.getUrl())
+                        .title(bookmark.getTitle())
+                        .build(),
+                    BookmarkRequest.builder()
+                        .folderId(bookmark.getFolder().getId())
+                        .url("url3")
+                        .title("추가하는 것")
+                        .build()))
                 .build();
+
         this.mockMvc.perform(put("/api/folders/{id}", folderForModify.getId())
                 .characterEncoding(StandardCharsets.UTF_8)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -834,6 +862,7 @@ public class FolderIntegrationTest {
                 .content(objectMapper.writeValueAsString(createFolderRequest)))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andDo(print())
             .andDo(
                 document("update-folder",
                     requestHeaders(
@@ -853,8 +882,16 @@ public class FolderIntegrationTest {
                             .description("isPrivate"),
                         fieldWithPath("tags").type(JsonFieldType.ARRAY)
                             .description("tags"),
-                        fieldWithPath("bookmarks").type(JsonFieldType.ARRAY)
-                            .description("bookmarks"),
+                        fieldWithPath("bookmarks[]").type(JsonFieldType.ARRAY)
+                            .description("bookmarks[]"),
+                        fieldWithPath("bookmarks[].id").type(JsonFieldType.NUMBER)
+                            .description("bookmarks[].id").optional(),
+                        fieldWithPath("bookmarks[].title").type(JsonFieldType.STRING)
+                            .description("bookmarks[].title"),
+                        fieldWithPath("bookmarks[].url").type(JsonFieldType.STRING)
+                            .description("bookmarks[].url"),
+                        fieldWithPath("bookmarks[].folderId").type(JsonFieldType.NUMBER)
+                            .description("bookmarks[].folderId"),
                         fieldWithPath("originId").type(JsonFieldType.NULL)
                             .description("originId, can be NULL")
                     ),
