@@ -32,7 +32,7 @@ public class Bookmark extends BaseDateEntity {
     private Long id;
 
     @NotBlank(message = "url을 입력하세요")
-    @Column(name = "url", nullable = false)
+    @Column(name = "url", nullable = false, columnDefinition = "TEXT") // URL 긴경우
     private String url;
 
     @NotBlank(message = "북마크이름을 입력하세요")
