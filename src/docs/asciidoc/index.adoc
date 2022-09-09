@@ -177,7 +177,7 @@ include::{snippets}/delete-folder/http-response.adoc[]
 .Request
 include::{snippets}/find-all-folder-list-by-root-tag/http-request.adoc[]
 
-include::{snippets}/find-all-folder-list-by-root-tag/request-fields.adoc[]
+
 
 .Response
 include::{snippets}/find-all-folder-list-by-root-tag/http-response.adoc[]
@@ -189,7 +189,6 @@ include::{snippets}/find-all-folder-list-by-root-tag/response-fields.adoc[]
 .Request
 include::{snippets}/find-all-folder-list-by-sub-tag/http-request.adoc[]
 
-include::{snippets}/find-all-folder-list-by-sub-tag/request-fields.adoc[]
 
 .Response
 include::{snippets}/find-all-folder-list-by-sub-tag/http-response.adoc[]
