@@ -182,14 +182,17 @@ public class FolderService {
         // 1. 기존 북마크 전체 가져와서 지우거나 수정하거나
         List<Bookmark> oldBookmark = bookmarkRepository.findAllByFolder(folder);
         for(Bookmark old : oldBookmark){
+            log.info("{}",old.getId());
             boolean remove = true;
             for(BookmarkRequest bookmarkRequest : createFolderRequest.getBookmarks()){
                 if(old.getId() == bookmarkRequest.getId()) { // 존재하는 경우 내용 수정
+                    log.info("{} {}",old.getId(), bookmarkRequest.getId());
                     remove = false;
                     old.modifyBookmark(bookmarkRequest,folder);
                     break;
                 }
             }
+            log.info("{}",remove);
             if(remove){
                 bookmarkRepository.delete(old);
             }
