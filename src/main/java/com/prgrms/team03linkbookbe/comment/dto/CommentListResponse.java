@@ -10,6 +10,4 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentListResponse {
     private List<CommentResponse> comments;
-
-    private Boolean isPrivate;
 }
