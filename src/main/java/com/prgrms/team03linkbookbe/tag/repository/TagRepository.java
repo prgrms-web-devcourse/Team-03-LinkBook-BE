@@ -9,5 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    Optional<Tag> findByName(TagCategory name);
+    Optional<Tag> findByName(String name);
+
+    @Query("select t.name from Tag t")
+    List<String> findAllTagName();
 }
