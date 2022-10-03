@@ -24,9 +24,9 @@ public class RootTag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "name", nullable = false)
-    private RootTagCategory name;
+
+    @Column(name = "name", nullable = false, length = 20)
+    private String name;
 
 
 }
