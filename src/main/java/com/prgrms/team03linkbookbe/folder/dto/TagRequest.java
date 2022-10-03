@@ -13,5 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TagRequest {
 
-    TagCategory tag;
+    private Long id;
+    private String name;
+
 }

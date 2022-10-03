@@ -40,7 +40,7 @@ public class CreateFolderRequest {
     @NotNull(message = "폴더 공개여부를 설정해주세요")
     private Boolean isPrivate;
 
-    private List<TagCategory> tags;
+    private List<TagRequest> tags;
 
     private List<BookmarkRequest> bookmarks;
 

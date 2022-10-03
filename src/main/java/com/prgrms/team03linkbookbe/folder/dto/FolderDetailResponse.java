@@ -3,6 +3,7 @@ package com.prgrms.team03linkbookbe.folder.dto;
 import com.prgrms.team03linkbookbe.bookmark.dto.BookmarkResponse;
 import com.prgrms.team03linkbookbe.comment.dto.CommentResponse;
 import com.prgrms.team03linkbookbe.folder.entity.Folder;
+import com.prgrms.team03linkbookbe.tag.dto.TagResponse;
 import com.prgrms.team03linkbookbe.user.dto.UserSimpleResponseDto;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,7 +40,7 @@ public class FolderDetailResponse {
 
     private List<CommentResponse> comments;
 
-    private List<String> tags;
+    private List<TagResponse> tags;
 
     private int likes;
 
@@ -59,7 +60,7 @@ public class FolderDetailResponse {
             .isPrivate(folder.getIsPrivate())
             .isLiked(isLiked)
             .tags(folder.getFolderTags().stream()
-                .map(folderTag -> folderTag.getTag().getName().getViewName())
+                .map(folderTag -> TagResponse.fromEntity(folderTag.getTag()))
                 .collect(Collectors.toList()))
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(
@@ -83,7 +84,7 @@ public class FolderDetailResponse {
             .isPrivate(folder.getIsPrivate())
             .isLiked(isLiked)
             .tags(folder.getFolderTags().stream()
-                .map(folderTag -> folderTag.getTag().getName().getViewName())
+                .map(folderTag -> TagResponse.fromEntity(folderTag.getTag()))
                 .collect(Collectors.toList()))
             .user(UserSimpleResponseDto.fromEntity(folder.getUser()))
             .bookmarks(folder.getBookmarks().stream().map(BookmarkResponse::fromEntity).collect(

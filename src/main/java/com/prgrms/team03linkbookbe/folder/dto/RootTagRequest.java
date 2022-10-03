@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RootTagRequest {
 
-    RootTagCategory rootTag;
+    String name;
+
 }

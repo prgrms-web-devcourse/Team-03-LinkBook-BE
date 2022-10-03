@@ -11,11 +11,14 @@ import lombok.Getter;
 @Getter
 public class TagResponse {
 
-    private List<String> tags;
+    private Long id;
 
-    public static TagResponse fromEntity(List<Tag> tags){
+    private String name;
+
+    public static TagResponse fromEntity(Tag tag){
         return TagResponse.builder()
-            .tags(tags.stream().map(tag -> tag.getName().getViewName()).collect(Collectors.toList()))
+            .id(tag.getId())
+            .name(tag.getName())
             .build();
     }
 
