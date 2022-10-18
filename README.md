@@ -214,7 +214,8 @@
 <br><br>
 
 ## 🖼 ERD
-![erd](https://user-images.githubusercontent.com/76257508/184299245-d5d81642-1526-456d-a5c5-59034bf02f92.png)
+![erd](https://user-images.githubusercontent.com/62363580/196364563-27c3dd8a-1a1a-441f-bc26-91df512ab487.png)
+
 
 <br>
 
